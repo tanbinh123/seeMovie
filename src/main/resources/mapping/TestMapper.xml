@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seeMovie.mapper.TestMapper">
-  <select id="getAll" resultType="java.lang.String">
-    select movie_id from movie limit 0,1
-  </select>
-  <insert id="insertaHrefByVo" parameterType="com.seeMovie.pojo.AHrefVo">
+  <!-- 查找所有电影信息 -->
+  <select id="selectAllMovieVo" resultType="com.seeMovie.pojo.MovieVo">
+	select m.movie_id as movieId,m.a_href as aHref,m.movie_name as
+	movieName,m.source as source,m.img_url as imgUrl,m.describes as
+	describes,m.insert_date as insertDate,m.remarks as remarks from movie m
+ </select>
+ <!-- 保存当前电影资源-->
+  <insert id="insertaHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
     insert into movie (movie_id, a_href, movie_name, 
       source, img_url, describes, 
       insert_date, remarks)
     values (#{movieId,jdbcType=VARCHAR}, #{aHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
       #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, 
-      #{insertDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR})
+      #{insertDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
   </insert>
+  <!-- 根据保存的截取链接判断当前数据是否存在  存在则不保存 -->
   <select id="selectaHrefVoByHref" parameterType="java.lang.String" resultType="int">
   select count(1) from movie where 1=1
   <if test="value !=null and value !=''">

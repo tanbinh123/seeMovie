@@ -9,7 +9,7 @@ import java.util.Date;
  * @date   2018年7月7日下午1:05:06
  * 保存电影信息的实体
  */
-public class AHrefVo implements Serializable{
+public class MovieVo implements Serializable{
 	/**
 	 * 
 	 */
@@ -25,7 +25,7 @@ public class AHrefVo implements Serializable{
 	/**
 	 * 电影名字
 	 */
-	private String  movieName;
+	private String movieName;
 	/**
 	 * 数据来源
 	 */

@@ -37,7 +37,6 @@ public class RequestAndResponseTool {
             page = new Page(responseBody,url,contentType); //封装成为页面
         } catch (HttpException e) {
         // 发生致命的异常，可能是协议不对或者返回的内容有问题
-            System.out.println("Please check your provided http address!");
             e.printStackTrace();
         } catch (IOException e) {
         // 发生网络异常

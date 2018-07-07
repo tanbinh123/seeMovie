@@ -64,7 +64,6 @@ public class FileTool {
             }
             out.flush();
             out.close();
-            System.out.println("文件："+ fileName + "已经被存储在"+ filePath  );
         } catch (IOException e) {
             e.printStackTrace();
         }
