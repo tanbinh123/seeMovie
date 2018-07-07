@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seeMovie.mapper.TestMapper">
+  <select id="getAll" resultType="java.lang.String">
+    select movie_id from movie limit 0,1
+  </select>
+  <insert id="insertaHrefByVo" parameterType="com.seeMovie.pojo.AHrefVo">
+    insert into movie (movie_id, a_href, movie_name, 
+      source, img_url, describes, 
+      insert_date, remarks)
+    values (#{movieId,jdbcType=VARCHAR}, #{aHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
+      #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, 
+      #{insertDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectaHrefVoByHref" parameterType="java.lang.String" resultType="int">
+  select count(1) from movie where 1=1
+  <if test="value !=null and value !=''">
+  and a_href = #{value}
+  </if>
+  </select>
+</mapper>
