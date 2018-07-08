@@ -2,12 +2,16 @@ package com.seeMovie.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.seeMovie.common.util.PagingUtil;
 import com.seeMovie.mapper.TestMapper;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.service.TestService;
@@ -17,9 +21,14 @@ public class TestServiceImpl implements TestService{
 	@Autowired
 	TestMapper testMapper;
 	@Override
-	public List<List<MovieVo>> selectAllMovieVo() {
+	public List<List<MovieVo>> selectAllMovieVo(PagingUtil pagingUtil) {
+		//最终返回的数据集合
 		List<List<MovieVo>> returnList = new ArrayList<>();
-		List<MovieVo> movieVoList =  testMapper.selectAllMovieVo();
+		//封装参数
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("currentPage", pagingUtil.getCurrentPage());
+		paramMap.put("pageSize", pagingUtil.getPageSize());
+		List<MovieVo> movieVoList =  testMapper.selectAllMovieVo(paramMap);
 		if(movieVoList != null && movieVoList.size() > 0){//每四个分为一组
 			for(int i = 0; i<movieVoList.size();i++){
 				if((i+1)%4 == 0){//例如下标位 3、7、11。。。。。。的元素
@@ -85,5 +94,10 @@ public class TestServiceImpl implements TestService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	//查找所有总数
+	@Override
+	public int selectMovieVoCount() {
+		return testMapper.selectMovieVoCount();
 	}
 }

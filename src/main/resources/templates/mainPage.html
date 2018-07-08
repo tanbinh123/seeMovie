@@ -42,7 +42,7 @@
    			<div class="row">
    			<#list fourMovieList as movie>
 				<div class="col-xs-6 col-sm-3">
-					<a href="${movie.aHref!''}"> <img
+					<a href="" onclick='goToThisPage("${movie.aHref!''}")'> <img
 						style="height: 150px; width: 150px;" alt=""
 						src="https://img3.doubanio.com/dae/niffler/niffler/images/2c4f36ec-3187-11e8-a133-0242ac110026.jpg"></br>${movie.movieName!''}
 					</a>
@@ -55,14 +55,79 @@
 <!-- 底部分页条 -->
 <div>
 	<ul class="pagination" style="margin-left:75%;">
-		<li><a href="#">&laquo;</a></li>
-		<li class="active disabled"><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
+		<#if pagingUtil.currentPage == 1>
+		    <!-- 第一页前不显示上一页 -->
+			<li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
+			<!-- 增加几个页码 -->
+		    <#if (pagingUtil.currentPage + 4) <= pagingUtil.totalPageSize>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>${pagingUtil.currentPage + 2}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 3}")'>${pagingUtil.currentPage + 3}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 4}")'>&raquo;</a></li>
+		     	<#elseif (pagingUtil.currentPage + 3) <= pagingUtil.totalPageSize>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>${pagingUtil.currentPage + 2}</a></li>
+		        <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 3}")'>&raquo;</a></li>
+		     	<#elseif (pagingUtil.currentPage + 2) <= pagingUtil.totalPageSize>
+		        <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>&raquo;</a></li>
+		     	<#elseif (pagingUtil.currentPage + 1) <= pagingUtil.totalPageSize>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>&raquo;</a></li>
+		    </#if>
+		    <!-- 最后一页后面不显示下一页 -->
+			<#elseif pagingUtil.currentPage == pagingUtil.totalPageSize>
+			<!-- 增加几个页码 -->
+		    <#if (pagingUtil.currentPage - 4) > 0>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 4}")'>&laquo;</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 3}")'>${pagingUtil.currentPage - 3}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 2}")'>${pagingUtil.currentPage - 2}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 1}")'>${pagingUtil.currentPage - 1}</a></li>
+		     	<#elseif (pagingUtil.currentPage - 3) > 0>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 3}")'>&laquo;</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 2}")'>${pagingUtil.currentPage - 2}</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 1}")'>${pagingUtil.currentPage - 1}</a></li>
+		     	<#elseif (pagingUtil.currentPage - 2) > 0>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 2}")'>&laquo;</a></li>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 1}")'>${pagingUtil.currentPage - 1}</a></li>
+		     	<#elseif (pagingUtil.currentPage - 1) > 0>
+		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 1}")'>&laquo;</a></li>
+		     	<#else>
+		    </#if>
+		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
+		    <!-- 第二页 -->
+		    <#elseif (pagingUtil.currentPage == 2)>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 1}")'>&laquo;</a></li>
+		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>${pagingUtil.currentPage + 2}</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 3}")'>${pagingUtil.currentPage + 3}</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 4}")'>&raquo;</a></li>
+		    <!-- 第三页 -->
+		    <#elseif (pagingUtil.currentPage >= 3)>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 2}")'>&laquo;</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage - 1}")'>${pagingUtil.currentPage -1}</a></li>
+		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>${pagingUtil.currentPage + 2}</a></li>
+		    <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 3}")'>&raquo;</a></li>
+		    <#else>
+		    <!-- 非第一页及最后一页且当前页码大于3的情况 -->
+		    <!-- 当前页往前增加几个页码 -->
+		    
+		</#if>
 	</ul>
 </div>
 </body>
+<script type="text/javascript">
+//打开一个新网页
+function goToThisPage(url){
+	window.open(url); 
+}
+//重新加载页面
+function reloadData(currentPage){
+	var pathName = document.location.pathname;
+    var index = pathName.substr(1).indexOf("/");
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+currentPage;
+}
+</script>
 </html>

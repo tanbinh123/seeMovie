@@ -12,12 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.seeMovie.common.Page;
 import com.seeMovie.common.PageParserTool;
 import com.seeMovie.common.RequestAndResponseTool;
 import com.seeMovie.common.link.LinkFilter;
-import com.seeMovie.common.link.Links;
+import com.seeMovie.common.util.PagingUtil;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.service.TestService;
 
@@ -42,11 +41,19 @@ public class MainPageController {
 	 * 进入主页面
 	 */
 	@RequestMapping("/mainPage")
-	public ModelAndView toMainPage(){
+	public ModelAndView toMainPage(PagingUtil pagingUtil){
 		ModelAndView mv = new ModelAndView();
 		//查找所有电影
-		List<List<MovieVo>> movieList = testService.selectAllMovieVo();
+		List<List<MovieVo>> movieList = testService.selectAllMovieVo(pagingUtil);//初始化时默认只查询30条  第一页
+		int total = testService.selectMovieVoCount();//查询总数
+		pagingUtil.setTotal(total);
+		if(total%pagingUtil.getPageSize() == 0){
+			pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize());
+		}else{
+			pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize()+1);
+		}
 		mv.addObject("movieList", movieList);
+		mv.addObject("pagingUtil", pagingUtil);
 		mv.setViewName("mainPage");
 		return mv;
 	}
