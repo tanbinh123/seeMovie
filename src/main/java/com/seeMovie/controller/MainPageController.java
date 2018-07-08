@@ -36,7 +36,7 @@ public class MainPageController {
     //待访问的 url 集合  待访问的主要考虑 1:规定访问顺序;2:保证不提供重复的带访问地址;
     private static LinkedList unVisitedUrlQueue = new LinkedList();
     //初始化访问的网站
-    private static String movieWebSite = "https://www.dy2018.com";
+    private static String movieWebSite = "http://www.dytt8.net/html/gndy/";
 	/**
 	 * 进入主页面
 	 */

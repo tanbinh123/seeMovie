@@ -84,6 +84,8 @@ public class TestServiceImpl implements TestService{
 					vo.setaHref(vo.getaHref().substring(0,vo.getaHref().lastIndexOf("html")+4));
 					//System.out.println("后"+vo.getaHref());
 				}
+				vo.setSource(httpHeader);
+				vo.setRemarks("定时器获取数据！");
 				vo.setInsertDate(new Date());
 				//根据保存的截取链接判断当前数据是否存在  存在则不保存
 				int num= testMapper.selectaHrefVoByHref(vo.getaHref());
