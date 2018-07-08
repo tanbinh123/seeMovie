@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.seeMovie.common.util.PagingUtil;
+import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.mapper.TestMapper;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.service.TestService;

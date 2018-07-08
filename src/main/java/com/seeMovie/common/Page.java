@@ -4,7 +4,7 @@ package com.seeMovie.common;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import com.seeMovie.common.util.CharsetDetector;
+import com.seeMovie.common.utils.CharsetDetector;
 
 import java.io.UnsupportedEncodingException;
 

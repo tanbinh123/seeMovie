@@ -1,4 +1,4 @@
-package com.seeMovie.common.util;
+package com.seeMovie.common.utils;
 
 
 

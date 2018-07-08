@@ -2,7 +2,7 @@ package com.seeMovie.service;
 
 import java.util.List;
 
-import com.seeMovie.common.util.PagingUtil;
+import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.pojo.MovieVo;
 public interface TestService {
 	//新增

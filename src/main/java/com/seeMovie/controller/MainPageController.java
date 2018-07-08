@@ -16,7 +16,7 @@ import com.seeMovie.common.Page;
 import com.seeMovie.common.PageParserTool;
 import com.seeMovie.common.RequestAndResponseTool;
 import com.seeMovie.common.link.LinkFilter;
-import com.seeMovie.common.util.PagingUtil;
+import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.service.TestService;
 
