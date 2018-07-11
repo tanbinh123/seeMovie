@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>看吧</title>
-<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">  
-<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.css">  
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-paginator.js"></script>
 </head>
 <body>
 <!-- 导航栏 -->
@@ -54,12 +55,15 @@
 </div>
 <!-- 底部分页条 -->
 <div>
+	<ul id="pagation"></ul>
+</div>
+<!-- <div>   自己造车的实现方式
           共 ${pagingUtil.totalPageSize} 页
 	<ul class="pagination" style="margin-left:75%;">
 		<#if pagingUtil.currentPage == 1>
-		    <!-- 第一页前不显示上一页 -->
+		    第一页前不显示上一页
 			<li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
-			<!-- 增加几个页码 -->
+			增加几个页码
 		    <#if (pagingUtil.currentPage + 4) <= pagingUtil.totalPageSize>
 		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
 		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>${pagingUtil.currentPage + 2}</a></li>
@@ -75,9 +79,9 @@
 		     	<#elseif (pagingUtil.currentPage + 1) <= pagingUtil.totalPageSize>
 		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>&raquo;</a></li>
 		    </#if>
-		    <!-- 最后一页后面不显示下一页 -->
+		    最后一页后面不显示下一页
 			<#elseif pagingUtil.currentPage == pagingUtil.totalPageSize>
-			<!-- 增加几个页码 -->
+			增加几个页码
 		    <#if (pagingUtil.currentPage - 4) > 0>
 		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 4})'>&laquo;</a></li>
 		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 3})'>${pagingUtil.currentPage - 3}</a></li>
@@ -95,7 +99,7 @@
 		     	<#else>
 		    </#if>
 		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
-		    <!-- 第二页 -->
+		    第二页
 		    <#elseif (pagingUtil.currentPage == 2)>
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>&laquo;</a></li>
 		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
@@ -103,7 +107,7 @@
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 2})'>${pagingUtil.currentPage + 2}</a></li>
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 3})'>${pagingUtil.currentPage + 3}</a></li>
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 4})'>&raquo;</a></li>
-		    <!-- 第三页 -->
+		    第三页
 		    <#elseif (pagingUtil.currentPage >= 3)>
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 2})'>&laquo;</a></li>
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>${pagingUtil.currentPage -1}</a></li>
@@ -112,29 +116,53 @@
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 2})'>${pagingUtil.currentPage + 2}</a></li>
 		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 3})'>&raquo;</a></li>
 		    <#else>
-		    <!-- 非第一页及最后一页且当前页码大于3的情况 -->
-		    <!-- 当前页往前增加几个页码 -->
+		    非第一页及最后一页且当前页码大于3的情况
+		    当前页往前增加几个页码
 		    
 		</#if>
 	</ul>
-	<!-- <ul>
+	<ul>
 	跳转到<input type="number" calss="pagination" onblur="reloadData(this.value)"/>页
-	</ul> -->
-</div>
+	</ul>
+</div> -->
 </body>
 <script type="text/javascript">
+$(function() {
+    var currentPage = 1;
+    var totalPages = 25;
+    $("#pagation").bootstrapPaginator({
+        bootstrapMajorVersion: 3, //对应的bootstrap版本
+        currentPage: ${pagingUtil.currentPage}, //当前页数
+        numberOfPages: 12, //每次显示页数
+        totalPages: ${pagingUtil.totalPageSize}, //总页数
+        shouldShowPage: true, //是否显示该按钮
+        useBootstrapTooltip: true,
+        //点击事件
+        onPageClicked: function(event, originalEvent, type, page) {
+        	if( page != null && page != ""){
+        		page =  page;
+        	}else{
+        		page = 1;
+        	}
+        	var pathName = document.location.pathname;
+            var index = pathName.substr(1).indexOf("/");
+            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+page;
+        }
+    });
+ 
+});
 //打开一个新网页
 function goToThisPage(url){
 	window.open(url); 
 }
 //重新加载页面
-function reloadData(currentPage){
+/* function reloadData(currentPage){
 	if(currentPage == "" || currentPage = null || currentPage == undefined || currentPage == "undefined"){
 		currentPage =  1;
 	}
 	var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
     window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+currentPage;
-}
+} */
 </script>
 </html>
