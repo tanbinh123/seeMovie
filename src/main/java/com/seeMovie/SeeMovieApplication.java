@@ -23,9 +23,9 @@ public class SeeMovieApplication {
 	//@Bean(destroyMethod = "close")
 	public DataSource dataSource() {
 		DruidDataSource dataSource = new DruidDataSource();
-		dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/seemovie");
-		dataSource.setUsername("iff");//用户名
-		dataSource.setPassword("iff");//密码
+		dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/see_movie?useUnicode=true&characterEncoding=UTF-8");
+		dataSource.setUsername("root");//用户名
+		dataSource.setPassword("root");//密码
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		dataSource.setInitialSize(2);//初始化时建立物理连接的个数
 		dataSource.setMaxActive(20);//最大连接池数量

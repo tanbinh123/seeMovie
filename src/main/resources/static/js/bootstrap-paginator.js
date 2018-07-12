@@ -383,27 +383,27 @@
             case "first":
                 if (!this.getValueFromOption(this.options.shouldShowPage, type, page, this.currentPage)) { return; }
                 text = this.options.itemTexts(type, page, this.currentPage);
-                title = this.options.tooltipTitles(type, page, this.currentPage);
+                //title = this.options.tooltipTitles(type, page, this.currentPage);
                 break;
             case "last":
                 if (!this.getValueFromOption(this.options.shouldShowPage, type, page, this.currentPage)) { return; }
                 text = this.options.itemTexts(type, page, this.currentPage);
-                title = this.options.tooltipTitles(type, page, this.currentPage);
+                //title = this.options.tooltipTitles(type, page, this.currentPage);
                 break;
             case "prev":
                 if (!this.getValueFromOption(this.options.shouldShowPage, type, page, this.currentPage)) { return; }
                 text = this.options.itemTexts(type, page, this.currentPage);
-                title = this.options.tooltipTitles(type, page, this.currentPage);
+                //title = this.options.tooltipTitles(type, page, this.currentPage);
                 break;
             case "next":
                 if (!this.getValueFromOption(this.options.shouldShowPage, type, page, this.currentPage)) { return; }
                 text = this.options.itemTexts(type, page, this.currentPage);
-                title = this.options.tooltipTitles(type, page, this.currentPage);
+               //title = this.options.tooltipTitles(type, page, this.currentPage);
                 break;
             case "page":
                 if (!this.getValueFromOption(this.options.shouldShowPage, type, page, this.currentPage)) { return; }
                 text = this.options.itemTexts(type, page, this.currentPage);
-                title = this.options.tooltipTitles(type, page, this.currentPage);
+                //title = this.options.tooltipTitles(type, page, this.currentPage);
                 break;
             }
 
@@ -614,32 +614,32 @@
         itemTexts: function (type, page, current) {
             switch (type) {
             case "first":
-                return "&lt;&lt;";
+                return "首页";
             case "prev":
-                return "&lt;";
+                return "上一页";
             case "next":
-                return "&gt;";
+                return "下一页";
             case "last":
-                return "&gt;&gt;";
+                return "尾页";
             case "page":
                 return page;
             }
         },
-        tooltipTitles: function (type, page, current) {
+        /*tooltipTitles: function (type, page, current) {
 
             switch (type) {
             case "first":
-                return "Go to first page";
+                return "首页";
             case "prev":
-                return "Go to previous page";
+                return "上一页";
             case "next":
-                return "Go to next page";
+                return "下一页";
             case "last":
-                return "Go to last page";
+                return "尾页";
             case "page":
-                return (page === current) ? "Current page is " + page : "Go to page " + page;
+                return (page === current) ? "当前页是"+ page : "第"+ page+"页";
             }
-        },
+        },*/
         bootstrapTooltipOptions: {
             animation: true,
             html: true,
