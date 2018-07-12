@@ -55,7 +55,10 @@
 </div>
 <!-- 底部分页条 -->
 <div>
-	<ul id="pagation"><li>共 ${pagingUtil.totalPageSize} 页</li></ul>
+    <div>
+    	<ul id="pagation"  style="margin-left:30%;"></ul>
+    	<span>共${pagingUtil.totalPageSize}页<input type="number" id="goToPage" placeholder="跳转到"><button onclick="goToPage()">GO</button></span>
+    </div>
 </div>
 <!-- <div>   自己造车的实现方式
           共 ${pagingUtil.totalPageSize} 页
@@ -128,12 +131,10 @@
 </body>
 <script type="text/javascript">
 $(function() {
-    var currentPage = 1;
-    var totalPages = 25;
     $("#pagation").bootstrapPaginator({
         bootstrapMajorVersion: 3, //对应的bootstrap版本
         currentPage: ${pagingUtil.currentPage}, //当前页数
-        numberOfPages: 12, //每次显示页数
+        numberOfPages: 10, //每次显示页数
         totalPages: ${pagingUtil.totalPageSize}, //总页数
         shouldShowPage: true, //是否显示该按钮
         useBootstrapTooltip: true,
@@ -149,8 +150,20 @@ $(function() {
             window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+page;
         }
     });
- 
+    //总页数
+   //$("#pagation li:first-child").prepend("<li>共"+ ${pagingUtil.totalPageSize}+"页</li>");
 });
+//跳转到输入的页数
+function goToPage(){
+	var goToPage = $("#goToPage").val();
+	if(goToPage<1 || goToPage > ${pagingUtil.totalPageSize}){
+		alert("请输入1-"+${pagingUtil.totalPageSize}+"之间的数字！");
+	}else{
+		var pathName = document.location.pathname;
+        var index = pathName.substr(1).indexOf("/");
+        window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+goToPage;
+	}
+}
 //打开一个新网页
 function goToThisPage(url){
 	window.open(url); 
