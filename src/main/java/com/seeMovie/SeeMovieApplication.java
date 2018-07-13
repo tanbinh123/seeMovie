@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 import com.alibaba.druid.pool.DruidDataSource;
 /**
  * 
@@ -13,6 +15,7 @@ import com.alibaba.druid.pool.DruidDataSource;
  * 系统主要入口
  */
 @SpringBootApplication
+@EnableScheduling
 @MapperScan("com.seeMovie.mapper")
 public class SeeMovieApplication {
 	public static void main(String[] args) {

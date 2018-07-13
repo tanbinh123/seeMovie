@@ -31,12 +31,6 @@ import com.seeMovie.service.TestService;
 public class MainPageController {
 	@Autowired
 	TestService testService;
-	//已访问的 url 集合  已经访问过的 主要考虑 不能再重复了 使用set来保证不重复;
-    private static Set visitedUrlSet = new HashSet();
-    //待访问的 url 集合  待访问的主要考虑 1:规定访问顺序;2:保证不提供重复的带访问地址;
-    private static LinkedList unVisitedUrlQueue = new LinkedList();
-    //初始化访问的网站
-    private static String movieWebSite = "http://www.dytt8.net/html/gndy/";
 	/**
 	 * 进入主页面
 	 */
@@ -57,100 +51,4 @@ public class MainPageController {
 		mv.setViewName("mainPage");
 		return mv;
 	}
-	@RequestMapping("/getHerf")
-	public void getHerf(){
-		crawling(new String[]{movieWebSite});
-		/*List<String> aHrefList = new ArrayList<>();
-		for (Elements elements : returnList) {
-			for (Element element : elements) {
-				aHrefList.add(element.toString());
-			}
-		}
-		testService.insertAllaHrefByList(aHrefList,"http://www.dytt8.net");*/
-	}
-	/**
-     * 抓取过程
-     *
-     * @param seeds
-     * @return
-     */
-    public void crawling(String[] seeds) {
-    	//List<Elements> returnList = new ArrayList<>();
-
-        //初始化 URL 队列
-        initCrawlerWithSeeds(seeds);
-
-        //定义过滤器，例如提取以 https://www.dy2018.com/html/gndy/dyzz/ 开头的链接
-        LinkFilter filter = new LinkFilter() {
-            public boolean accept(String url) {
-                if (url.startsWith(movieWebSite)){
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-        };
-
-        //循环条件：待抓取的链接不空且每次最多抓取500的链接
-        while (unVisitedUrlQueue!=null && unVisitedUrlQueue.size() <=500) {
-
-            //先从待访问的序列中取出第一个；
-            String visitUrl = (String)unVisitedUrlQueue.removeFirst();;
-            if (visitUrl == null){
-                continue;
-            }
-
-            //根据URL得到page;
-            Page page = RequestAndResponseTool.sendRequstAndGetResponse(visitUrl);
-
-            //对page进行处理： 访问DOM的某个标签
-            Elements elements = PageParserTool.select(page,"a");
-            List<String> aHrefList = new ArrayList<>();
-    		for (Element element : elements) {
-    			aHrefList.add(element.toString());
-    		}
-    		testService.insertAllaHrefByList(aHrefList,movieWebSite);
-            //returnList.add(es);
-            /*if(!es.isEmpty()){
-                System.out.println("下面将打印所有a标签： ");
-                System.out.println(es);
-            }*/
-
-            //将文件保存
-            //FileTool.saveToLocal(page);
-
-            //将已经访问过的链接放入已访问的链接中；
-            //Links.addVisitedUrlSet(visitUrl);
-            visitedUrlSet.add(visitUrl);
-
-           
-            if(unVisitedUrlQueue.size()<=500){
-            	 //得到超链接
-                Set<String> links = PageParserTool.getLinks(page,"a");
-                for (String link : links) {
-                    //Links.addUnvisitedUrlQueue(link);
-                	if (link != null && !link.trim().equals("")  && !visitedUrlSet.contains(link)  && !unVisitedUrlQueue.contains(link)){
-                        unVisitedUrlQueue.add(link);
-                    }
-                	if(unVisitedUrlQueue.size()<=500){//超过两千不在添加新链接
-                		continue;
-                	}else{
-                		break;
-                	}
-                	}
-                }
-        }
-		//return returnList;
-    }
-    /**
-     * 使用种子初始化 URL 队列
-     *
-     * @param seeds 种子 URL
-     * @return
-     */
-    private void initCrawlerWithSeeds(String[] seeds) {
-        for (int i = 0; i < seeds.length; i++){
-            unVisitedUrlQueue.add(seeds[i]);
-        }
-    }
 }
