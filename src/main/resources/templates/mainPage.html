@@ -56,8 +56,9 @@
 <!-- 底部分页条 -->
 <div>
     <div>
+    	<span>共${pagingUtil.totalPageSize}页&nbsp;</span>
     	<ul id="pagation"  style="margin-left:30%;"></ul>
-    	<span>共${pagingUtil.totalPageSize}页<input type="number" id="goToPage" placeholder="跳转到"><button onclick="goToPage()">GO</button></span>
+    	<span>&nbsp;跳转到<input type="number" style="width:66px;" id="goToPage"><button onclick="goToPage()">GO</button></span>
     </div>
 </div>
 <!-- <div>   自己造车的实现方式
