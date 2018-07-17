@@ -21,7 +21,7 @@ public class MovieVo implements Serializable{
 	/**
 	 * a标签连接
 	 */
-	private String aHref;
+	private String downHref;
 	/**
 	 * 电影名字
 	 */
@@ -34,6 +34,10 @@ public class MovieVo implements Serializable{
 	 * 电影图片路径
 	 */
 	private String imgUrl;
+	/**
+	 * 电影图片路径1
+	 */
+	private String imgUrl2;
 	/**
 	 * 电影描述
 	 */
@@ -52,11 +56,11 @@ public class MovieVo implements Serializable{
 	public void setMovieId(String movieId) {
 		this.movieId = movieId;
 	}
-	public String getaHref() {
-		return aHref;
+	public String getDownHref() {
+		return downHref;
 	}
-	public void setaHref(String aHref) {
-		this.aHref = aHref;
+	public void setDownHref(String downHref) {
+		this.downHref = downHref;
 	}
 	public String getMovieName() {
 		return movieName;
@@ -75,6 +79,12 @@ public class MovieVo implements Serializable{
 	}
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
+	}
+	public String getImgUrl2() {
+		return imgUrl2;
+	}
+	public void setImgUrl2(String imgUrl2) {
+		this.imgUrl2 = imgUrl2;
 	}
 	public String getDescribes() {
 		return describes;

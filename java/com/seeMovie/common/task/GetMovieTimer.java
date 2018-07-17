@@ -33,18 +33,18 @@ public class GetMovieTimer {
 	//待访问的 url 集合  待访问的主要考虑 1:规定访问顺序;2:保证不提供重复的带访问地址;
 	private static LinkedList unVisitedUrlQueue = new LinkedList();
 	//初始化访问的网站
-	private static String movieWebSite = "http://www.dytt8.net/html/gndy/";
-	@Scheduled(cron="0 0 2 * * ? ") //每天凌晨两点执行一次
+	private static String webLinks = "http://www.dytt8.net/html/gndy/";
+	@Scheduled(cron="0 0/1 * * * ?") //每天凌晨两点执行一次  0 0 2 * * ?
 	public void getNewMovie(){ 
 		System.out.println("获取电影定时器开始执行"+ new Date());
-		String[] seeds = new String[]{movieWebSite};
+		String[] seeds = new String[]{webLinks};
 		for (int i = 0; i < seeds.length; i++){
 			unVisitedUrlQueue.add(seeds[i]);
 		}
-		//定义过滤器，例如提取以 https://www.dy2018.com/html/gndy/dyzz/ 开头的链接
+		//定义过滤器，例如提取以 http://www.dytt8.net/html/gndy/ 开头的链接
 		LinkFilter filter = new LinkFilter() {
 			public boolean accept(String url) {
-				if (url.startsWith(movieWebSite)){
+				if (url.startsWith(webLinks)){
 					return true;
 				}else{
 					return false;
@@ -66,16 +66,22 @@ public class GetMovieTimer {
 
 			//对page进行处理： 访问DOM的某个标签
 			Elements elements = PageParserTool.select(page,"a");
-			List<String> aHrefList = new ArrayList<>();
+			List<String> downHrefList = new ArrayList<>();
 			for (Element element : elements) {
-				aHrefList.add(element.toString());
+				if(element!=null && element.toString().contains("ftp://")){
+					Elements imgElements = PageParserTool.select(page,"img");
+					if(!imgElements.isEmpty()){
+						String imgUrl = "";
+						for (Element imgElement : imgElements) {
+							imgUrl = imgUrl + "#"+imgElement.toString();
+						}
+						downHrefList.add(element.toString()+imgUrl);
+					}else{
+						downHrefList.add(element.toString());
+					}
+				}
 			}
-			testService.insertAllaHrefByList(aHrefList,movieWebSite);
-			//returnList.add(es);
-			/*if(!es.isEmpty()){
-	                System.out.println("下面将打印所有a标签： ");
-	                System.out.println(es);
-	            }*/
+			testService.insertAlldownHrefByList(downHrefList,webLinks);
 
 			//将文件保存
 			//FileTool.saveToLocal(page);
@@ -93,7 +99,7 @@ public class GetMovieTimer {
 					if (link != null && !link.trim().equals("")  && !visitedUrlSet.contains(link)  && !unVisitedUrlQueue.contains(link)){
 						unVisitedUrlQueue.add(link);
 					}
-					if(unVisitedUrlQueue.size()<=500){//超过两千不在添加新链接
+					if(unVisitedUrlQueue.size()<=500){//超过500不在添加新链接
 						continue;
 					}else{
 						break;

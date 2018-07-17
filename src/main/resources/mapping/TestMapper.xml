@@ -3,31 +3,31 @@
 <mapper namespace="com.seeMovie.mapper.TestMapper">
   <!-- 查找所有电影信息 -->
   <select id="selectAllMovieVo" resultType="com.seeMovie.pojo.MovieVo" parameterType="map">
-	select m.movie_id as movieId,m.a_href as aHref,m.movie_name as
-	movieName,m.source as source,m.img_url as imgUrl,m.describes as
+	select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
+	movieName,m.source as source,m.img_url as imgUrl,m.img_url2 as imgUrl2,m.describes as
 	describes,m.insert_date as insertDate,m.remarks as remarks from movie m
 	<if test="currentPage != null and pageSize !=null">
 	LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
 	</if>
  </select>
+ <!-- 查找所有符合条件的总数 -->
+  <select id="selectMovieVoCount" resultType="int">
+  select count(1) from movie
+  </select>
  <!-- 保存当前电影资源-->
-  <insert id="insertaHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
-    insert into movie (movie_id, a_href, movie_name, 
-      source, img_url, describes, 
+  <insert id="insertDownHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
+    insert into movie (movie_id, down_href, movie_name, 
+      source, img_url,img_url2, describes, 
       insert_date, remarks)
-    values (#{movieId,jdbcType=VARCHAR}, #{aHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
-      #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, 
+    values (#{movieId,jdbcType=VARCHAR}, #{downHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
+      #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR},#{imgUrl2,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, 
       #{insertDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
   </insert>
   <!-- 根据保存的截取链接判断当前数据是否存在  存在则不保存 -->
-  <select id="selectaHrefVoByHref" parameterType="java.lang.String" resultType="int">
+  <select id="selectDownHrefVoByHref" parameterType="java.lang.String" resultType="int">
   select count(1) from movie where 1=1
   <if test="value !=null and value !=''">
-  and a_href = #{value}
+  and down_href = #{value}
   </if>
-  </select>
-  <!-- 查找所有符合条件的总数 -->
-  <select id="selectMovieVoCount" resultType="int">
-  select count(1) from movie
   </select>
 </mapper>

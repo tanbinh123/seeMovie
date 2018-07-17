@@ -44,9 +44,9 @@
    			<div class="row">
    			<#list fourMovieList as movie>
 				<div class="col-xs-6 col-sm-3">
-					<a href="" onclick='goToThisPage("${movie.aHref!''}")'> <img
+					<a href="" onclick='goToThisPage("${movie.movieId!''}")'> <img
 						style="height: 150px; width: 150px;" alt=""
-						src="https://img1.doubanio.com/dae/niffler/niffler/images/ba356172-7825-11e8-9fa1-0242ac110017.png"></br>${movie.movieName!''}
+						src="${movie.imgUrl}"></br>${movie.movieName!''}
 					</a>
 				</div>
 		  	</#list>
@@ -167,8 +167,11 @@ function goToPage(){
 	}
 }
 //打开一个新网页
-function goToThisPage(url){
-	window.open(url); 
+function goToThisPage(movieId){
+	var pathName = document.location.pathname;
+    var index = pathName.substr(1).indexOf("/");
+    alert(pathName+"******"+pathName.substr(0,index+1));
+	//window.open(window.location.href=pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId); 
 }
 //重新加载页面
 /* function reloadData(currentPage){
