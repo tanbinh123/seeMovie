@@ -17,20 +17,20 @@
 		<a class="navbar-brand" href="#"><!-- <img alt="看吧" src="..."> -->搜你所搜，看你所看！</a>
 	</div>
 	<div>
-		<ul class="nav nav-pills" style="margin-top:10px;">
+		<!-- <ul class="nav nav-pills" style="margin-top:10px;">
 			<li><a href="#">经典影片</a></li>
 			<li><a href="#">动作科幻</a></li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 					爱情文艺
 				</a>
-				<!-- <ul class="dropdown-menu">
+				<ul class="dropdown-menu">
 					<li><a href="#">jmeter</a></li>
 					<li><a href="#">EJB</a></li>
 					<li><a href="#">Jasper Report</a></li>
-				</ul> -->
+				</ul>
 			</li>
-		</ul>
+		</ul> -->
 	</div>
 	</div>
 </nav>
@@ -43,10 +43,9 @@
    			<!-- 每四个一行 -->
    			<div class="row">
    			<#list fourMovieList as movie>
-				<div class="col-xs-6 col-sm-3">
+				<div class="col-xs-6 col-sm-3" style="width:22.5%;">
 					<a href="" onclick='goToThisPage("${movie.movieId!''}")'> <img
-						style="height: 150px; width: 150px;" alt=""
-						src="${movie.imgUrl}"></br>${movie.movieName!''}
+						style="height:235px; width:100%;" src="${movie.imgUrl}"></br>${movie.movieName!''}
 					</a>
 				</div>
 		  	</#list>
@@ -62,74 +61,6 @@
     	<span>&nbsp;跳转到<input type="number" style="width:66px;" id="goToPage"><button onclick="goToPage()">GO</button></span>
     </div>
 </div>
-<!-- <div>   自己造车的实现方式
-          共 ${pagingUtil.totalPageSize} 页
-	<ul class="pagination" style="margin-left:75%;">
-		<#if pagingUtil.currentPage == 1>
-		    第一页前不显示上一页
-			<li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
-			增加几个页码
-		    <#if (pagingUtil.currentPage + 4) <= pagingUtil.totalPageSize>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>${pagingUtil.currentPage + 2}</a></li>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 3}")'>${pagingUtil.currentPage + 3}</a></li>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 4}")'>&raquo;</a></li>
-		     	<#elseif (pagingUtil.currentPage + 3) <= pagingUtil.totalPageSize>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>${pagingUtil.currentPage + 2}</a></li>
-		        <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 3}")'>&raquo;</a></li>
-		     	<#elseif (pagingUtil.currentPage + 2) <= pagingUtil.totalPageSize>
-		        <li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>${pagingUtil.currentPage + 1}</a></li>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 2}")'>&raquo;</a></li>
-		     	<#elseif (pagingUtil.currentPage + 1) <= pagingUtil.totalPageSize>
-		     	<li><a href="#" onclick='reloadData("${pagingUtil.currentPage + 1}")'>&raquo;</a></li>
-		    </#if>
-		    最后一页后面不显示下一页
-			<#elseif pagingUtil.currentPage == pagingUtil.totalPageSize>
-			增加几个页码
-		    <#if (pagingUtil.currentPage - 4) > 0>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 4})'>&laquo;</a></li>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 3})'>${pagingUtil.currentPage - 3}</a></li>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 2})'>${pagingUtil.currentPage - 2}</a></li>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>${pagingUtil.currentPage - 1}</a></li>
-		     	<#elseif (pagingUtil.currentPage - 3) > 0>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 3})'>&laquo;</a></li>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 2})'>${pagingUtil.currentPage - 2}</a></li>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>${pagingUtil.currentPage - 1}</a></li>
-		     	<#elseif (pagingUtil.currentPage - 2) > 0>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 2})'>&laquo;</a></li>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>${pagingUtil.currentPage - 1}</a></li>
-		     	<#elseif (pagingUtil.currentPage - 1) > 0>
-		     	<li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>&laquo;</a></li>
-		     	<#else>
-		    </#if>
-		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
-		    第二页
-		    <#elseif (pagingUtil.currentPage == 2)>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>&laquo;</a></li>
-		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 1})'>${pagingUtil.currentPage + 1}</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 2})'>${pagingUtil.currentPage + 2}</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 3})'>${pagingUtil.currentPage + 3}</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 4})'>&raquo;</a></li>
-		    第三页
-		    <#elseif (pagingUtil.currentPage >= 3)>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 2})'>&laquo;</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage - 1})'>${pagingUtil.currentPage -1}</a></li>
-		    <li class="active"><a href="#">${pagingUtil.currentPage}</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 1})'>${pagingUtil.currentPage + 1}</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 2})'>${pagingUtil.currentPage + 2}</a></li>
-		    <li><a href="#" onclick='reloadData(${pagingUtil.currentPage + 3})'>&raquo;</a></li>
-		    <#else>
-		    非第一页及最后一页且当前页码大于3的情况
-		    当前页往前增加几个页码
-		    
-		</#if>
-	</ul>
-	<ul>
-	跳转到<input type="number" calss="pagination" onblur="reloadData(this.value)"/>页
-	</ul>
-</div> -->
 </body>
 <script type="text/javascript">
 $(function() {
@@ -170,17 +101,7 @@ function goToPage(){
 function goToThisPage(movieId){
 	var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
-    alert(pathName+"******"+pathName.substr(0,index+1));
-	//window.open(window.location.href=pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId); 
+	window.open(window.location.href=pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId); 
 }
-//重新加载页面
-/* function reloadData(currentPage){
-	if(currentPage == "" || currentPage = null || currentPage == undefined || currentPage == "undefined"){
-		currentPage =  1;
-	}
-	var pathName = document.location.pathname;
-    var index = pathName.substr(1).indexOf("/");
-    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+currentPage;
-} */
 </script>
 </html>

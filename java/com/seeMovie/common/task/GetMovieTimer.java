@@ -17,7 +17,7 @@ import com.seeMovie.common.Page;
 import com.seeMovie.common.PageParserTool;
 import com.seeMovie.common.RequestAndResponseTool;
 import com.seeMovie.common.link.LinkFilter;
-import com.seeMovie.service.TestService;
+import com.seeMovie.service.MovieService;
 /**
  * 
  * @author 马玉谋
@@ -27,14 +27,14 @@ import com.seeMovie.service.TestService;
 @Component
 public class GetMovieTimer {
 	@Autowired
-	TestService testService;
+	MovieService testService;
 	//已访问的 url 集合  已经访问过的 主要考虑 不能再重复了 使用set来保证不重复;
 	private static Set visitedUrlSet = new HashSet();
 	//待访问的 url 集合  待访问的主要考虑 1:规定访问顺序;2:保证不提供重复的带访问地址;
 	private static LinkedList unVisitedUrlQueue = new LinkedList();
 	//初始化访问的网站
 	private static String webLinks = "http://www.dytt8.net/html/gndy/";
-	@Scheduled(cron="0 0/1 * * * ?") //每天凌晨两点执行一次  0 0 2 * * ?
+	@Scheduled(cron="0 0 2 * * ?") //每天凌晨两点执行一次  0 0 2 * * ?
 	public void getNewMovie(){ 
 		System.out.println("获取电影定时器开始执行"+ new Date());
 		String[] seeds = new String[]{webLinks};

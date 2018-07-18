@@ -10,19 +10,17 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.StringUtils;
-
 import com.seeMovie.common.utils.PagingUtil;
-import com.seeMovie.mapper.TestMapper;
+import com.seeMovie.mapper.MovieMapper;
 import com.seeMovie.pojo.MovieVo;
-import com.seeMovie.service.TestService;
+import com.seeMovie.service.MovieService;
 @Service
 @Transactional
-public class TestServiceImpl implements TestService{
+public class MovieServiceImpl implements MovieService{
 	//默认图片链接
 	private static final String default_img_url = "https://img1.doubanio.com/dae/niffler/niffler/images/ba356172-7825-11e8-9fa1-0242ac110017.png";
 	@Autowired
-	TestMapper testMapper;
+	MovieMapper movieMapper;
 	@Override
 	public List<List<MovieVo>> selectAllMovieVo(PagingUtil pagingUtil) {
 		//最终返回的数据集合
@@ -31,7 +29,7 @@ public class TestServiceImpl implements TestService{
 		Map<String,Object> paramMap = new HashMap<>();
 		paramMap.put("currentPage", pagingUtil.getCurrentPage());
 		paramMap.put("pageSize", pagingUtil.getPageSize());
-		List<MovieVo> movieVoList =  testMapper.selectAllMovieVo(paramMap);
+		List<MovieVo> movieVoList =  movieMapper.selectAllMovieVo(paramMap);
 		if(movieVoList != null && movieVoList.size() > 0){//每四个分为一组
 			for(int i = 0; i<movieVoList.size();i++){
 				if((i+1)%4 == 0){//例如下标位 3、7、11。。。。。。的元素
@@ -86,9 +84,9 @@ public class TestServiceImpl implements TestService{
 				vo.setRemarks("定时器获取数据！");
 				vo.setInsertDate(new Date());
 				//根据保存的截取链接判断当前数据是否存在  存在则不保存
-				int num= testMapper.selectDownHrefVoByHref(vo.getDownHref());
+				int num= movieMapper.selectDownHrefVoByHref(vo.getDownHref());
 				if(num == 0){
-					testMapper.insertDownHrefByVo(vo);
+					movieMapper.insertDownHrefByVo(vo);
 				}
 			}
 		} catch (Exception e) {
@@ -151,6 +149,11 @@ public class TestServiceImpl implements TestService{
 	//查找所有总数
 	@Override
 	public int selectMovieVoCount() {
-		return testMapper.selectMovieVoCount();
+		return movieMapper.selectMovieVoCount();
+	}
+	//根据电影id查看电影详情
+	@Override
+	public MovieVo getMovieDetail(String movieId) {
+		return movieMapper.getMovieDetail(movieId);
 	}
 }

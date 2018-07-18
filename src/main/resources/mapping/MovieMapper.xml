@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.seeMovie.mapper.TestMapper">
+<mapper namespace="com.seeMovie.mapper.MovieMapper">
   <!-- 查找所有电影信息 -->
   <select id="selectAllMovieVo" resultType="com.seeMovie.pojo.MovieVo" parameterType="map">
 	select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
@@ -29,5 +29,15 @@
   <if test="value !=null and value !=''">
   and down_href = #{value}
   </if>
+  </select>
+  <!-- 根据电影id查看电影详情-->
+  <select id="getMovieDetail" resultType="com.seeMovie.pojo.MovieVo" parameterType="java.lang.String">
+  select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
+	movieName,m.source as source,m.img_url as imgUrl,m.img_url2 as imgUrl2,m.describes as
+	describes,m.insert_date as insertDate,m.remarks as remarks from movie m
+	where 1=1
+	<if test="value != null and value != ''">
+ 	and m.movie_id =#{value}	
+	</if>
   </select>
 </mapper>
