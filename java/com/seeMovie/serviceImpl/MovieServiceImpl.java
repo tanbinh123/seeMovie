@@ -10,6 +10,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.mapper.MovieMapper;
 import com.seeMovie.pojo.MovieVo;
@@ -51,35 +53,21 @@ public class MovieServiceImpl implements MovieService{
 		return returnList;
 	}
 	@Override
-	public void insertAlldownHrefByList(List<String> downHrefList,String webLinks) {
+	public void insertAlldownHrefByList(List<Map<String, Object>> downHrefList, String webLinks) {
 		try {
 			MovieVo vo = new MovieVo();
-			for (String downHref : downHrefList) {
+			for (Map<String, Object> map : downHrefList) {
+				String downHref = map.get("downHrf").toString();
+				//String movieName = map.get("movieName").toString();
+				String describes = map.get("describes").toString();
 				//<a href="ftp://ygdy8:ygdy8@yg90.dydytt.net:8356/阳光电影www.ygdy8.com.逆袭人生.HD.1080p.国语中字.mp4">ftp://ygdy8:ygdy8@yg90.dydytt.net:8356/阳光电影www.ygdy8.com.逆袭
 				//人生.HD.1080p.国语中字.mp4</a>#<img src="/images/bbs_btn.gif" alt="电影天堂" border="0">#<img border="0" src="http://www.imageto.org/images/3vrHn.jpg" alt="">#<img 
 				//border="0" src="http://www.imageto.org/images/nos3.jpg" alt="">
 				vo.setMovieId(UUID.randomUUID().toString().replaceAll("-", ""));
 				List<String> movieHrefAndImgUrl = getMovieHrefAndImgUrl(downHref);
-				if(movieHrefAndImgUrl!=null && movieHrefAndImgUrl.size()>=2){//至少存在电影名字及下载链接
-					//最多保留两张图片链接
-					vo.setDownHref(movieHrefAndImgUrl.get(0));
-					vo.setMovieName(movieHrefAndImgUrl.get(1));
-					//初始化赋值
-					vo.setImgUrl(default_img_url);
-					if(movieHrefAndImgUrl.size() == 3){
-						vo.setImgUrl(movieHrefAndImgUrl.get(2));
-					}else if(movieHrefAndImgUrl.size() >= 4){
-						if(movieHrefAndImgUrl.get(2).equals(default_img_url)){
-							//图片链接1位默认值 则将图片2的链接赋值给图片1 
-							//因为会出现图片1截取链接时无值用默认值代替，但是图片2有链接的情况
-							vo.setImgUrl(movieHrefAndImgUrl.get(3));
-							vo.setImgUrl2(movieHrefAndImgUrl.get(3));
-						}else{
-							vo.setImgUrl(movieHrefAndImgUrl.get(2));
-							vo.setImgUrl2(movieHrefAndImgUrl.get(3));
-						}
-					}
-				}
+				vo.setDescribes(describes);
+				vo = getNewVoByParam(movieHrefAndImgUrl,vo);
+				vo.setDescribes(describes);
 				vo.setSource(webLinks);
 				vo.setRemarks("定时器获取数据！");
 				vo.setInsertDate(new Date());
@@ -92,6 +80,87 @@ public class MovieServiceImpl implements MovieService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	private MovieVo getNewVoByParam(List<String> movieHrefAndImgUrl,MovieVo movieVo) {
+		if(movieHrefAndImgUrl!=null && movieHrefAndImgUrl.size()>=2){//至少存在电影名字及下载链接
+			//最多保留两张图片链接
+			movieVo.setDownHref(movieHrefAndImgUrl.get(0));
+			movieVo.setMovieName(movieHrefAndImgUrl.get(1));
+			//初始化赋值
+			movieVo.setImgUrl(default_img_url);
+			if(movieHrefAndImgUrl.size() == 3){
+				movieVo.setImgUrl(movieHrefAndImgUrl.get(2));
+			}else if(movieHrefAndImgUrl.size() >= 4){
+				if(movieHrefAndImgUrl.get(2).equals(default_img_url)){
+					//图片链接1位默认值 则将图片2的链接赋值给图片1 
+					//因为会出现图片1截取链接时无值用默认值代替，但是图片2有链接的情况
+					movieVo.setImgUrl(movieHrefAndImgUrl.get(3));
+					movieVo.setImgUrl2(movieHrefAndImgUrl.get(3));
+				}else{
+					movieVo.setImgUrl(movieHrefAndImgUrl.get(2));
+					movieVo.setImgUrl2(movieHrefAndImgUrl.get(3));
+				}
+			}
+		}
+		if(!movieVo.getDescribes().equals("暂无当前影片详情！")){
+			//String describes = movieVo.getDescribes();
+			String[] describesArr = movieVo.getDescribes().split("<br>");
+			for (String describe : describesArr) {
+				/*◎译　　名　西伯利亚 
+				◎片　　名　Siberia 
+				◎年　　代　2018 
+				◎产　　地　美国 
+				◎类　　别　爱情/犯罪/惊悚 
+				◎语　　言　英语 
+				◎字　　幕　中英双字幕 
+				◎上映日期　2018-07-13(美国) 
+				◎IMDb评分 6.9/10 from 69 users 
+				◎文件格式　x264 + aac 
+				◎视频尺寸　1280 x 720 
+				◎文件大小　1CD 
+				◎导　　演　Matthew M. Ross 
+				◎主　　演　基努·里维斯 Keanu Reeves 
+				　　　　　　莫利·林沃德 Molly Ringwald 
+				　　　　　　安娜·乌拉鲁 Ana Ularu 
+				　　　　　　阿莱克斯·潘诺维奇 Aleks Paunovic 
+				　　　　　　帕沙·D.林奇尼科夫 Pasha D. Lychnikoff 
+				　　　　　　维罗尼卡·费瑞尔 Veronica Ferres 
+				　　　　　　尤金·里皮斯基 Eugene Lipinski 
+				　　　　　　詹姆斯·亚历山大 James Alexander 
+				　　　　　　布拉德利·索茨基 Bradley Sawatzky 
+				　　　　　　纳扎利·德姆克维奇 Nazariy Demkowicz 
+				　　　　　　维塔利·马卡罗夫 Vitali Makarov 
+				　　　　　　达伦·罗斯 Darren Ross
+				
+				◎简　　介　 
+				*/ 
+				if(!StringUtils.isEmpty(describe) && describe.contains("简　　介")){
+					String[] newDescribeArr = describe.split("<br>");
+					if(newDescribeArr.length>2){//超过两组  还需要在次循环取值
+						for (String newDescribe : newDescribeArr) {
+							if(!StringUtils.isEmpty(newDescribe) && newDescribe.contains("简　　介")){
+								if(newDescribe.length()>2500){
+									movieVo.setDescribes(newDescribe.substring(0,2500));
+									break;
+								}else{
+									movieVo.setDescribes(newDescribe);
+									break;
+								}
+							}
+						}
+					}else{
+						if(describe.length()>2500){
+							movieVo.setDescribes(describe.substring(0,2500));
+							break;
+						}else{
+							movieVo.setDescribes(describe);
+							break;
+						}
+					}
+				}
+			}
+		}
+		return movieVo;
 	}
 	//将定时器传过来的链接截取出电影下载链接、电影名称及图片链接
 	private List<String> getMovieHrefAndImgUrl(String downHref) {

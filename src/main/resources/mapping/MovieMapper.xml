@@ -16,10 +16,10 @@
   </select>
  <!-- 保存当前电影资源-->
   <insert id="insertDownHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
-    insert into movie (movie_id, down_href, movie_name, 
+    insert into movie (movie_id,category, down_href, movie_name, 
       source, img_url,img_url2, describes, 
       insert_date, remarks)
-    values (#{movieId,jdbcType=VARCHAR}, #{downHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
+    values (#{movieId,jdbcType=VARCHAR},#{category,jdbcType=INTEGER}, #{downHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
       #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR},#{imgUrl2,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, 
       #{insertDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
   </insert>

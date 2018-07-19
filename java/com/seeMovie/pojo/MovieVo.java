@@ -23,6 +23,10 @@ public class MovieVo implements Serializable{
 	 */
 	private String downHref;
 	/**
+	 * 类别
+	 */
+	private int category;
+	/**
 	 * 电影名字
 	 */
 	private String movieName;
@@ -50,6 +54,12 @@ public class MovieVo implements Serializable{
 	 * 备注
 	 */
 	private String remarks;
+	public int getCategory() {
+		return category;
+	}
+	public void setCategory(int category) {
+		this.category = category;
+	}
 	public String getMovieId() {
 		return movieId;
 	}

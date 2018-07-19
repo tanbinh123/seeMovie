@@ -2,9 +2,11 @@ package com.seeMovie.common.task;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
@@ -27,14 +29,14 @@ import com.seeMovie.service.MovieService;
 @Component
 public class GetMovieTimer {
 	@Autowired
-	MovieService testService;
+	MovieService movieService;
 	//已访问的 url 集合  已经访问过的 主要考虑 不能再重复了 使用set来保证不重复;
 	private static Set visitedUrlSet = new HashSet();
 	//待访问的 url 集合  待访问的主要考虑 1:规定访问顺序;2:保证不提供重复的带访问地址;
 	private static LinkedList unVisitedUrlQueue = new LinkedList();
 	//初始化访问的网站
-	private static String webLinks = "http://www.dytt8.net/html/gndy/";
-	@Scheduled(cron="0 0 2 * * ?") //每天凌晨两点执行一次  0 0 2 * * ?
+	private static String webLinks = "http://www.dytt8.net/html/gndy/dyzz/20180715/57139.html";
+	@Scheduled(cron="0 0/10 * * * ?") //每天凌晨两点执行一次  0 0 2 * * ?
 	public void getNewMovie(){ 
 		System.out.println("获取电影定时器开始执行"+ new Date());
 		String[] seeds = new String[]{webLinks};
@@ -53,7 +55,7 @@ public class GetMovieTimer {
 		};
 
 		//循环条件：待抓取的链接不空且每次最多抓取500的链接
-		while (unVisitedUrlQueue!=null && unVisitedUrlQueue.size() <=500) {
+		while (unVisitedUrlQueue!=null) {
 
 			//先从待访问的序列中取出第一个；
 			String visitUrl = (String)unVisitedUrlQueue.removeFirst();;
@@ -63,25 +65,10 @@ public class GetMovieTimer {
 
 			//根据URL得到page;
 			Page page = RequestAndResponseTool.sendRequstAndGetResponse(visitUrl);
-
 			//对page进行处理： 访问DOM的某个标签
 			Elements elements = PageParserTool.select(page,"a");
-			List<String> downHrefList = new ArrayList<>();
-			for (Element element : elements) {
-				if(element!=null && element.toString().contains("ftp://")){
-					Elements imgElements = PageParserTool.select(page,"img");
-					if(!imgElements.isEmpty()){
-						String imgUrl = "";
-						for (Element imgElement : imgElements) {
-							imgUrl = imgUrl + "#"+imgElement.toString();
-						}
-						downHrefList.add(element.toString()+imgUrl);
-					}else{
-						downHrefList.add(element.toString());
-					}
-				}
-			}
-			testService.insertAlldownHrefByList(downHrefList,webLinks);
+			List<Map<String,Object>> downHrefList = getMovieInfo(elements,page);
+			movieService.insertAlldownHrefByList(downHrefList,webLinks);
 
 			//将文件保存
 			//FileTool.saveToLocal(page);
@@ -91,7 +78,7 @@ public class GetMovieTimer {
 			visitedUrlSet.add(visitUrl);
 
 
-			if(unVisitedUrlQueue.size()<=500){
+			//if(unVisitedUrlQueue.size()<=500){
 				//得到超链接
 				Set<String> links = PageParserTool.getLinks(page,"a");
 				for (String link : links) {
@@ -99,13 +86,41 @@ public class GetMovieTimer {
 					if (link != null && !link.trim().equals("")  && !visitedUrlSet.contains(link)  && !unVisitedUrlQueue.contains(link)){
 						unVisitedUrlQueue.add(link);
 					}
-					if(unVisitedUrlQueue.size()<=500){//超过500不在添加新链接
+					/*if(unVisitedUrlQueue.size()<=500){//超过500不在添加新链接
 						continue;
 					}else{
 						break;
+					}*/
+				}
+			//}
+		}
+	}
+	//获得电影信息
+	private List<Map<String,Object>> getMovieInfo(Elements elements, Page page) {
+		List<Map<String,Object>> returnList = new ArrayList<>();
+		for (Element element : elements) {
+			if(element!=null && element.toString().contains("ftp://")){
+				Elements imgElements = PageParserTool.select(page,"img");
+				Map<String,Object> map = new HashMap<>();
+				if(!imgElements.isEmpty()){
+					String imgUrl = "";
+					for (Element imgElement : imgElements) {
+						imgUrl = imgUrl + "#"+imgElement.toString();
+					}
+					map.put("downHrf", element.toString()+imgUrl);
+				}else{
+					map.put("downHrf", element.toString());
+				}
+				map.put("describes","暂无当前影片详情！");
+				Elements describesElements = PageParserTool.select(page,"p");
+				for (Element describesElement : describesElements) {
+					if(describesElement.toString().contains("简　　介")&&describesElement.toString().contains("片　　名")&&describesElement.toString().contains("<br>")){
+						map.put("describes",describesElement);
 					}
 				}
+				returnList.add(map);
 			}
 		}
+		return returnList;
 	}  
 }
