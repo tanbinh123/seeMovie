@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <title>看吧</title>
 <link rel="stylesheet" href="/css/bootstrap.css">  
+<link rel="stylesheet" href="/css/pagination.css">  
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <!-- 分页 -->
-<script src="/js/bootstrap-paginator.js"></script>
+<script src="/js/jquery.pagination.js"></script>
 </head>
 <body>
 <!-- 导航栏 -->
@@ -55,48 +56,39 @@
 </div>
 <!-- 底部分页条 -->
 <div>
-    <div>
+<div class="M-box"></div>
+    <!-- <div>
     	<span>共${pagingUtil.totalPageSize}页&nbsp;</span>
     	<ul id="pagation"  style="margin-left:30%;"></ul>
     	<span>&nbsp;跳转到<input type="number" style="width:66px;" id="goToPage"><button onclick="goToPage()">GO</button></span>
-    </div>
+    </div> -->
 </div>
 </body>
 <script type="text/javascript">
 $(function() {
-    $("#pagation").bootstrapPaginator({
-        bootstrapMajorVersion: 3, //对应的bootstrap版本
-        currentPage: ${pagingUtil.currentPage}, //当前页数
-        numberOfPages: 10, //每次显示页数
-        totalPages: ${pagingUtil.totalPageSize}, //总页数
-        shouldShowPage: true, //是否显示该按钮
-        useBootstrapTooltip: true,
-        //点击事件
-        onPageClicked: function(event, originalEvent, type, page) {
-        	if( page != null && page != ""){
-        		page =  page;
+	$(".M-box").pagination({
+		current:${pagingUtil.currentPage},
+	    pageCount:${pagingUtil.totalPageSize},
+	    count:5,
+	    jump:true,
+	    coping:true,
+	    homePage:'首页',
+	    endPage:'尾页',
+	    prevContent:'上页',
+	    nextContent:'下页',
+	    callback:function(api){
+	    	var nextPage = api.getCurrent();
+	    	if( nextPage != null && nextPage != ""){
+	    		nextPage =  nextPage;
         	}else{
-        		page = 1;
+        		nextPage = 1;
         	}
         	var pathName = document.location.pathname;
             var index = pathName.substr(1).indexOf("/");
-            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+page;
+            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage;
         }
-    });
-    //总页数
-   //$("#pagation li:first-child").prepend("<li>共"+ ${pagingUtil.totalPageSize}+"页</li>");
+	});
 });
-//跳转到输入的页数
-function goToPage(){
-	var goToPage = $("#goToPage").val();
-	if(goToPage<1 || goToPage > ${pagingUtil.totalPageSize}){
-		alert("请输入1-"+${pagingUtil.totalPageSize}+"之间的数字！");
-	}else{
-		var pathName = document.location.pathname;
-        var index = pathName.substr(1).indexOf("/");
-        window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+goToPage;
-	}
-}
 //打开一个新网页
 function goToThisPage(movieId){
 	var pathName = document.location.pathname;

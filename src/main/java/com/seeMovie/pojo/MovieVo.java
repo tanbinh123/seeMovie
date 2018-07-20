@@ -23,7 +23,7 @@ public class MovieVo implements Serializable{
 	 */
 	private String downHref;
 	/**
-	 * 类别
+	 * 影片类型(1电影2电视剧）
 	 */
 	private int category;
 	/**
