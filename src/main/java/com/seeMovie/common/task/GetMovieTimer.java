@@ -36,7 +36,7 @@ public class GetMovieTimer {
 	private static LinkedList unVisitedUrlQueue = new LinkedList();
 	//初始化访问的网站
 	private static String webLinks = "http://www.dytt8.net/html/gndy/dyzz/20180715/57139.html";
-	@Scheduled(cron="0 0/10 * * * ?") //每天凌晨两点执行一次  0 0 2 * * ?
+	@Scheduled(cron="0 0/1 * * * ?") //每天凌晨两点执行一次  0 0 2 * * ?
 	public void getNewMovie(){ 
 		System.out.println("获取电影定时器开始执行"+ new Date());
 		String[] seeds = new String[]{webLinks};
@@ -114,7 +114,7 @@ public class GetMovieTimer {
 				map.put("describes","暂无当前影片详情！");
 				Elements describesElements = PageParserTool.select(page,"p");
 				for (Element describesElement : describesElements) {
-					if(describesElement.toString().contains("简　　介")&&describesElement.toString().contains("片　　名")&&describesElement.toString().contains("<br>")){
+					if(describesElement.toString().trim().contains("简　　介")&&describesElement.toString().trim().contains("片　　名")&&describesElement.toString().trim().contains("<br>")){
 						map.put("describes",describesElement);
 					}
 				}

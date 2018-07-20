@@ -19,7 +19,7 @@ public class MovieVo implements Serializable{
 	 */
 	private String movieId;
 	/**
-	 * a标签连接
+	 * 下载连接
 	 */
 	private String downHref;
 	/**

@@ -67,7 +67,6 @@ public class MovieServiceImpl implements MovieService{
 				List<String> movieHrefAndImgUrl = getMovieHrefAndImgUrl(downHref);
 				vo.setDescribes(describes);
 				vo = getNewVoByParam(movieHrefAndImgUrl,vo);
-				vo.setDescribes(describes);
 				vo.setSource(webLinks);
 				vo.setRemarks("定时器获取数据！");
 				vo.setInsertDate(new Date());
@@ -105,7 +104,9 @@ public class MovieServiceImpl implements MovieService{
 		if(!movieVo.getDescribes().equals("暂无当前影片详情！")){
 			//String describes = movieVo.getDescribes();
 			String[] describesArr = movieVo.getDescribes().split("<br>");
-			for (String describe : describesArr) {
+			String describe = "";
+			for (int i=0;i<describesArr.length;i++) {
+				describe = describesArr[i];
 				/*◎译　　名　西伯利亚 
 				◎片　　名　Siberia 
 				◎年　　代　2018 
@@ -134,26 +135,29 @@ public class MovieServiceImpl implements MovieService{
 				
 				◎简　　介　 
 				*/ 
-				if(!StringUtils.isEmpty(describe) && describe.contains("简　　介")){
-					String[] newDescribeArr = describe.split("<br>");
-					if(newDescribeArr.length>2){//超过两组  还需要在次循环取值
-						for (String newDescribe : newDescribeArr) {
-							if(!StringUtils.isEmpty(newDescribe) && newDescribe.contains("简　　介")){
-								if(newDescribe.length()>2500){
-									movieVo.setDescribes(newDescribe.substring(0,2500));
-									break;
-								}else{
-									movieVo.setDescribes(newDescribe);
-									break;
-								}
-							}
-						}
-					}else{
-						if(describe.length()>2500){
-							movieVo.setDescribes(describe.substring(0,2500));
+				if(!StringUtils.isEmpty(describe) && describe.trim().contains("简　　介")){
+					if(i+1 < describesArr.length &&  !describesArr[i+1].isEmpty()){//简介换行多次后才是具体的描述值
+						if(describesArr[i+1].length()>2500){
+							movieVo.setDescribes(describesArr[i+1].trim().substring(0,2500));
 							break;
 						}else{
-							movieVo.setDescribes(describe);
+							movieVo.setDescribes(describesArr[i+1].trim());
+							break;
+						}
+					}else if(i+2 < describesArr.length &&  !describesArr[i+2].isEmpty()){
+						if(describesArr[i+2].length()>2500){
+							movieVo.setDescribes(describesArr[i+2].trim().substring(0,2500));
+							break;
+						}else{
+							movieVo.setDescribes(describesArr[i+2].trim());
+							break;
+						}
+					}else if(i+3 < describesArr.length &&  !describesArr[i+3].isEmpty()){
+						if(describesArr[i+3].length()>2500){
+							movieVo.setDescribes(describesArr[i+3].trim().substring(0,2500));
+							break;
+						}else{
+							movieVo.setDescribes(describesArr[i+3].trim());
 							break;
 						}
 					}
