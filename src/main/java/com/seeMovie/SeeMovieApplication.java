@@ -10,9 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.alibaba.druid.pool.DruidDataSource;
 /**
  * 
- * @author mym
- * @date   2018年7月6日下午10:09:40
- * 系统主要入口
+ * @author		mym
+ * @date   		2018年7月6日下午10:09:40
+ * @describe	系统主要入口
+ * 
  */
 @SpringBootApplication
 @EnableScheduling
@@ -26,7 +27,7 @@ public class SeeMovieApplication {
 	//@Bean(destroyMethod = "close")
 	public DataSource dataSource() {
 		DruidDataSource dataSource = new DruidDataSource();
-		dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/see_movie?useUnicode=true&characterEncoding=UTF-8");
+		dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/see_movie?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true");
 		dataSource.setUsername("root");//用户名
 		dataSource.setPassword("root");//密码
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");

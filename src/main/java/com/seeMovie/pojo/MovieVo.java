@@ -5,9 +5,10 @@ import java.util.Date;
 
 /**
  * 
- * @author mym
- * @date   2018年7月7日下午1:05:06
- * 保存电影信息的实体
+ * @author 		mym
+ * @date   		2018年7月7日下午1:05:06
+ * @describe 	保存电影信息的实体
+ * 
  */
 public class MovieVo implements Serializable{
 	/**
@@ -62,6 +63,16 @@ public class MovieVo implements Serializable{
 	 * 更新日期
 	 */
 	private Date updateDate;
+	/**
+	 * 影片类型(电影/电视剧)同步标志(Y/N)
+	 */
+	private String synchronousImgUrlFlage;
+	public String getSynchronousImgUrlFlage() {
+		return synchronousImgUrlFlage;
+	}
+	public void setSynchronousImgUrlFlage(String synchronousImgUrlFlage) {
+		this.synchronousImgUrlFlage = synchronousImgUrlFlage;
+	}
 	public Date getUpdateDate() {
 		return updateDate;
 	}

@@ -11,9 +11,10 @@ import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.service.MovieService;
 /**
  * 
- * @author mym
- * @date   2018年7月6日下午10:11:40
- * 进入主页
+ * @author 		mym
+ * @date   		2018年7月6日下午10:11:40
+ * @describe	进入主页
+ * 
  */
 @Controller
 @RequestMapping("/mainPage")
@@ -47,6 +48,7 @@ public class MainPageController {
 	 * @date     2018年7月18日下午10:10:09
 	 * @return   ModelAndView
 	 * @describe 根据电影id查看电影详情
+	 * 
 	 */
 	@RequestMapping("/movieDetail")
 	public ModelAndView movieDetail(String movieId){

@@ -49,11 +49,28 @@
  	and m.movie_id =#{value}	
 	</if>
   </select>
-  <!-- 拿到所点category为1并且同步标志为N且同步时间为null的影片-->
+  <!-- 根绝条件查询对应的影片的影片-->
   <select id="getAllMovie" resultType="com.seeMovie.pojo.MovieVo">
   select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
 	movieName,m.img_url as imgUrl,m.img_url2 as imgUrl2 from movie m
-	where m.category = '1' and m.synchronous_flag = 'N' and m.update_date is null order by m.insert_date desc
+	where 1=1 
+	<!-- 影片类别 -->
+	<if test="category != null and category != ''">
+	and m.category =#{category}
+	</if>
+	<!-- 影片类别是否同步标志 -->
+	<if test="synchronousFlag != null and synchronousFlag != ''">
+	and m.synchronous_flag =#{category}
+	</if>
+	<!-- 同步影片类别时需要 -->
+	<if test="synchronousFlagType != null and synchronousFlagType != ''">
+	and m.update_date is null
+	</if>
+	<!-- 同步图片url时需要 -->
+	<if test="synchronousImgUrlFlage != null and synchronousImgUrlFlage != ''">
+	and m.synchronous_imgUrl_flage =#{synchronousImgUrlFlage}
+	</if>
+	order by m.insert_date desc
   </select>
   <!-- 根据影片id更新影片信息 -->
   <update id="updateMovieInfoByMovieIdList" parameterType="java.util.List">
@@ -61,6 +78,13 @@
   where movie_id in
   <foreach collection="allUpdateMovieId" item="item" open="(" separator="," close=")">
   #{item}
+  </foreach>
+  </update>
+  <!-- 根据影片id更新影片信息，更新已存在值得对应字段-->
+  <update id="updateMovieByList" parameterType="java.util.List">
+  <foreach collection="updateMovieList" item="item" separator=";">
+    update movie set img_url=#{item.imgUrl},img_url2=#{item.imgUrl2},synchronous_imgUrl_flage='Y'
+	where movie_id=#{item.movieId}
   </foreach>
   </update>
 </mapper>

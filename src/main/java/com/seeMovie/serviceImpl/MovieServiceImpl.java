@@ -1,7 +1,10 @@
 package com.seeMovie.serviceImpl;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -38,6 +41,8 @@ public class MovieServiceImpl implements MovieService{
 				vo.setSource(webLinks);
 				vo.setRemarks("定时器获取数据！");
 				vo.setCategory(1);//新增时默认类型都为电影，有专门定时器定时根据自己算法更新影片的类型
+				vo.setSynchronousFlag("N");
+				vo.setSynchronousImgUrlFlage("N");
 				vo.setInsertDate(new Date());
 				//根据保存的截取链接判断当前数据是否存在  存在则不保存
 				int num= movieMapper.selectDownHrefVoByHref(vo.getDownHref());
@@ -195,44 +200,51 @@ public class MovieServiceImpl implements MovieService{
 	}
 	//定时更新影片信息  例如影片类型、影片分类等
 	@Override
-	public void UpdateMovieInfoTimer() {
-		List<MovieVo> movieList = movieMapper.getAllMovie();//拿到所点category为1并且同步标志N的影片
-		String checkName = "";
-		int movieNameNum = 0;
-		List<String> movieIdList = new ArrayList<>();//用来封装每一个跟上一个电影名字不同的电影id
-		List<String> allUpdateMovieId = new ArrayList<>();//最终要更新影片类型的影片id集合
-		for (int i = 0; i < movieList.size(); i++) {
-			String movieName = "";
-			if(movieList.get(i).getMovieName().length()>=3){
-				movieName = movieList.get(i).getMovieName().substring(0, 3);//截取3位作为是否名字有重复的标识	
-			}else{
-				movieName.substring(0);
-			}
-			if(i == 0){
-				checkName = movieName;
-				movieIdList.add(movieList.get(i).getMovieId());
-			}else{
-				if(movieName.equals(checkName)){//重复影片
-					movieNameNum += 1;
+	public void UpdateMovieCategoryInfoTimer() {
+		Map<String,Object> paramMap = new HashMap<>();
+		try {
+			paramMap.put("category",1);//影片接进来时默认值
+			paramMap.put("synchronousFlag","N");//还没有处理的数据
+			paramMap.put("synchronousFlagType","synchronousFlagType");//过滤标识
+			List<MovieVo> movieList = movieMapper.getAllMovie(paramMap);
+			String checkName = "";
+			int movieNameNum = 0;
+			List<String> movieIdList = new ArrayList<>();//用来封装每一个跟上一个电影名字不同的电影id
+			List<String> allUpdateMovieId = new ArrayList<>();//最终要更新影片类型的影片id集合
+			for (int i = 0; i < movieList.size(); i++) {
+				String movieName = "";
+				if(movieList.get(i).getMovieName().length()>=3){
+					movieName = movieList.get(i).getMovieName().substring(0, 3);//截取3位作为是否名字有重复的标识	
+				}else{
+					movieName.substring(0);
+				}
+				if(i == 0){
+					checkName = movieName;
 					movieIdList.add(movieList.get(i).getMovieId());
-				}else{//新影片
-					if(movieNameNum >= 2){//名字重复出现3次及以上才认为是电视剧
-						allUpdateMovieId.addAll(movieIdList);
-						checkName = movieName;
-						movieNameNum = 0;
-						movieIdList.clear();
+				}else{
+					if(movieName.equals(checkName)){//重复影片
+						movieNameNum += 1;
 						movieIdList.add(movieList.get(i).getMovieId());
-					}else{
-						checkName = movieName;
-						movieNameNum = 0;
-						movieIdList.clear();
-						movieIdList.add(movieList.get(i).getMovieId());
+					}else{//新影片
+						if(movieNameNum >= 2){//名字重复出现3次及以上才认为是电视剧
+							allUpdateMovieId.addAll(movieIdList);
+							checkName = movieName;
+							movieNameNum = 0;
+							movieIdList.clear();
+							movieIdList.add(movieList.get(i).getMovieId());
+						}else{
+							checkName = movieName;
+							movieNameNum = 0;
+							movieIdList.clear();
+							movieIdList.add(movieList.get(i).getMovieId());
+						}
 					}
 				}
 			}
-		}
-		if(!allUpdateMovieId.isEmpty()){
-			movieMapper.updateMovieInfoByMovieIdList(allUpdateMovieId);
+			if(!allUpdateMovieId.isEmpty()){
+				movieMapper.updateMovieInfoByMovieIdList(allUpdateMovieId);
+			}
+		} catch (Exception e) {
 		}
 	}
 	@Override
@@ -274,5 +286,58 @@ public class MovieServiceImpl implements MovieService{
 		} catch (Exception e) {
 		}
 		return map;
+	}
+	//定时更新影片的图片链接信息 无法访问的图片链接用默认图片代替
+	@Override
+	public void UpdateMovieImgUrlInfoTimer() {
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		try {
+			paramMap.put("synchronousImgUrlFlage","N");//影片图片链接同步标志(Y/N)   接进来时为N
+			boolean status = false;
+			List<MovieVo> movieList = movieMapper.getAllMovie(paramMap);
+			for (MovieVo movieVo : movieList) {
+				movieVo.setSynchronousImgUrlFlage("Y");//更新图片检查标识为Y
+				status = checkImgUrlCanUseOrNo(movieVo.getImgUrl());
+				if(status){//图片1可访问
+					status = checkImgUrlCanUseOrNo(movieVo.getImgUrl2());
+					if(!status){//图片2不可访问
+						movieVo.setImgUrl2(movieVo.getImgUrl());
+					}
+				}else{//图片1不可访问
+					movieVo.setImgUrl(default_img_url);
+					status = checkImgUrlCanUseOrNo(movieVo.getImgUrl2());
+					if(!status){//图片2不可访问
+						movieVo.setImgUrl2(default_img_url);
+					}else{
+						movieVo.setImgUrl(movieVo.getImgUrl2());
+					}
+				}
+			}
+			if(!movieList.isEmpty()){
+				movieMapper.updateMovieByList(movieList);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private boolean checkImgUrlCanUseOrNo(String url) {
+		try {
+			// 设置此类是否应该自动执行 HTTP重定向（响应代码为 3xx 的请求）。
+			HttpURLConnection.setFollowRedirects(false);
+			// 到URL所引用的远程对象的连接
+			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+			// 设置URL请求的方法，GET POST HEAD OPTIONS PUT DELETE TRACE
+			// 以上方法之一是合法的，具体取决于协议的限制。
+			conn.setRequestMethod("HEAD");
+			// 从HTTP响应消息获取状态码
+			if(HttpURLConnection.HTTP_OK == 200 && conn.getResponseCode() != 404){
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

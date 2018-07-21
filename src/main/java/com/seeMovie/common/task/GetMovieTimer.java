@@ -22,9 +22,9 @@ import com.seeMovie.common.link.LinkFilter;
 import com.seeMovie.service.MovieService;
 /**
  * 
- * @author 马玉谋
- * @date   2018年7月13日上午9:57:19
- * 通过定时器获取新电影资源
+ * @author 		mym
+ * @date   		2018年7月13日上午9:57:19
+ * @describe	通过定时器获取新电影资源
  */
 @Component
 public class GetMovieTimer {
