@@ -83,7 +83,8 @@ public class GetMovieTimer {
 				Set<String> links = PageParserTool.getLinks(page,"a");
 				for (String link : links) {
 					//Links.addUnvisitedUrlQueue(link);
-					if (link != null && !link.trim().equals("")  && !visitedUrlSet.contains(link)  && !unVisitedUrlQueue.contains(link)){
+					if (link != null && !link.trim().equals("")  && !visitedUrlSet.contains(link)  
+							&& !unVisitedUrlQueue.contains(link) && link.startsWith("http")){
 						unVisitedUrlQueue.add(link);
 					}
 					/*if(unVisitedUrlQueue.size()<=500){//超过500不在添加新链接
