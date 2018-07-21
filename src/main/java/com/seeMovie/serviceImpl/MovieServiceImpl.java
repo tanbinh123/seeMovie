@@ -2,15 +2,12 @@ package com.seeMovie.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.mapper.MovieMapper;
@@ -23,35 +20,6 @@ public class MovieServiceImpl implements MovieService{
 	private static final String default_img_url = "https://img1.doubanio.com/dae/niffler/niffler/images/ba356172-7825-11e8-9fa1-0242ac110017.png";
 	@Autowired
 	MovieMapper movieMapper;
-	@Override
-	public List<List<MovieVo>> selectAllMovieVo(PagingUtil pagingUtil) {
-		//最终返回的数据集合
-		List<List<MovieVo>> returnList = new ArrayList<>();
-		//封装参数
-		Map<String,Object> paramMap = new HashMap<>();
-		paramMap.put("currentPage", pagingUtil.getCurrentPage());
-		paramMap.put("pageSize", pagingUtil.getPageSize());
-		List<MovieVo> movieVoList =  movieMapper.selectAllMovieVo(paramMap);
-		if(movieVoList != null && movieVoList.size() > 0){//每四个分为一组
-			for(int i = 0; i<movieVoList.size();i++){
-				if((i+1)%4 == 0){//例如下标位 3、7、11。。。。。。的元素
-					List<MovieVo> newMovieList = new ArrayList<>();
-					for(int j=i-3;j<=i;j++){
-						newMovieList.add(movieVoList.get(j));
-					}
-					returnList.add(newMovieList);
-				}else if(i>=(movieVoList.size()/4*4)){//假设:movieVoList.size()为18,则/4  得到4,4*4=16
-					List<MovieVo> newMovieList = new ArrayList<>();
-					for(int j=i;j<movieVoList.size();j++){
-						newMovieList.add(movieVoList.get(j));
-						break;
-					}
-					returnList.add(newMovieList);
-				}
-			}
-		}
-		return returnList;
-	}
 	@Override
 	public void insertAlldownHrefByList(List<Map<String, Object>> downHrefList, String webLinks) {
 		try {
@@ -69,6 +37,7 @@ public class MovieServiceImpl implements MovieService{
 				vo = getNewVoByParam(movieHrefAndImgUrl,vo);
 				vo.setSource(webLinks);
 				vo.setRemarks("定时器获取数据！");
+				vo.setCategory(1);//新增时默认类型都为电影，有专门定时器定时根据自己算法更新影片的类型
 				vo.setInsertDate(new Date());
 				//根据保存的截取链接判断当前数据是否存在  存在则不保存
 				int num= movieMapper.selectDownHrefVoByHref(vo.getDownHref());
@@ -219,14 +188,91 @@ public class MovieServiceImpl implements MovieService{
 		}
 		return imgUrl;
 	}
-	//查找所有总数
-	@Override
-	public int selectMovieVoCount() {
-		return movieMapper.selectMovieVoCount();
-	}
 	//根据电影id查看电影详情
 	@Override
 	public MovieVo getMovieDetail(String movieId) {
 		return movieMapper.getMovieDetail(movieId);
+	}
+	//定时更新影片信息  例如影片类型、影片分类等
+	@Override
+	public void UpdateMovieInfoTimer() {
+		List<MovieVo> movieList = movieMapper.getAllMovie();//拿到所点category为1并且同步标志N的影片
+		String checkName = "";
+		int movieNameNum = 0;
+		List<String> movieIdList = new ArrayList<>();//用来封装每一个跟上一个电影名字不同的电影id
+		List<String> allUpdateMovieId = new ArrayList<>();//最终要更新影片类型的影片id集合
+		for (int i = 0; i < movieList.size(); i++) {
+			String movieName = "";
+			if(movieList.get(i).getMovieName().length()>=3){
+				movieName = movieList.get(i).getMovieName().substring(0, 3);//截取3位作为是否名字有重复的标识	
+			}else{
+				movieName.substring(0);
+			}
+			if(i == 0){
+				checkName = movieName;
+				movieIdList.add(movieList.get(i).getMovieId());
+			}else{
+				if(movieName.equals(checkName)){//重复影片
+					movieNameNum += 1;
+					movieIdList.add(movieList.get(i).getMovieId());
+				}else{//新影片
+					if(movieNameNum >= 2){//名字重复出现3次及以上才认为是电视剧
+						allUpdateMovieId.addAll(movieIdList);
+						checkName = movieName;
+						movieNameNum = 0;
+						movieIdList.clear();
+						movieIdList.add(movieList.get(i).getMovieId());
+					}else{
+						checkName = movieName;
+						movieNameNum = 0;
+						movieIdList.clear();
+						movieIdList.add(movieList.get(i).getMovieId());
+					}
+				}
+			}
+		}
+		if(!allUpdateMovieId.isEmpty()){
+			movieMapper.updateMovieInfoByMovieIdList(allUpdateMovieId);
+		}
+	}
+	@Override
+	public Map<String, Object> selectMovieInfoByParam(PagingUtil pagingUtil, Map<String, Object> map) {
+		try {
+			//最终返回的数据集合
+			List<List<MovieVo>> returnList = new ArrayList<>();
+			//封装查询参数
+			map.put("currentPage", pagingUtil.getCurrentPage());
+			map.put("pageSize", pagingUtil.getPageSize());
+			List<MovieVo> movieVoList =  movieMapper.selectAllMovieVo(map);
+			if(movieVoList != null && movieVoList.size() > 0){//每四个分为一组
+				for(int i = 0; i<movieVoList.size();i++){
+					if((i+1)%4 == 0){//例如下标位 3、7、11。。。。。。的元素
+						List<MovieVo> newMovieList = new ArrayList<>();
+						for(int j=i-3;j<=i;j++){
+							newMovieList.add(movieVoList.get(j));
+						}
+						returnList.add(newMovieList);
+					}else if(i>=(movieVoList.size()/4*4)){//假设:movieVoList.size()为18,则/4  得到4,4*4=16
+						List<MovieVo> newMovieList = new ArrayList<>();
+						for(int j=i;j<movieVoList.size();j++){
+							newMovieList.add(movieVoList.get(j));
+							break;
+						}
+						returnList.add(newMovieList);
+					}
+				}
+			}
+			int total = movieMapper.selectMovieVoCount(map);
+			pagingUtil.setTotal(total);
+			if(total%pagingUtil.getPageSize() == 0){
+				pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize());
+			}else{
+				pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize()+1);
+			}
+			map.put("movieList", returnList);
+			map.put("pagingUtil", pagingUtil);
+		} catch (Exception e) {
+		}
+		return map;
 	}
 }

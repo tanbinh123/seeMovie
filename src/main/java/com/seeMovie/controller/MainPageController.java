@@ -1,6 +1,7 @@
 package com.seeMovie.controller;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +24,17 @@ public class MainPageController {
 	 * 进入主页面
 	 */
 	@RequestMapping("/mainPage")
-	public ModelAndView toMainPage(PagingUtil pagingUtil){
+	public ModelAndView toMainPage(PagingUtil pagingUtil,String category){
 		ModelAndView mv = new ModelAndView();
+		//封装参数
+		Map<String,Object> map = new HashMap<>();
 		try {
-			//查找所有电影
-			List<List<MovieVo>> movieList = movieService.selectAllMovieVo(pagingUtil);//初始化时默认只查询30条  第一页
-			int total = movieService.selectMovieVoCount();//查询总数
-			pagingUtil.setTotal(total);
-			if(total%pagingUtil.getPageSize() == 0){
-				pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize());
-			}else{
-				pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize()+1);
-			}
-			mv.addObject("movieList", movieList);
-			mv.addObject("pagingUtil", pagingUtil);
+			//根据影片类型查找对应电影
+			map.put("category", category);
+			map = movieService.selectMovieInfoByParam(pagingUtil,map);
+			mv.addObject("movieList",map.get("movieList"));
+			mv.addObject("pagingUtil",map.get("pagingUtil"));
+			mv.addObject("category",category);
 			mv.setViewName("mainPage");
 		} catch (Exception e) {
 			mv.setViewName("error");

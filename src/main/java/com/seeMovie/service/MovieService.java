@@ -8,11 +8,11 @@ import com.seeMovie.pojo.MovieVo;
 public interface MovieService {
 	//新增电影资源
 	void insertAlldownHrefByList(List<Map<String, Object>> downHrefList, String webLinks);
-    //查找所有电影
-	List<List<MovieVo>> selectAllMovieVo(PagingUtil pagingUtil);
-	//查找所有电影总数
-	int selectMovieVoCount();
 	//根据电影id查看电影详情
 	MovieVo getMovieDetail(String movieId);
+	//定时更新影片信息  例如影片类型、影片分类等
+	void UpdateMovieInfoTimer();
+	//根据参数查找影片信息
+	Map<String, Object> selectMovieInfoByParam(PagingUtil pagingUtil, Map<String, Object> map);
 
 }

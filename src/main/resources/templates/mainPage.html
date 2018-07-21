@@ -18,20 +18,20 @@
 		<a class="navbar-brand" href="#"><!-- <img alt="看吧" src="..."> -->搜你所搜，看你所看！</a>
 	</div>
 	<div>
-		<!-- <ul class="nav nav-pills" style="margin-top:10px;">
-			<li><a href="#">经典影片</a></li>
-			<li><a href="#">动作科幻</a></li>
+		<ul class="nav nav-pills" style="margin-top:10px;">
+			<li><a href="#" onclick="findMovieByParam(2)">电视剧</a></li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					爱情文艺
+					电影
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#">jmeter</a></li>
-					<li><a href="#">EJB</a></li>
-					<li><a href="#">Jasper Report</a></li>
+					<li><a href="#" onclick="findMovieByParam(1)">动作</a></li>
+					<li><a href="#" onclick="findMovieByParam(1)">科幻</a></li>
+					<li><a href="#" onclick="findMovieByParam(1)">爱情</a></li>
+					<li><a href="#" onclick="findMovieByParam(1)">文艺</a></li>
 				</ul>
 			</li>
-		</ul> -->
+		</ul>
 	</div>
 	</div>
 </nav>
@@ -53,6 +53,8 @@
 		  	</div>
 		</#list>
    </#if>
+   <!-- 隐藏查看的影片类型 -->
+   <input id="category_id" type="hidden" value="${category!''}">
 </div>
 <!-- 底部分页条 -->
 <div>
@@ -80,15 +82,22 @@ $(function() {
         	}
         	var pathName = document.location.pathname;
             var index = pathName.substr(1).indexOf("/");
-            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage;
+            var category = $("#category_id").val();
+            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category;
         }
 	});
 });
-//打开一个新网页
+//根据影片类型及影片分类查找对应影片
+function findMovieByParam(category){
+	var pathName = document.location.pathname;
+    var index = pathName.substr(1).indexOf("/");
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?category="+category;
+}
+//根绝影片id查看影片详情
 function goToThisPage(movieId){
 	var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
-	window.open(window.location.href=pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId); 
+    window.open(pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId);
 }
 </script>
 </html>

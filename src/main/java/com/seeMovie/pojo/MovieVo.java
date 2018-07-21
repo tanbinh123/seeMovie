@@ -54,6 +54,26 @@ public class MovieVo implements Serializable{
 	 * 备注
 	 */
 	private String remarks;
+	/**
+	 * 影片类型(电影/电视剧)同步标志(Y/N)
+	 */
+	private String synchronousFlag;
+	/**
+	 * 更新日期
+	 */
+	private Date updateDate;
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+	public String getSynchronousFlag() {
+		return synchronousFlag;
+	}
+	public void setSynchronousFlag(String synchronousFlag) {
+		this.synchronousFlag = synchronousFlag;
+	}
 	public int getCategory() {
 		return category;
 	}
