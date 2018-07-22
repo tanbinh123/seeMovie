@@ -25,7 +25,7 @@ public class SeeMovieApplication {
 	
 	//destroy-method="close"的作用是当数据库连接不使用的时候,就把该连接重新放到数据池中,方便下次使用调用.
 	//@Bean(destroyMethod = "close")
-	public DataSource dataSource() {
+	/*public DataSource dataSource() {
 		DruidDataSource dataSource = new DruidDataSource();
 		dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/see_movie?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true");
 		dataSource.setUsername("root");//用户名
@@ -40,6 +40,6 @@ public class SeeMovieApplication {
 		dataSource.setTestWhileIdle(true);//建议配置为true，不影响性能，并且保证安全性。
 		dataSource.setPoolPreparedStatements(false);//是否缓存preparedStatement，也就是PSCache
 		return dataSource;
-	}
+	}*/
 
 }
