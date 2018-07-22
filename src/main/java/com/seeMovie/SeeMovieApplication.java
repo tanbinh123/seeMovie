@@ -1,13 +1,11 @@
 package com.seeMovie;
 
-import javax.sql.DataSource;
-
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import com.alibaba.druid.pool.DruidDataSource;
 /**
  * 
  * @author		mym
@@ -18,7 +16,12 @@ import com.alibaba.druid.pool.DruidDataSource;
 @SpringBootApplication
 @EnableScheduling
 @MapperScan("com.seeMovie.mapper")
-public class SeeMovieApplication {
+public class SeeMovieApplication extends SpringBootServletInitializer {
+	@Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(SeeMovieApplication.class);
+    }
+	
 	public static void main(String[] args) {
 		SpringApplication.run(SeeMovieApplication.class,args);
 	}
