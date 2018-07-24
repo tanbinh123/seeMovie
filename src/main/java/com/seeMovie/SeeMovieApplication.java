@@ -16,11 +16,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @MapperScan("com.seeMovie.mapper")
-public class SeeMovieApplication extends SpringBootServletInitializer {
-	@Override
+public class SeeMovieApplication{
+	/*@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SeeMovieApplication.class);
-    }
+    }*/
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SeeMovieApplication.class,args);
