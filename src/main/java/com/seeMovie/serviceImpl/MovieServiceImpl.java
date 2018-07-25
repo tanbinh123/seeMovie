@@ -284,6 +284,7 @@ public class MovieServiceImpl implements MovieService{
 			map.put("movieList", returnList);
 			map.put("pagingUtil", pagingUtil);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return map;
 	}

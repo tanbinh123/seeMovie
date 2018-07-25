@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @MapperScan("com.seeMovie.mapper")
 public class SeeMovieApplication extends SpringBootServletInitializer {
+	//这是为打war部署做准备 包括extends的SpringBootServletInitializer都是为打war包部署时使用
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SeeMovieApplication.class);
