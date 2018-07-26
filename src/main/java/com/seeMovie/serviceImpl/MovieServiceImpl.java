@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -213,10 +216,20 @@ public class MovieServiceImpl implements MovieService{
 			List<String> allUpdateMovieId = new ArrayList<>();//最终要更新影片类型的影片id集合
 			for (int i = 0; i < movieList.size(); i++) {
 				String movieName = "";
-				if(movieList.get(i).getMovieName().length()>=3){
-					movieName = movieList.get(i).getMovieName().substring(0, 3);//截取3位作为是否名字有重复的标识	
-				}else{
-					movieName.substring(0);
+				if(isChinese(movieName.substring(0, 1))){//汉字开头
+					if(movieList.get(i).getMovieName().length()>=2){
+						movieName = movieList.get(i).getMovieName().substring(0, 2);//截取2位作为是否名字有重复的标识	
+					}else{
+						movieName.substring(0);
+					}
+				}else{//非汉字开头
+					if(movieList.get(i).getMovieName().length()>=8){
+						//2166/神犬小七2HDTV19.mp4  2121/神犬小七2HDTV18.mp4 类似于这种名字
+						//截取相同的部分
+						movieName = movieList.get(i).getMovieName().substring(5,movieList.get(i).getMovieName().lastIndexOf(".")-2);
+					}else{
+						movieName.substring(0);
+					}
 				}
 				if(i == 0){
 					checkName = movieName;
@@ -321,8 +334,18 @@ public class MovieServiceImpl implements MovieService{
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * 
+	 * @author      马玉谋
+	 * @date        2018年7月26日下午7:27:43
+	 * @describe    校验链接是否可用
+	 * @return      boolean
+	 */
 	private boolean checkImgUrlCanUseOrNo(String url) {
 		try {
+			if(StringUtils.isEmpty(url) || !url.startsWith("http")){
+				return false;
+			}
 			// 设置此类是否应该自动执行 HTTP重定向（响应代码为 3xx 的请求）。
 			HttpURLConnection.setFollowRedirects(false);
 			// 到URL所引用的远程对象的连接
@@ -341,4 +364,22 @@ public class MovieServiceImpl implements MovieService{
 			return false;
 		}
 	}
+	/**
+	 * 
+	 * @author      马玉谋
+	 * @date        2018年7月26日下午7:28:04
+	 * @describe    校验传入的是否是汉字
+	 * @return      boolean
+	 */
+	public static boolean isChinese(String str) {
+		String regEx = "[\u4e00-\u9fa5]";
+		Pattern pat = Pattern.compile(regEx);
+		Matcher matcher = pat.matcher(str);
+		boolean flg = false;
+		if (matcher.find()){
+			flg = true;
+		}
+		return flg;
+	}
+	
 }
