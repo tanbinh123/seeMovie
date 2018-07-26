@@ -60,7 +60,7 @@
 	</if>
 	<!-- 影片类别是否同步标志 -->
 	<if test="synchronousFlag != null and synchronousFlag != ''">
-	and m.synchronous_flag =#{category}
+	and m.synchronous_flag =#{synchronousFlag}
 	</if>
 	<!-- 同步影片类别时需要 -->
 	<if test="synchronousFlagType != null and synchronousFlagType != ''">

@@ -203,7 +203,7 @@ public class MovieServiceImpl implements MovieService{
 	public void UpdateMovieCategoryInfoTimer() {
 		Map<String,Object> paramMap = new HashMap<>();
 		try {
-			paramMap.put("category",1);//影片接进来时默认值
+			paramMap.put("category","1");//影片接进来时默认值
 			paramMap.put("synchronousFlag","N");//还没有处理的数据
 			paramMap.put("synchronousFlagType","synchronousFlagType");//过滤标识
 			List<MovieVo> movieList = movieMapper.getAllMovie(paramMap);
