@@ -9,6 +9,12 @@
 <script src="/js/bootstrap.min.js"></script>
 <!-- 分页 -->
 <script src="/js/jquery.pagination.js"></script>
+<!-- 回到顶部特效 -->
+<script src="/js/scrolltopcontrol.js"></script>
+<style>
+#n{margin:10px auto; width:920px; border:1px solid #CCC;font-size:12px; line-height:30px;}
+#n a{ padding:0 4px; color:#333}
+</style>
 </head>
 <body>
 <!-- 导航栏 -->
@@ -31,20 +37,32 @@
 					<li><a href="#" onclick="findMovieByParam(1)">文艺</a></li>
 				</ul>
 			</li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					每行显示影片条数
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" onclick="refreshMovieDataByRowNum(2)">每行2个</a></li>
+					<li><a href="#" onclick="refreshMovieDataByRowNum(4)">每行4个</a></li>
+					<li><a href="#" onclick="refreshMovieDataByRowNum(6)">每行6个</a></li>
+					<li><a href="#" onclick="refreshMovieDataByRowNum(12)">每行12个</a></li>
+				</ul>
+			</li>
 		</ul>
 	</div>
 	</div>
 </nav>
+
 <!-- 内容展示区域 -->
 <div class="container">
    <!-- 存在电影资源 -->
    <#if movieList?exists && (movieList?size > 0)>
    		<!-- 循环取值 -->
-   		<#list movieList as fourMovieList>
-   			<!-- 每四个一行 -->
+   		<#list movieList as rowMovieList>
+   			<!-- 默认每四个一行 -->
    			<div class="row">
-   			<#list fourMovieList as movie>
-				<div class="col-xs-6 col-sm-3" style="width:22.5%;">
+   			<#list rowMovieList as movie>
+				<div class="col-sm-${12/rowNum}">
 					<a href="" onclick='goToThisPage("${movie.movieId!''}")'> <img
 						style="height:235px; width:100%;" src="${movie.imgUrl}"></br>${movie.movieName!''}
 					</a>
@@ -55,6 +73,8 @@
    </#if>
    <!-- 隐藏查看的影片类型 -->
    <input id="category_id" type="hidden" value="${category!''}">
+   <!-- 隐藏每行显示数据 -->
+   <input id="rowNum_id" type="hidden" value="${rowNum!''}">
 </div>
 <!-- 底部分页条 -->
 <div>
@@ -83,21 +103,45 @@ $(function() {
         	var pathName = document.location.pathname;
             var index = pathName.substr(1).indexOf("/");
             var category = $("#category_id").val();
-            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category;
+            var rowNum = $("#rowNum_id").val();
+            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum;
         }
 	});
+	//遍历每页显示记录数   将对应的option选中
+	$(".pageSize option").each(function(){
+		if(parseInt($(this).val()) != 12 && parseInt($(this).val()) == ${pagingUtil.pageSize}){
+			$(this).prop("selected",true);
+		}
+	})
 });
+
 //根据影片类型及影片分类查找对应影片
 function findMovieByParam(category){
 	var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
-    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?category="+category;
+    var rowNum = $("#rowNum_id").val();
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum;
 }
 //根绝影片id查看影片详情
 function goToThisPage(movieId){
 	var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
     window.open(pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId);
+}
+//根据更改的每页显示记录数   重新加载数据
+function refreshMovieData(){
+	var pathName = document.location.pathname;
+	var index = pathName.substr(1).indexOf("/");
+	var category = $("#category_id").val();
+	var rowNum = $("#rowNum_id").val();
+	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum;
+}
+//每行显示电影数目   重新加载数据
+function refreshMovieDataByRowNum(rowNum){
+	var pathName = document.location.pathname;
+	var index = pathName.substr(1).indexOf("/");
+	var category = $("#category_id").val();
+	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum;
 }
 </script>
 </html>

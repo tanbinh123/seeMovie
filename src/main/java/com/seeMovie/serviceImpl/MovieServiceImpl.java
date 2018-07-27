@@ -288,17 +288,18 @@ public class MovieServiceImpl implements MovieService{
 			map.put("currentPage", pagingUtil.getCurrentPage());
 			map.put("pageSize", pagingUtil.getPageSize());
 			List<MovieVo> movieVoList =  movieMapper.selectAllMovieVo(map);
+			int rowNum = (int) map.get("rowNum");//4 6 8 10
 			if(movieVoList != null && movieVoList.size() > 0){//每四个分为一组
 				for(int i = 0; i<movieVoList.size();i++){
-					if((i+1)%4 == 0){//例如下标位 3、7、11。。。。。。的元素
+					if((i+1)%rowNum == 0){//例如下标位 3、7、11。。。。。。的元素   (i+1)%4
 						List<MovieVo> newMovieList = new ArrayList<>();
-						for(int j=i-3;j<=i;j++){
+						for(int j=i+1-rowNum;j<=i;j++){//j=i-3
 							newMovieList.add(movieVoList.get(j));
 						}
 						returnList.add(newMovieList);
-					}else if(i>=(movieVoList.size()/4*4)){//假设:movieVoList.size()为18,则/4  得到4,4*4=16
+					}else if(i>=(movieVoList.size()/rowNum*rowNum)){//假设:movieVoList.size()为18,则/4  得到4,4*4=16
 						List<MovieVo> newMovieList = new ArrayList<>();
-						for(int j=i;j<movieVoList.size();j++){
+						for(int j=i;j<movieVoList.size();){
 							newMovieList.add(movieVoList.get(j));
 							break;
 						}

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.service.MovieService;
@@ -25,17 +27,20 @@ public class MainPageController {
 	 * 进入主页面
 	 */
 	@RequestMapping("/mainPage")
-	public ModelAndView toMainPage(PagingUtil pagingUtil,String category){
+	public ModelAndView toMainPage(PagingUtil pagingUtil,String category,String rowNum){
 		ModelAndView mv = new ModelAndView();
 		//封装参数
 		Map<String,Object> map = new HashMap<>();
 		try {
 			//根据影片类型查找对应电影
 			map.put("category", category);
+			//每行显示影片数目
+			map.put("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);//默认每行显示4个
 			map = movieService.selectMovieInfoByParam(pagingUtil,map);
 			mv.addObject("movieList",map.get("movieList"));
 			mv.addObject("pagingUtil",map.get("pagingUtil"));
 			mv.addObject("category",category);
+			mv.addObject("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);
 			mv.setViewName("mainPage");
 		} catch (Exception e) {
 			mv.setViewName("error");
