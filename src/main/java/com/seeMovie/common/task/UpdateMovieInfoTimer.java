@@ -27,7 +27,7 @@ public class UpdateMovieInfoTimer {
 		movieService.UpdateMovieCategoryInfoTimer();
 	}
 	
-	@Scheduled(cron="0 0/1 * * * ?") //每天凌晨3点55执行一次  0 55 3 * * ?
+	@Scheduled(cron="0 55 3 * * ?") //每天凌晨3点55执行一次  0 55 3 * * ?
 	public void UpdateMovieImgUrlInfoTimer(){ 
 		movieService.UpdateMovieImgUrlInfoTimer();
 	}
