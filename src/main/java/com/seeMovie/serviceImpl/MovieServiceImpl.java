@@ -205,6 +205,7 @@ public class MovieServiceImpl implements MovieService{
 	@Override
 	public void UpdateMovieCategoryInfoTimer() {
 		Map<String,Object> paramMap = new HashMap<>();
+		int index = 0;//这个是名称中第一个为汉字的下标
 		try {
 			paramMap.put("category","1");//影片接进来时默认值
 			paramMap.put("synchronousFlag","N");//还没有处理的数据
@@ -224,7 +225,11 @@ public class MovieServiceImpl implements MovieService{
 						//2166/神犬小七2HDTV19.mp4  2121/神犬小七2HDTV18.mp4 类似于这种名字
 						//截取相同的部分
 						//movieName = movieName.substring(movieName.length()/2,movieName.length()/2+movieName.length()/4);
-						movieName = movieName.substring(4,7);//截取3位作为判断标准
+						//movieName = movieName.substring(4,7);//截取3位作为判断标准
+						index = getChineseIndex(movieName);
+						//截取2位作为判断标准
+						movieName = movieName.substring(index,index+2 <= movieName.length()?index+2:index+1);
+						index = 0;
 					}
 				}
 				if(i == 0){
@@ -264,6 +269,15 @@ public class MovieServiceImpl implements MovieService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	//通过名称拿到第一个汉字的index
+	private int getChineseIndex(String movieName) {
+		for(int i=0;i<movieName.length();i++){
+			if(isChinese(movieName.substring(i,i+1))){
+				return i;
+			}
+		}
+		return 0;
 	}
 	@Override
 	public Map<String, Object> selectMovieInfoByParam(PagingUtil pagingUtil, Map<String, Object> map) {
