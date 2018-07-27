@@ -20,7 +20,7 @@ public interface MovieMapper {
 	//拿到所点category为1并且同步标志N的影片
 	List<MovieVo> getAllMovie(Map<String, Object> paramMap);
 	//根据影片id更新影片信息，更新固定字段，批量
-	void updateMovieInfoByMovieIdList(@Param("allUpdateMovieId")List<String> allUpdateMovieId);
+	void updateMovieInfoByMovieIdList(Map<String,Object> paramMap);
 	//根据影片id更新影片信息，更新已存在值得对应字段
 	void updateMovieByList(@Param("updateMovieList")List<MovieVo> updateMovieList);
 }

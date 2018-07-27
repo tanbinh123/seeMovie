@@ -22,12 +22,12 @@ public class UpdateMovieInfoTimer {
 	 * @return      void
 	 * @describe    更新影片类型(电影/电视剧)
 	 */
-	@Scheduled(cron="0 45 3 * * ?") //每天凌晨3点45执行一次  0 45 3 * * ?
+	@Scheduled(cron=" 0 45 3 * * ?") //每天凌晨3点45执行一次  0 45 3 * * ?
 	public void UpdateMovieCategoryInfoTimer(){ 
 		movieService.UpdateMovieCategoryInfoTimer();
 	}
 	
-	@Scheduled(cron="0 55 3 * * ?") //每天凌晨3点55执行一次  0 55 3 * * ?
+	@Scheduled(cron="0 0/1 * * * ?") //每天凌晨3点55执行一次  0 55 3 * * ?
 	public void UpdateMovieImgUrlInfoTimer(){ 
 		movieService.UpdateMovieImgUrlInfoTimer();
 	}

@@ -212,23 +212,19 @@ public class MovieServiceImpl implements MovieService{
 			List<MovieVo> movieList = movieMapper.getAllMovie(paramMap);
 			String checkName = "";
 			int movieNameNum = 0;
-			List<String> movieIdList = new ArrayList<>();//用来封装每一个跟上一个电影名字不同的电影id
-			List<String> allUpdateMovieId = new ArrayList<>();//最终要更新影片类型的影片id集合
+			List<String> movieIdList = new ArrayList<>();//用来封装每一个跟上一个电影名字不同的电影id   其实装的就是电视剧数据 
+			List<String> allMovieIdList = new ArrayList<>();//最终要更新影片类型的影片id集合  更新synchronousFlag为Y
+			List<String> allUpdateMovieId = new ArrayList<>();//最终要更新影片类型的影片id集合      其实就是电视剧数据
 			for (int i = 0; i < movieList.size(); i++) {
-				String movieName = "";
-				if(isChinese(movieName.substring(0, 1))){//汉字开头
-					if(movieList.get(i).getMovieName().length()>=2){
-						movieName = movieList.get(i).getMovieName().substring(0, 2);//截取2位作为是否名字有重复的标识	
-					}else{
-						movieName.substring(0);
-					}
+				String movieName = movieList.get(i).getMovieName().trim().substring(0);
+				if(!StringUtils.isEmpty(movieName) && movieName.length() >=2 && isChinese(movieName.substring(0, 1))){//汉字开头
+						movieName = movieName.substring(0, 2);//截取2位作为是否名字有重复的标识	
 				}else{//非汉字开头
-					if(movieList.get(i).getMovieName().length()>=8){
+					if(movieName.length()>=8){
 						//2166/神犬小七2HDTV19.mp4  2121/神犬小七2HDTV18.mp4 类似于这种名字
 						//截取相同的部分
-						movieName = movieList.get(i).getMovieName().substring(5,movieList.get(i).getMovieName().lastIndexOf(".")-2);
-					}else{
-						movieName.substring(0);
+						//movieName = movieName.substring(movieName.length()/2,movieName.length()/2+movieName.length()/4);
+						movieName = movieName.substring(4,7);//截取3位作为判断标准
 					}
 				}
 				if(i == 0){
@@ -246,6 +242,7 @@ public class MovieServiceImpl implements MovieService{
 							movieIdList.clear();
 							movieIdList.add(movieList.get(i).getMovieId());
 						}else{
+							allMovieIdList.addAll(movieIdList);//电影  更新synchronousFlag为Y并更新更新时间字段
 							checkName = movieName;
 							movieNameNum = 0;
 							movieIdList.clear();
@@ -254,10 +251,18 @@ public class MovieServiceImpl implements MovieService{
 					}
 				}
 			}
-			if(!allUpdateMovieId.isEmpty()){
-				movieMapper.updateMovieInfoByMovieIdList(allUpdateMovieId);
+			if(!allUpdateMovieId.isEmpty()){//更新影片类型为2电视剧，同步标志为Y,影片同步日期
+				paramMap.put("type", "dianshi");
+				paramMap.put("allUpdateMovieIdList",allUpdateMovieId);
+				movieMapper.updateMovieInfoByMovieIdList(paramMap);
+			}
+			if(!allMovieIdList.isEmpty()){//更新同步标志为Y,影片同步日期   电影
+				paramMap.put("type", "movie");
+				paramMap.put("allUpdateMovieIdList",allMovieIdList);
+				movieMapper.updateMovieInfoByMovieIdList(paramMap);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	@Override

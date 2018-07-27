@@ -74,11 +74,20 @@
   </select>
   <!-- 根据影片id更新影片信息 -->
   <update id="updateMovieInfoByMovieIdList" parameterType="java.util.List">
+  <if test="type != null and type == 'dianshi'">
   update movie set synchronous_flag = 'Y',category = '2',update_date = now()
   where movie_id in
-  <foreach collection="allUpdateMovieId" item="item" open="(" separator="," close=")">
-  #{item}
+  <foreach collection="allUpdateMovieIdList" item="item" open="(" separator="," close=")">
+    #{item}
   </foreach>
+  </if>
+  <if test="type != null and type == 'movie'">
+   update movie set synchronous_flag = 'Y',update_date = now()
+   where movie_id in
+   <foreach collection="allUpdateMovieIdList" item="item" open="(" separator="," close=")">
+    #{item}
+   </foreach>
+  </if>
   </update>
   <!-- 根据影片id更新影片信息，更新已存在值得对应字段-->
   <update id="updateMovieByList" parameterType="java.util.List">
