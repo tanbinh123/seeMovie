@@ -25,17 +25,25 @@
 	</div>
 	<div>
 		<ul class="nav nav-pills" style="margin-top:10px;">
-			<li><a href="#" onclick="findMovieByParam(2)">电视剧</a></li>
+			<li><a href="#" onclick="findMovieByParam('teleplay')">电视剧</a></li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 					电影
 				</a>
-				<ul class="dropdown-menu">
+				 <#if movieCategoryList?exists && (movieCategoryList?size > 0)>
+   					<!-- 循环取值 -->
+   					<ul class="dropdown-menu">
+   					<#list movieCategoryList as movieCategory>
+   						<li><a href="#" onclick="findMovieByParam('${movieCategory.movieCategoryCode}')">${movieCategory.movieCategoryName}</a></li>
+   					</#list>
+   					</ul>
+   				</#if>
+				<!-- <ul class="dropdown-menu">
 					<li><a href="#" onclick="findMovieByParam(1)">动作</a></li>
 					<li><a href="#" onclick="findMovieByParam(1)">科幻</a></li>
 					<li><a href="#" onclick="findMovieByParam(1)">爱情</a></li>
 					<li><a href="#" onclick="findMovieByParam(1)">文艺</a></li>
-				</ul>
+				</ul> -->
 			</li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">

@@ -39,6 +39,7 @@ public class GetMovieTimer {
 		try {
 			List<WebLinksVo> webLinksList = movieService.getWebLinksVo();//每次查询两条网站初始化链接
 			for (WebLinksVo webLinksVo : webLinksList) {
+				int i = 0;
 				unVisitedUrlQueue.add(webLinksVo.getWebLink());
 				//定义过滤器，例如提取以 http://www.dytt8.net/html/gndy/ 开头的链接
 				//循环条件：待抓取的链接不空且每次最多抓取500的链接
@@ -55,7 +56,11 @@ public class GetMovieTimer {
 					//对page进行处理： 访问DOM的某个标签
 					Elements elements = PageParserTool.select(page,"a");
 					List<Map<String,Object>> downHrefList = getMovieInfo(elements,page);
-					movieService.insertAlldownHrefByList(downHrefList,webLinksVo.getWebLink());
+					movieService.insertAlldownHrefByList(downHrefList,webLinksVo);
+					i += 1;
+					if(i==1){//每一个网址只更新一次状态
+						movieService.updateWebLinks(webLinksVo);
+					}
 
 					//将文件保存
 					//FileTool.saveToLocal(page);

@@ -24,9 +24,9 @@ public class MovieVo implements Serializable{
 	 */
 	private String downHref;
 	/**
-	 * 影片类型(1电影2电视剧）
+	 * 影片类型(teleplay电视剧   除了电视剧都是电影）
 	 */
-	private int category;
+	private String category;
 	/**
 	 * 电影名字
 	 */
@@ -66,7 +66,7 @@ public class MovieVo implements Serializable{
 	/**
 	 * 影片类型(电影/电视剧)同步标志(Y/N)
 	 */
-	private String synchronousImgUrlFlage;
+	private String synchronousImgUrlFlage;		
 	public String getSynchronousImgUrlFlage() {
 		return synchronousImgUrlFlage;
 	}
@@ -85,10 +85,11 @@ public class MovieVo implements Serializable{
 	public void setSynchronousFlag(String synchronousFlag) {
 		this.synchronousFlag = synchronousFlag;
 	}
-	public int getCategory() {
+	
+	public String getCategory() {
 		return category;
 	}
-	public void setCategory(int category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 	public String getMovieId() {

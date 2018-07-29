@@ -28,7 +28,7 @@
     insert into movie (movie_id,category, down_href, movie_name, 
       source, img_url,img_url2, describes, 
       insert_date, remarks,synchronous_flag)
-    values (#{movieId,jdbcType=VARCHAR},#{category,jdbcType=INTEGER}, #{downHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
+    values (#{movieId,jdbcType=VARCHAR},#{category,jdbcType=VARCHAR}, #{downHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
       #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR},#{imgUrl2,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, 
       #{insertDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR},#{synchronousFlag,jdbcType=VARCHAR})
   </insert>
@@ -49,7 +49,7 @@
  	and m.movie_id =#{value}	
 	</if>
   </select>
-  <!-- 根绝条件查询对应的影片的影片-->
+  <!-- 根绝条件查询对应的影片-->
   <select id="getAllMovie" resultType="com.seeMovie.pojo.MovieVo">
   select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
 	movieName,m.img_url as imgUrl,m.img_url2 as imgUrl2 from movie m
@@ -74,8 +74,8 @@
   </select>
   <!-- 根据影片id更新影片信息 -->
   <update id="updateMovieInfoByMovieIdList" parameterType="java.util.List">
-  <if test="type != null and type == 'dianshi'">
-  update movie set synchronous_flag = 'Y',category = '2',update_date = now()
+  <if test="type != null and type == 'teleplay'">
+  update movie set synchronous_flag = 'Y',category = 'teleplay',update_date = now()
   where movie_id in
   <foreach collection="allUpdateMovieIdList" item="item" open="(" separator="," close=")">
     #{item}
@@ -103,4 +103,9 @@
 	where crawl_flag = "N"
 	limit 2
   </select>
+  <!-- 将当前已经爬取过的网站爬取状态改为Y -->
+  <update id="updateWebLinks" parameterType="com.seeMovie.pojo.WebLinksVo">
+  update web_links set crawl_flag = 'Y',update_date = now()
+  where web_id = #{webId}
+  </update>
 </mapper>

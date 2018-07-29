@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
-
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.pojo.WebLinksVo;
 public interface MovieMapper {
@@ -26,4 +25,6 @@ public interface MovieMapper {
 	void updateMovieByList(@Param("updateMovieList")List<MovieVo> updateMovieList);
 	//每次查询两条网站初始化链接
 	List<WebLinksVo> getWebLinksVo();
+	//将当前已经爬取过的网站爬取状态改为Y
+	void updateWebLinks(WebLinksVo webLinksVo);
 }

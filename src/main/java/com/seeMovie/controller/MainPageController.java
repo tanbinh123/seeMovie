@@ -32,13 +32,16 @@ public class MainPageController {
 		//封装参数
 		Map<String,Object> map = new HashMap<>();
 		try {
-			//根据影片类型查找对应电影
+			//根据影片类型查找对应影片
 			map.put("category", category);
+			//根据影片分类查找对应影片   (喜剧爱情)
 			//每行显示影片数目
 			map.put("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);//默认每行显示4个
 			map = movieService.selectMovieInfoByParam(pagingUtil,map);
 			mv.addObject("movieList",map.get("movieList"));
+			mv.addObject("movieCategoryList",map.get("movieCategoryList"));//影片分类集合
 			mv.addObject("pagingUtil",map.get("pagingUtil"));
+			//以下参数在再次查询时有用 默认记住用户上一次查询的条件
 			mv.addObject("category",category);
 			mv.addObject("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);
 			mv.setViewName("mainPage");

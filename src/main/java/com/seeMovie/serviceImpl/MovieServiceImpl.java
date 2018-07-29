@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
+import com.seeMovie.mapper.MovieCategoryVoMapper;
 import com.seeMovie.mapper.MovieMapper;
+import com.seeMovie.pojo.MovieCategoryVo;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.pojo.WebLinksVo;
 import com.seeMovie.service.MovieService;
@@ -27,8 +29,10 @@ public class MovieServiceImpl implements MovieService{
 	private static final String default_img_url = "https://img1.doubanio.com/dae/niffler/niffler/images/ba356172-7825-11e8-9fa1-0242ac110017.png";
 	@Autowired
 	MovieMapper movieMapper;
+	@Autowired
+	MovieCategoryVoMapper movieCategoryVoMapper;
 	@Override
-	public void insertAlldownHrefByList(List<Map<String, Object>> downHrefList, String webLinks) {
+	public void insertAlldownHrefByList(List<Map<String, Object>> downHrefList,WebLinksVo webLinksVo) {
 		try {
 			MovieVo vo = new MovieVo();
 			for (Map<String, Object> map : downHrefList) {
@@ -42,9 +46,8 @@ public class MovieServiceImpl implements MovieService{
 				List<String> movieHrefAndImgUrl = getMovieHrefAndImgUrl(downHref);
 				vo.setDescribes(describes);
 				vo = getNewVoByParam(movieHrefAndImgUrl,vo);
-				vo.setSource(webLinks);
+				vo.setSource(webLinksVo.getWebLink());
 				vo.setRemarks("定时器获取数据！");
-				vo.setCategory(1);//新增时默认类型都为电影，有专门定时器定时根据自己算法更新影片的类型
 				vo.setSynchronousFlag("N");
 				vo.setSynchronousImgUrlFlage("N");
 				vo.setInsertDate(new Date());
@@ -59,6 +62,7 @@ public class MovieServiceImpl implements MovieService{
 		}
 	}
 	private MovieVo getNewVoByParam(List<String> movieHrefAndImgUrl,MovieVo movieVo) {
+		movieVo.setCategory("teleplay");
 		if(movieHrefAndImgUrl!=null && movieHrefAndImgUrl.size()>=2){//至少存在电影名字及下载链接
 			//最多保留两张图片链接
 			movieVo.setDownHref(movieHrefAndImgUrl.get(0));
@@ -113,6 +117,25 @@ public class MovieServiceImpl implements MovieService{
 				
 				◎简　　介　 
 				*/ 
+				
+				if(!StringUtils.isEmpty(describe) && describe.trim().contains("类　　别")){
+					if(describe.contains("喜剧")||describe.contains("爱情")){
+						movieVo.setCategory("category1");
+					}else if(describe.contains("剧情")||describe.contains("文艺")){
+						movieVo.setCategory("category2");
+					}else if(describe.contains("动作")||describe.contains("战争")){
+						movieVo.setCategory("category3");
+					}else if(describe.contains("科幻")||describe.contains("冒险")){
+						movieVo.setCategory("category4");
+					}else if(describe.contains("犯罪")||describe.contains("悬疑")){
+						movieVo.setCategory("category5");
+					}else if(describe.contains("恐怖")||describe.contains("惊悚")){
+						movieVo.setCategory("category6");
+					}else{
+						movieVo.setCategory("category");//默认类型
+					}
+				}
+				
 				if(!StringUtils.isEmpty(describe) && describe.trim().contains("简　　介")){
 					if(i+1 < describesArr.length &&  !describesArr[i+1].isEmpty()){//简介换行多次后才是具体的描述值
 						if(describesArr[i+1].length()>2500){
@@ -140,6 +163,7 @@ public class MovieServiceImpl implements MovieService{
 						}
 					}
 				}
+				
 			}
 		}
 		return movieVo;
@@ -208,7 +232,7 @@ public class MovieServiceImpl implements MovieService{
 		Map<String,Object> paramMap = new HashMap<>();
 		int index = 0;//这个是名称中第一个为汉字的下标
 		try {
-			paramMap.put("category","1");//影片接进来时默认值
+			paramMap.put("category","teleplay");//影片接进来时默认值
 			paramMap.put("synchronousFlag","N");//还没有处理的数据
 			paramMap.put("synchronousFlagType","synchronousFlagType");//过滤标识
 			List<MovieVo> movieList = movieMapper.getAllMovie(paramMap);
@@ -240,6 +264,9 @@ public class MovieServiceImpl implements MovieService{
 					if(movieName.equals(checkName)){//重复影片
 						movieNameNum += 1;
 						movieIdList.add(movieList.get(i).getMovieId());
+						if(i == movieList.size() -1){//此处加这个逻辑主要是解决可能存在当前待更新的数据都是同一个电视剧而不更新的bug
+							allUpdateMovieId.addAll(movieIdList);
+						}
 					}else{//新影片
 						if(movieNameNum >= 2){//名字重复出现3次及以上才认为是电视剧
 							allUpdateMovieId.addAll(movieIdList);
@@ -257,8 +284,8 @@ public class MovieServiceImpl implements MovieService{
 					}
 				}
 			}
-			if(!allUpdateMovieId.isEmpty()){//更新影片类型为2电视剧，同步标志为Y,影片同步日期
-				paramMap.put("type", "dianshi");
+			if(!allUpdateMovieId.isEmpty()){//更新影片类型为teleplay电视剧，同步标志为Y,影片同步日期
+				paramMap.put("type", "teleplay");
 				paramMap.put("allUpdateMovieIdList",allUpdateMovieId);
 				movieMapper.updateMovieInfoByMovieIdList(paramMap);
 			}
@@ -288,7 +315,10 @@ public class MovieServiceImpl implements MovieService{
 			//封装查询参数
 			map.put("currentPage", pagingUtil.getCurrentPage());
 			map.put("pageSize", pagingUtil.getPageSize());
+			//查找影片集合
 			List<MovieVo> movieVoList =  movieMapper.selectAllMovieVo(map);
+			//查找影片分类集合
+			List<MovieCategoryVo> movieCategoryList =  movieCategoryVoMapper.selectAll();
 			int rowNum = (int) map.get("rowNum");//4 6 8 10
 			if(movieVoList != null && movieVoList.size() > 0){//每四个分为一组
 				for(int i = 0; i<movieVoList.size();i++){
@@ -316,6 +346,7 @@ public class MovieServiceImpl implements MovieService{
 				pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize()+1);
 			}
 			map.put("movieList", returnList);
+			map.put("movieCategoryList", movieCategoryList);
 			map.put("pagingUtil", pagingUtil);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -407,5 +438,9 @@ public class MovieServiceImpl implements MovieService{
 	public List<WebLinksVo> getWebLinksVo() {
 		return movieMapper.getWebLinksVo();
 	}
-	
+	@Override
+	public void updateWebLinks(WebLinksVo webLinksVo) {
+		//将当前已经爬取过的网站爬取状态改为Y
+		movieMapper.updateWebLinks(webLinksVo);
+	}
 }

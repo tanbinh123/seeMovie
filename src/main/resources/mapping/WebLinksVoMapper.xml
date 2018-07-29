@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seeMovie.mapper.WebLinksVoMapper" >
+  <resultMap id="BaseResultMap" type="com.seeMovie.pojo.WebLinksVo" >
+    <result column="web_id" property="webId" jdbcType="VARCHAR" />
+    <result column="web_name" property="webName" jdbcType="VARCHAR" />
+    <result column="web_link" property="webLink" jdbcType="VARCHAR" />
+    <result column="crawl_flag" property="crawlFlag" jdbcType="VARCHAR" />
+    <result column="insert_date" property="insertDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.seeMovie.pojo.WebLinksVo" >
+    insert into web_links (web_id, web_name, web_link, 
+      crawl_flag, insert_date, update_date
+      )
+    values (#{webId,jdbcType=VARCHAR}, #{webName,jdbcType=VARCHAR}, #{webLink,jdbcType=VARCHAR}, 
+      #{crawlFlag,jdbcType=VARCHAR}, #{insertDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select web_id, web_name, web_link, crawl_flag, insert_date, update_date
+    from web_links
+  </select>
+</mapper>
