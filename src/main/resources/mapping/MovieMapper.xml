@@ -98,7 +98,7 @@
   </update>
   <!-- 每次查询两条网站初始化链接-->
   <select id="getWebLinksVo" resultType="com.seeMovie.pojo.WebLinksVo">
-  select web_id, web_name, web_link, crawl_flag, insert_date, update_date
+  select web_id as webId, web_name as webName, web_link as webLink, crawl_flag as crawlFlag, insert_date as insertDate, update_date as updateDate
     from web_links
 	where crawl_flag = "N"
 	limit 2

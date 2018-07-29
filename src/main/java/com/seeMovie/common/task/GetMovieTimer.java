@@ -37,7 +37,6 @@ public class GetMovieTimer {
 	@Scheduled(cron="0 30 3 * * ?") //每天凌晨3点半执行一次  0 30 3 * * ?
 	public void getNewMovie(){
 		try {
-			 
 			List<WebLinksVo> webLinksList = movieService.getWebLinksVo();//每次查询两条网站初始化链接
 			for (WebLinksVo webLinksVo : webLinksList) {
 				unVisitedUrlQueue.add(webLinksVo.getWebLink());
