@@ -34,7 +34,7 @@
    					<!-- 循环取值 -->
    					<ul class="dropdown-menu">
    					<#list movieCategoryList as movieCategory>
-   						<li><a href="#" onclick="findMovieByParam('${movieCategory.movieCategoryCode}')">${movieCategory.movieCategoryName}</a></li>
+   						<li><a href="#" class="movieCategory" id="${movieCategory.movieCategoryCode}" onclick="findMovieByParam('${movieCategory.movieCategoryCode}')">${movieCategory.movieCategoryName}</a></li>
    					</#list>
    					</ul>
    				</#if>
@@ -94,7 +94,7 @@ $(function() {
 	$(".M-box").pagination({
 		current:${pagingUtil.currentPage},
 	    pageCount:${pagingUtil.totalPageSize},
-	    count:5,
+	    count:3,
 	    jump:true,
 	    coping:true,
 	    homePage:'首页',
@@ -120,7 +120,13 @@ $(function() {
 		if(parseInt($(this).val()) != 12 && parseInt($(this).val()) == ${pagingUtil.pageSize}){
 			$(this).prop("selected",true);
 		}
-	})
+	});
+	//遍历影片类型   将对应的option选中
+	/* $(".movieCategory").each(function(){
+		if($(this).attr("id") == $("#category_id").val()){
+			$(this).prop("active",true);
+		}
+	}); */
 });
 
 //根据影片类型及影片分类查找对应影片

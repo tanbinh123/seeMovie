@@ -121,18 +121,25 @@ public class MovieServiceImpl implements MovieService{
 				if(!StringUtils.isEmpty(describe) && describe.trim().contains("类　　别")){
 					if(describe.contains("喜剧")||describe.contains("爱情")){
 						movieVo.setCategory("category1");
+						movieVo.setSynchronousFlag("Y");
 					}else if(describe.contains("剧情")||describe.contains("文艺")){
 						movieVo.setCategory("category2");
+						movieVo.setSynchronousFlag("Y");
 					}else if(describe.contains("动作")||describe.contains("战争")){
 						movieVo.setCategory("category3");
+						movieVo.setSynchronousFlag("Y");
 					}else if(describe.contains("科幻")||describe.contains("冒险")){
 						movieVo.setCategory("category4");
+						movieVo.setSynchronousFlag("Y");
 					}else if(describe.contains("犯罪")||describe.contains("悬疑")){
 						movieVo.setCategory("category5");
+						movieVo.setSynchronousFlag("Y");
 					}else if(describe.contains("恐怖")||describe.contains("惊悚")){
 						movieVo.setCategory("category6");
+						movieVo.setSynchronousFlag("Y");
 					}else{
-						movieVo.setCategory("category");//默认类型
+						movieVo.setCategory("category");//其他类型
+						movieVo.setSynchronousFlag("Y");
 					}
 				}
 				
@@ -203,16 +210,34 @@ public class MovieServiceImpl implements MovieService{
 		}
 		if(imgUrl.contains(".jpg")){
 			imgUrl =  imgUrl.substring(imgUrl.indexOf(htppType),imgUrl.lastIndexOf("jpg")+3);
+			if(imgUrl.indexOf(".jpg")+4 < imgUrl.length()){//说明存在多个.jpg结尾
+				imgUrl = imgUrl.substring(0,imgUrl.indexOf(".jpg")+4);
+			}
 		}else if(imgUrl.contains(".JPG")){
 			imgUrl =  imgUrl.substring(imgUrl.indexOf(htppType),imgUrl.lastIndexOf("JPG")+3);
+			if(imgUrl.indexOf(".JPG")+4 < imgUrl.length()){//说明存在多个.JPG结尾
+				imgUrl = imgUrl.substring(0,imgUrl.indexOf(".JPG")+4);
+			}
 		}else if(imgUrl.contains(".jpeg")){
 			imgUrl =  imgUrl.substring(imgUrl.indexOf(htppType),imgUrl.lastIndexOf("jpeg")+3);
+			if(imgUrl.indexOf(".jpeg")+5 < imgUrl.length()){//说明存在多个.jpeg结尾
+				imgUrl = imgUrl.substring(0,imgUrl.indexOf(".jpeg")+5);
+			}
 		}else if(imgUrl.contains(".JPEG")){
 			imgUrl =  imgUrl.substring(imgUrl.indexOf(htppType),imgUrl.lastIndexOf("JPEG")+3);
+			if(imgUrl.indexOf(".JPEG")+5 < imgUrl.length()){//说明存在多个.JPEG结尾
+				imgUrl = imgUrl.substring(0,imgUrl.indexOf(".JPEG")+5);
+			}
 		}else if(imgUrl.contains(".png")){
 			imgUrl =  imgUrl.substring(imgUrl.indexOf(htppType),imgUrl.lastIndexOf("png")+3);
+			if(imgUrl.indexOf(".png")+4 < imgUrl.length()){//说明存在多个.png结尾
+				imgUrl = imgUrl.substring(0,imgUrl.indexOf(".png")+4);
+			}
 		}else if(imgUrl.contains(".PNG")){
 			imgUrl =  imgUrl.substring(imgUrl.indexOf(htppType),imgUrl.lastIndexOf("PNG")+3);
+			if(imgUrl.indexOf(".PNG")+4 < imgUrl.length()){//说明存在多个.PNG结尾
+				imgUrl = imgUrl.substring(0,imgUrl.indexOf(".PNG")+4);
+			}
 		}else{
 			imgUrl = default_img_url;
 		}
@@ -330,11 +355,11 @@ public class MovieServiceImpl implements MovieService{
 						returnList.add(newMovieList);
 					}else if(i>=(movieVoList.size()/rowNum*rowNum)){//假设:movieVoList.size()为18,则/4  得到4,4*4=16
 						List<MovieVo> newMovieList = new ArrayList<>();
-						for(int j=i;j<movieVoList.size();){
+						for(int j=i;j<movieVoList.size();j++){
 							newMovieList.add(movieVoList.get(j));
-							break;
 						}
 						returnList.add(newMovieList);
+						break;
 					}
 				}
 			}
@@ -402,6 +427,8 @@ public class MovieServiceImpl implements MovieService{
 			HttpURLConnection.setFollowRedirects(false);
 			// 到URL所引用的远程对象的连接
 			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+			//设置请求超时
+			conn.setConnectTimeout(5000);
 			// 设置URL请求的方法，GET POST HEAD OPTIONS PUT DELETE TRACE
 			// 以上方法之一是合法的，具体取决于协议的限制。
 			conn.setRequestMethod("HEAD");
@@ -412,7 +439,6 @@ public class MovieServiceImpl implements MovieService{
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

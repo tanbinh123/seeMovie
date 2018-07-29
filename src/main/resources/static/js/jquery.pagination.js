@@ -94,7 +94,7 @@
 		this.filling = function(index){
 			/******   by  mym ***/
 			var html = '<span style="margin-left:-120px;height:38px;">'
-				+'<select class="form-control pageSize" style="width:180px;" onchange="refreshMovieData()">'
+				+'<select class="form-control pageSize" style="width:200px;" onchange="refreshMovieData()">'
 				+'<option value="12">选择每页显示记录数</option>'
 				+'<option value="12">每页12条电影</option>'
 				+'<option value="24">每页24条电影</option>'
@@ -105,7 +105,7 @@
 				+'<option value="768">每页768条电影</option>'
 				+'</select></span>';
 			var pageCount = this.getPageCount();//获取的总页数
-			    html += '<span style="margin-left:50px;height:38px;width:120px;font-size:18px;color:#8A8A8A;">共'+pageCount+'页</span>';
+			    html += '<span style="margin-left:70px;height:38px;width:120px;font-size:18px;color:#8A8A8A;">共'+pageCount+'页</span>';
 			/***  by mym **********/
 			current = index || opts.current;//当前页码
 			if(opts.keepShowPN || current > 1){//上一页
