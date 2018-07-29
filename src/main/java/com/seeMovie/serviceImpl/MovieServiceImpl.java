@@ -18,6 +18,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.mapper.MovieMapper;
 import com.seeMovie.pojo.MovieVo;
+import com.seeMovie.pojo.WebLinksVo;
 import com.seeMovie.service.MovieService;
 @Service
 @Transactional
@@ -400,6 +401,11 @@ public class MovieServiceImpl implements MovieService{
 			flg = true;
 		}
 		return flg;
+	}
+	//每次查询两条网站初始化链接
+	@Override
+	public List<WebLinksVo> getWebLinksVo() {
+		return movieMapper.getWebLinksVo();
 	}
 	
 }

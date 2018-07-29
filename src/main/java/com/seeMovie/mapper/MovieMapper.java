@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.seeMovie.pojo.MovieVo;
+import com.seeMovie.pojo.WebLinksVo;
 public interface MovieMapper {
 	//保存当前电影资源
 	void insertDownHrefByVo(MovieVo vo);
@@ -23,4 +24,6 @@ public interface MovieMapper {
 	void updateMovieInfoByMovieIdList(Map<String,Object> paramMap);
 	//根据影片id更新影片信息，更新已存在值得对应字段
 	void updateMovieByList(@Param("updateMovieList")List<MovieVo> updateMovieList);
+	//每次查询两条网站初始化链接
+	List<WebLinksVo> getWebLinksVo();
 }

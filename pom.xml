@@ -22,26 +22,14 @@
 			<groupId>org.springframework.boot </groupId>
 			<artifactId>spring-boot-starter-web </artifactId>
 			<!-- 本地使用springBoot自带tomcat时注释 -->
-			<!-- <exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions> -->
+			<!-- <exclusions> <exclusion> <groupId>org.springframework.boot</groupId> 
+				<artifactId>spring-boot-starter-tomcat</artifactId> </exclusion> </exclusions> -->
 		</dependency>
 		<!-- 本地使用springBoot自带tomcat时注释 -->
-		<!-- <dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jsp-api</artifactId>
-			<scope>provided</scope>
-			<version>2.0</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
+			<version>2.5</version> <scope>provided</scope> </dependency> <dependency> 
+			<groupId>javax.servlet</groupId> <artifactId>jsp-api</artifactId> <scope>provided</scope> 
+			<version>2.0</version> </dependency> -->
 		<!-- mysql -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -138,9 +126,16 @@
 				</configuration>
 			</plugin>
 			<!-- mybatis generator 自动生成代码插件 -->
-			<!-- <plugin> <groupId>org.mybatis.generator</groupId> <artifactId>mybatis-generator-maven-plugin</artifactId> 
-				<version>1.3.2</version> <configuration> <configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile> 
-				<overwrite>true</overwrite> <verbose>true</verbose> </configuration> </plugin> -->
+			<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.3.2</version>
+				<configuration>
+					<configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
+					<overwrite>true</overwrite>
+					<verbose>true</verbose>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

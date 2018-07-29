@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.pojo.MovieVo;
+import com.seeMovie.pojo.WebLinksVo;
 public interface MovieService {
 	//新增电影资源
 	void insertAlldownHrefByList(List<Map<String, Object>> downHrefList, String webLinks);
@@ -16,5 +17,7 @@ public interface MovieService {
 	Map<String, Object> selectMovieInfoByParam(PagingUtil pagingUtil, Map<String, Object> map);
 	//定时更新影片的图片链接信息 无法访问的图片链接用默认图片代替
 	void UpdateMovieImgUrlInfoTimer();
+	//每次查询两条网站初始化链接
+	List<WebLinksVo> getWebLinksVo();
 
 }
