@@ -44,7 +44,7 @@ public class MainPageController {
 			//以下参数在再次查询时有用 默认记住用户上一次查询的条件
 			mv.addObject("category",category);
 			mv.addObject("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);
-			mv.setViewName("mainPage");
+			mv.setViewName("homePage/mainPage");
 		} catch (Exception e) {
 			mv.setViewName("error");
 		}
@@ -65,7 +65,7 @@ public class MainPageController {
 			//查找所有电影
 			MovieVo movieVo = movieService.getMovieDetail(movieId);
 			mv.addObject("movie", movieVo);
-			mv.setViewName("movieDetail");
+			mv.setViewName("homePage/movieDetail");
 		} catch (Exception e) {
 			mv.setViewName("error");
 		}
