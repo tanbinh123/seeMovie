@@ -23,6 +23,18 @@ public class LoginController {
 	 */
 	@RequestMapping("/toLoginPage")
 	public String goToLoginPage(){
-		return "theBackground/login";
+			return "theBackground/login";
+	}
+	/**
+	 * 
+	 * @author 		mym
+	 * @date   		2018年7月31日下午10:59:09
+	 * @describe	登录成功进入主页否则重定向到登录页
+	 * @return		String
+	 *
+	 */
+	@RequestMapping("/login")
+	public String login(){
+			return "theBackground/index";
 	}
 }
