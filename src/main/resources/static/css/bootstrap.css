@@ -1,6 +1,6 @@
 /*!
- * Bootstrap v3.3.6 (http://getbootstrap.com)
- * Copyright 2011-2015 Twitter, Inc.
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1106,7 +1106,6 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2257,7 +2256,6 @@ caption {
   padding-bottom: 8px;
   color: #777;
   text-align: left;
-  margin-left:15px;
 }
 th {
   text-align: left;
@@ -2266,7 +2264,6 @@ th {
   width: 100%;
   max-width: 100%;
   margin-bottom: 20px;
-  /*margin-left:15px;*/
 }
 .table > thead > tr > th,
 .table > tbody > tr > th,
@@ -2274,11 +2271,10 @@ th {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  padding:8px;
-  line-height: 100%;
+  padding: 8px;
+  line-height: 1.42857143;
   vertical-align: top;
   border-top: 1px solid #ddd;
-  
 }
 .table > thead > tr > th {
   vertical-align: bottom;
@@ -2515,7 +2511,6 @@ label {
   margin-bottom: 5px;
   font-weight: bold;
 }
-
 input[type="search"] {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -2541,7 +2536,6 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2926,7 +2920,7 @@ select[multiple].input-lg {
   }
   .form-inline .form-control {
     display: inline-block;
-    width: 100px;
+    width: auto;
     vertical-align: middle;
   }
   .form-inline .form-control-static {
@@ -3033,7 +3027,6 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -4281,11 +4274,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-brand {
   float: left;
   height: 50px;
-  padding: 10px 5px 10px 6px;
+  padding: 15px 15px;
   font-size: 18px;
-  line-height: 30px;
-  font-family:'Microsoft YaHei';
- /*crew-stew-style   border-right:1px solid #eee; */
+  line-height: 20px;
 }
 .navbar-brand:hover,
 .navbar-brand:focus {
@@ -4527,10 +4518,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  font-weight:bold;
-  color: #fff;
-  background-color: #11a13a;
-}/*crew-stew-style  color: #555; #e7e7e7 */
+  color: #555;
+  background-color: #e7e7e7;
+}
 .navbar-default .navbar-nav > .disabled > a,
 .navbar-default .navbar-nav > .disabled > a:hover,
 .navbar-default .navbar-nav > .disabled > a:focus {
@@ -5821,7 +5811,7 @@ button.list-group-item-danger.active:focus {
   border: 0;
 }
 .embed-responsive-16by9 {
-  padding-bottom: 50%;
+  padding-bottom: 56.25%;
 }
 .embed-responsive-4by3 {
   padding-bottom: 75%;
