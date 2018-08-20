@@ -7,6 +7,15 @@
 <link rel="stylesheet" href="/css/bootstrap.css">  
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<style type="text/css">
+body{
+    font-size: 16px;
+    background-color:#D6D5B7;
+}
+.detailImg:hover{
+         transform: scale(1.1,2.2); /* 长放大1.5倍宽放大2倍 */
+    }
+</style>
 </head>
 <body>
 <!-- 导航栏 -->
@@ -30,7 +39,7 @@
 				<div>
 				  <textarea style="margin-top:20px;height:295px;width:100%;resize:none;" disabled="disabled">${movie.describes!'当前影片暂无描述！'}</textarea>
 				</div>
-				<img style="height:300px; width:100%;" src="${movie.imgUrl2!''}">
+				<img class="detailImg" style="height:300px; width:100%;" src="${movie.imgUrl2!''}">
 			</div>
 		</div>
 	</div>

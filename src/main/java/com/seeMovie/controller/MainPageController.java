@@ -27,7 +27,7 @@ public class MainPageController {
 	 * 进入主页面
 	 */
 	@RequestMapping("/mainPage")
-	public ModelAndView toMainPage(PagingUtil pagingUtil,String category,String rowNum){
+	public ModelAndView toMainPage(PagingUtil pagingUtil,String category,String rowNum,String showType){
 		ModelAndView mv = new ModelAndView();
 		//封装参数
 		Map<String,Object> map = new HashMap<>();
@@ -37,6 +37,14 @@ public class MainPageController {
 			//根据影片分类查找对应影片   (喜剧爱情)
 			//每行显示影片数目
 			map.put("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);//默认每行显示4个
+			//展示方式
+			if(!StringUtils.isEmpty(showType)){
+				map.put("showType",showType);
+				mv.addObject("showType",showType);
+			}else{
+				map.put("showType","picture");
+				mv.addObject("showType","picture");
+			}
 			map = movieService.selectMovieInfoByParam(pagingUtil,map);
 			mv.addObject("movieList",map.get("movieList"));
 			mv.addObject("movieCategoryList",map.get("movieCategoryList"));//影片分类集合

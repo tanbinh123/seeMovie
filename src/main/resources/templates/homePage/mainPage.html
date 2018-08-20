@@ -13,6 +13,10 @@
 <!-- 回到顶部特效 -->
 <script src="/js/scrolltopcontrol.js"></script>
 <style>
+body{
+    font-size: 16px;
+    background-color:#D6D5B7;
+}
 #n{margin:10px auto; width:920px; border:1px solid #CCC;font-size:12px; line-height:30px;}
 #n a{ padding:0 4px; color:#333}
 </style>
@@ -48,6 +52,30 @@
 			</li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					影片展示方式
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" onclick="setShowType('picture')">图片方式显示</a></li>
+					<li><a href="#" onclick="setShowType('list')">列表方式显示</a></li>
+				</ul>
+			</li>
+			<!-- <li>
+			<#if showType?exists && (showType == "picture")>
+			<select id="show_type_id" onchange="setShowType()">
+			<option id="picture_id" value="picture" selected="selected">图片方式显示</option>
+			<option id="list_id" value="list">列表方式显示</option>
+			</select>
+   			</#if>
+			<#if showType?exists && (showType == "list")>
+			<select id="show_type_id" onchange="setShowType()">
+			<option id="picture_id" value="picture">图片方式显示</option>
+			<option id="list_id" value="list" selected="selected">列表方式显示</option>
+			</select>
+   			</#if>
+			</li> -->
+			<#if showType?exists && (showType == "picture")>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 					每行显示影片条数
 				</a>
 				<ul class="dropdown-menu">
@@ -57,6 +85,7 @@
 					<li><a href="#" onclick="refreshMovieDataByRowNum(12)">每行12个</a></li>
 				</ul>
 			</li>
+			</#if>
 		</ul>
 	</div>
 	</div>
@@ -66,8 +95,9 @@
 <div class="container">
    <!-- 存在电影资源 -->
    <#if movieList?exists && (movieList?size > 0)>
-   		<!-- 循环取值 -->
-   		<#list movieList as rowMovieList>
+   			<#if showType?exists && (showType == "picture")>
+			<!-- 循环取值 -->
+   			<#list movieList as rowMovieList>
    			<!-- 默认每四个一行 -->
    			<div class="row">
    			<#list rowMovieList as movie>
@@ -79,12 +109,25 @@
 				</div>
 		  	</#list>
 		  	</div>
-		</#list>
+			</#list>
+   			</#if>
+   			
+			<#if showType?exists && (showType == "list")>
+				<!-- 循环取值 -->
+   				<#list movieList as movie>
+   				<div class="row">
+					<a href="/mainPage/movieDetail.html?movieId=${movie.movieId!''}">${movie.movieName!''}
+					</a>
+				</div>
+				</#list>
+   			</#if>
    </#if>
    <!-- 隐藏查看的影片类型 -->
    <input id="category_id" type="hidden" value="${category!''}">
    <!-- 隐藏每行显示数据 -->
    <input id="rowNum_id" type="hidden" value="${rowNum!''}">
+   <!-- 隐藏数据显示方式-->
+   <input id="showType_id" type="hidden" value="${showType!''}">
 </div>
 <!-- 底部分页条 -->
 <div>
@@ -114,7 +157,8 @@ $(function() {
             var index = pathName.substr(1).indexOf("/");
             var category = $("#category_id").val();
             var rowNum = $("#rowNum_id").val();
-            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum;
+            var showType = $("#showType_id").val();
+            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType;
         }
 	});
 	//遍历每页显示记录数   将对应的option选中
@@ -133,10 +177,23 @@ $(function() {
 
 //根据影片类型及影片分类查找对应影片
 function findMovieByParam(category){
+	//隐藏影片类型
+	$("#category_id").val(category);
+	var showType = $("#showType_id").val();
 	var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
     var rowNum = $("#rowNum_id").val();
-    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum;
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType;
+}
+//根据影片类型及影片分类查找对应影片
+function setShowType(showType){
+	//隐藏数据展示方式
+	$("#showType_id").val(showType);
+	var pathName = document.location.pathname;
+    var index = pathName.substr(1).indexOf("/");
+    var rowNum = $("#rowNum_id").val();
+	var category = $("#category_id").val();
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType;
 }
 //根绝影片id查看影片详情
 function goToThisPage(movieId){
@@ -150,14 +207,16 @@ function refreshMovieData(){
 	var index = pathName.substr(1).indexOf("/");
 	var category = $("#category_id").val();
 	var rowNum = $("#rowNum_id").val();
-	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum;
+	var showType = $("#showType_id").val();
+	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum+"&showType="+showType;
 }
 //每行显示电影数目   重新加载数据
 function refreshMovieDataByRowNum(rowNum){
 	var pathName = document.location.pathname;
 	var index = pathName.substr(1).indexOf("/");
 	var category = $("#category_id").val();
-	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum;
+	var showType = $("#showType_id").val();
+	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum+"&showType="+showType;
 }
 </script>
 </html>
