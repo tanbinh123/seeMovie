@@ -72,7 +72,8 @@
    			<div class="row">
    			<#list rowMovieList as movie>
 				<div class="col-sm-${12/rowNum}">
-					<a href="" onclick='goToThisPage("${movie.movieId!''}")'> <img
+				<!-- onclick='goToThisPage("${movie.movieId!''}")' -->
+					<a href="/mainPage/movieDetail.html?movieId=${movie.movieId!''}" > <img
 						style="height:235px; width:100%;" src="${movie.imgUrl}"></br>${movie.movieName!''}
 					</a>
 				</div>
