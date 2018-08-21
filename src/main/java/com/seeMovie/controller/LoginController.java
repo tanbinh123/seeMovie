@@ -23,7 +23,7 @@ public class LoginController {
 	 */
 	@RequestMapping("/toLoginPage")
 	public String goToLoginPage(){
-			return "theBackground/login";
+			return "theBackGround/login";
 	}
 	/**
 	 * 
@@ -35,6 +35,6 @@ public class LoginController {
 	 */
 	@RequestMapping("/login")
 	public String login(){
-			return "theBackground/index";
+			return "theBackGround/index";
 	}
 }
