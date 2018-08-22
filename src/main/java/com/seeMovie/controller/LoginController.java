@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.druid.util.StringUtils;
+
 /**
  * 
  * @author 		mym
@@ -35,8 +37,14 @@ public class LoginController {
 	 *
 	 */
 	@RequestMapping("/login")
-	public ModelAndView login(ModelAndView model){
-		model.setViewName("theBackGround/index");
+	public ModelAndView login(ModelAndView model,String userName,String password){
+		//因为后台管理不对外开放  所以此处进行伪登录
+		if(StringUtils.isEmpty(userName)&&StringUtils.isEmpty(password)&&userName.equals("admin")&&password.equals("admin")){
+			model.setViewName("theBackGround/index");	
+		}else{
+			model.addObject("errorInfo","用户名或者密码错误请重新输入！");
+			model.setViewName("theBackGround/login");
+		}
 		return model;
 	}
 }
