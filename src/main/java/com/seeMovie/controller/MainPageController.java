@@ -1,15 +1,23 @@
 package com.seeMovie.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.druid.util.StringUtils;
+import com.seeMovie.common.utils.IpInfoUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.pojo.MovieVo;
+import com.seeMovie.pojo.VisitUserVo;
+import com.seeMovie.service.LoginService;
 import com.seeMovie.service.MovieService;
 /**
  * 
@@ -23,15 +31,29 @@ import com.seeMovie.service.MovieService;
 public class MainPageController {
 	@Autowired
 	MovieService movieService;
+	@Autowired
+	LoginService loginService;
 	/**
 	 * 进入主页面
 	 */
 	@RequestMapping("/mainPage")
-	public ModelAndView toMainPage(PagingUtil pagingUtil,String category,String rowNum,String showType){
+	public ModelAndView toMainPage(PagingUtil pagingUtil,String category,String rowNum,String showType,HttpServletRequest request){
 		ModelAndView mv = new ModelAndView();
 		//封装参数
 		Map<String,Object> map = new HashMap<>();
 		try {
+			//初次登录时将当前登录人信息存入信息表中
+			if(StringUtils.isEmpty(category) && StringUtils.isEmpty(rowNum)&& StringUtils.isEmpty(showType)){
+				//首次进入网站时将当前登录IP等信息存起来
+				VisitUserVo vo = new VisitUserVo();
+				vo.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+				vo.setIp(IpInfoUtils.getVisitIp(request));
+				vo.setHostName(IpInfoUtils.getHostName(request));
+				vo.setSource("1");
+				vo.setUsername("访客");
+				vo.setDate(new Date());
+				loginService.insertVisitUserVo(vo);
+			}
 			//根据影片类型查找对应影片
 			map.put("category", category);
 			//根据影片分类查找对应影片   (喜剧爱情)

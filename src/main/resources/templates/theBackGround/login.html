@@ -1,5 +1,29 @@
-<#include "../theBackground-header.html"/>
-<meta name="description" content="User login page" />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <#assign ctx=request.getContextPath()>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="User login page" />
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="/favicon.ico" type="image/ico" />
+    <title>SeeMovie</title>
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- page specific plugin styles -->
+    <link href="/assets/css/jquery-ui.min.css"  rel="stylesheet"/>
+    <link href="/assets/css/bootstrap-datepicker3.min.css"  rel="stylesheet"/>
+    <link href="/assets/css/ui.jqgrid.min.css"  rel="stylesheet"/>
+	<!-- text fonts -->
+	<link href="/assets/css/fonts.googleapis.com.css" rel="stylesheet"/>
+	<!-- ace styles -->
+	<link href="/assets/css/ace.min.css" rel="stylesheet"/>
+    <link href="/assets/css/ace-skins.min.css" rel="stylesheet"/>
+	<link href="/assets/css/ace-rtl.min.css" rel="stylesheet"/>
+</head>
 <body class="login-layout">
 		<div class="main-container">
 			<div class="main-content">
@@ -238,7 +262,26 @@
 				</div><!-- /.row -->
 			</div><!-- /.main-content -->
 		</div><!-- /.main-container -->
-<#include "../theBackground-footer.html"/>
+<!-- jQuery -->
+<script src="/js/jquery.min.js" type="text/javascript"></script>
+<!-- Bootstrap -->
+<script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/assets/js/ace-extra.min.js" rel="stylesheet"></script>
+<script src="/assets/js/jquery-ui.custom.min.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.easypiechart.min.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.sparkline.index.min.js" type="text/javascript"></script>
+<script src="/assets/js/ace-extra.min.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.flot.pie.min.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.flot.resize.min.js" type="text/javascript"></script>
+<!-- ace scripts -->
+<script src="/assets/js/ace-elements.min.js" type="text/javascript"></script>
+<script src="/assets/js/ace.min.js" type="text/javascript"></script>
+<!-- page specific plugin scripts -->
+<script src="/assets/js/bootstrap-datepicker.min.js type="text/javascript"></script>
+<script src="/assets/js/jquery.jqGrid.min.js" type="text/javascript"></script>
+<script src="/assets/js/grid.locale-en.js" type="text/javascript"></script>
 <script type="text/javascript">
 	$(function() {
 		$(document).on('click', '.toolbar a[data-target]', function(e) {
