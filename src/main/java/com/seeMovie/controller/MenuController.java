@@ -2,6 +2,8 @@ package com.seeMovie.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
 /**
  * @author      mym
  * @date        2018/8/23 0023 19:44
@@ -22,7 +24,9 @@ public class MenuController {
 	 *
 	 */
 	@RequestMapping("/toMenu")
-	public String goToLoginPage(){
-			return "theBackGround/systemPage/menu";
+	public ModelAndView goToLoginPage(ModelAndView model){
+		model.addObject("userName","admin");
+		model.setViewName("theBackGround/systemPage/menu");
+		return model;
 	}
 }
