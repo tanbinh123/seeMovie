@@ -39,7 +39,8 @@ public class LoginController {
 	@RequestMapping("/login")
 	public ModelAndView login(ModelAndView model,String userName,String password){
 		//因为后台管理不对外开放  所以此处进行伪登录
-		if(StringUtils.isEmpty(userName)&&StringUtils.isEmpty(password)&&userName.equals("admin")&&password.equals("admin")){
+		if(!StringUtils.isEmpty(userName)&&!StringUtils.isEmpty(password)&&userName.equals("admin")&&password.equals("admin")){
+			model.addObject("userName","admin");
 			model.setViewName("theBackGround/index");	
 		}else{
 			model.addObject("errorInfo","用户名或者密码错误请重新输入！");
