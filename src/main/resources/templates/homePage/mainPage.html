@@ -169,7 +169,7 @@ $(function() {
 	});
 	//遍历每页显示记录数   将对应的option选中
 	$(".pageSize option").each(function(){
-		if(parseInt($(this).val()) != 12 && parseInt($(this).val()) == ${pagingUtil.pageSize}){
+		if(parseInt($(this).val()) == ${pagingUtil.pageSize}){
 			$(this).prop("selected",true);
 		}
 	});
@@ -211,10 +211,14 @@ function goToThisPage(movieId){
 function refreshMovieData(){
 	var pathName = document.location.pathname;
 	var index = pathName.substr(1).indexOf("/");
+	var pageSize = $(".pageSize").val();
+	if(pageSize == null || pageSize == "" || pageSize == undefined || pageSize == "undefined"){
+		return false;
+	}
 	var category = $("#category_id").val();
 	var rowNum = $("#rowNum_id").val();
 	var showType = $("#showType_id").val();
-	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum+"&showType="+showType;
+	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+pageSize+"&rowNum="+rowNum+"&showType="+showType;
 }
 //每行显示电影数目   重新加载数据
 function refreshMovieDataByRowNum(rowNum){

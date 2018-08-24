@@ -17,9 +17,9 @@ public class PagingUtil implements Serializable{
 	 */
 	private int currentPage = 1;
 	/**
-	 * 每页显示记录数
+	 * 每页显示记录数  默认条数
 	 */
-	private int pageSize = 12;
+	private int pageSize = 24;
 	/**
 	 * 总页数
 	 */
