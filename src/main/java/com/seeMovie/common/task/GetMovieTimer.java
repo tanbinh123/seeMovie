@@ -109,7 +109,7 @@ public class GetMovieTimer {
 			try {
 				systemLogVo.setLogContent("定时器执行异常		"+systemLogVo.getLogContent()+",定时器执行结束时间为"+endDate
 						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！"+e.getMessage().substring(0, 500));
-				systemLogVo.setLogLevel("1");
+				systemLogVo.setLogLevel("2");
 				systemLogVo.setLogCreateDate(new Date());
 				systemLogService.insertSystemLog(systemLogVo);
 			} catch (Exception e1) {
