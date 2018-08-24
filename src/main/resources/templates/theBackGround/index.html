@@ -5,7 +5,7 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
-			<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+			<div id="sidebar" class="sidebar  responsive ace-save-state">
 				<script type="text/javascript">
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
@@ -159,9 +159,21 @@
 								</div><!-- /.pull-left -->
 							</div><!-- /.ace-settings-box -->
 						</div><!-- /.ace-settings-container -->
+						
+						<div class="page-header">
+							<h1>
+								<!-- Dashboard
+								<small>
+									<i class="ace-icon fa fa-angle-double-right"></i>
+									overview &amp; stats
+								</small> -->
+							</h1>
+						</div><!-- /.page-header -->
+						
 						<div class="row">
 							<div class="col-xs-12">
-								<!-- PAGE CONTENT BEGINS -->
+							
+							<!-- PAGE CONTENT BEGINS -->
 								<div class="alert alert-block alert-success">
 									<button type="button" class="close" data-dismiss="alert">
 										<i class="ace-icon fa fa-times"></i>
@@ -169,37 +181,35 @@
 
 									<i class="ace-icon fa fa-check green"></i>
 
-									Welcome to
+									Welcome ${userName} to
 									<strong class="green">
 										SeeMovie
 										<small>(v1.0)</small>
-									</strong>,
-									<a href="https://github.com/crazymzlovepp">github</a>.
+									</strong>,这是您第${loginNum}次使用本系统！
 								</div>
 
 								<div class="row">
 									<div class="space-6"></div>
 
-									<div class="col-sm-7 infobox-container">
-									   <h2>欢迎您：${userName}，这是您第${loginNum}次使用本系统！</h2>
-									   <div>
+									<div class="col-sm-7">
 									   <#if visitUserVoList?exists && (visitUserVoList?size>0)>
 									   <table>
 									   <thead>
 									   <tr>
 									   <th>IP</th>
-									   <th>日期</th>
+									   <th>登陆地址</th>
+									   <th>登陆日期</th>
 									   </tr>
 									   </thead>
 									   <#list visitUserVoList as visitUserVo>
 									   <tr>
 									   <td>${visitUserVo.ip!''}</td>
+									   <td>${visitUserVo.ipAddress!''}</td>
 									   <td>${visitUserVo.date?string('yyyy-MM-dd hh:mm:ss')}</td>
 									   </tr>
 									   </#list>
 									   </table>
 									   </#if>
-									   </div>
 									</div>
 
 									<div class="vspace-12-sm"></div>

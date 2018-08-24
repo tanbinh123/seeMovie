@@ -101,7 +101,7 @@
   select web_id as webId, web_name as webName, web_link as webLink, crawl_flag as crawlFlag, insert_date as insertDate, update_date as updateDate
     from web_links
 	where crawl_flag = "N"
-	limit 2
+	<!-- limit 2 -->
   </select>
   <!-- 将当前已经爬取过的网站爬取状态改为Y -->
   <update id="updateWebLinks" parameterType="com.seeMovie.pojo.WebLinksVo">

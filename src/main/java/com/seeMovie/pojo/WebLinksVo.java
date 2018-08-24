@@ -1,9 +1,15 @@
 package com.seeMovie.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class WebLinksVo {
-    private String webId;
+public class WebLinksVo implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String webId;
 
     private String webName;
 

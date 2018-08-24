@@ -1,7 +1,14 @@
 package com.seeMovie.pojo;
 
-public class MovieCategoryVo {
-    private String movieCategoryCode;
+import java.io.Serializable;
+
+public class MovieCategoryVo implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String movieCategoryCode;
 
     private String movieCategoryName;
 

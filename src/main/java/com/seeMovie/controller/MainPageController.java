@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.seeMovie.pojo.VisitUserVo;
+import com.seeMovie.pojo.VisitUserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,14 +44,15 @@ public class MainPageController {
 			//初次登录时将当前登录人信息存入信息表中
 			if(StringUtils.isEmpty(category) && StringUtils.isEmpty(rowNum)&& StringUtils.isEmpty(showType)){
 				//首次进入网站时将当前登录IP等信息存起来
-				VisitUserVo vo = new VisitUserVo();
+				VisitUserInfoVo vo = new VisitUserInfoVo();
 				vo.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 				vo.setIp(IpInfoUtils.getVisitIp(request));
+				vo.setIpAddress(IpInfoUtils.getIpAddress(vo.getIp()));
 				vo.setHostName(IpInfoUtils.getHostName(request));
 				vo.setSource("1");
 				vo.setUsername("访客");
 				vo.setDate(new Date());
-				loginService.insertVisitUserVo(vo);
+				loginService.insertVisitUserInfoVo(vo);
 			}
 			//根据影片类型查找对应影片
 			map.put("category", category);

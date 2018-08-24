@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.seeMovie.pojo.VisitUserVo;
+import com.seeMovie.pojo.VisitUserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,20 +53,21 @@ public class LoginController {
 		//因为后台管理不对外开放  所以此处进行伪登录
 		if(!StringUtils.isEmpty(userName)&&!StringUtils.isEmpty(password)&&userName.equals("admin")&&password.equals("admin")){
 			//登录成功后将当前登录IP等信息存起来
-			VisitUserVo vo = new VisitUserVo();
+			VisitUserInfoVo vo = new VisitUserInfoVo();
 			vo.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 			vo.setIp(IpInfoUtils.getVisitIp(request));
+			vo.setIpAddress(IpInfoUtils.getIpAddress(vo.getIp()));
 			vo.setHostName(IpInfoUtils.getHostName(request));
 			vo.setSource("2");
 			vo.setUsername("admin");
 			vo.setDate(new Date());
-			loginService.insertVisitUserVo(vo);
+			loginService.insertVisitUserInfoVo(vo);
 			//查询后端用户最近十次登录信息及总的登录次数
-			List<VisitUserVo> visitUserVoList = loginService.selectTheLastTenVisitsByUserName("admin");//其实应该用用户id查询
+			List<VisitUserInfoVo> VisitUserInfoVoList = loginService.selectTheLastTenVisitsByUserName("admin");//其实应该用用户id查询
 			int loginNum = loginService.selectAllVisitNumsByUserName("admin");
 			model.addObject("userName","admin");
 			model.addObject("loginNum",loginNum);
-			model.addObject("visitUserVoList",visitUserVoList);
+			model.addObject("VisitUserInfoVoList",VisitUserInfoVoList);
 			model.setViewName("theBackGround/index");	
 		}else{
 			model.addObject("errorInfo","用户名或者密码错误请重新输入！");
