@@ -1,6 +1,7 @@
 package com.seeMovie.pojo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,6 +37,18 @@ public class MovieVo implements Serializable{
 	 */
 	private String source;
 	/**
+	 * 豆瓣评分
+	 */
+	private BigDecimal doubanScore;
+	/**
+	 * 电影上映年份
+	 */
+	private String produceYear;
+	/**
+	 * 电影产地
+	 */
+	private String produceCountry;
+	/**
 	 * 电影图片路径
 	 */
 	private String imgUrl;
@@ -67,6 +80,24 @@ public class MovieVo implements Serializable{
 	 * 影片类型(电影/电视剧)同步标志(Y/N)
 	 */
 	private String synchronousImgUrlFlage;		
+	public String getProduceCountry() {
+		return produceCountry;
+	}
+	public void setProduceCountry(String produceCountry) {
+		this.produceCountry = produceCountry;
+	}
+	public BigDecimal getDoubanScore() {
+		return doubanScore;
+	}
+	public void setDoubanScore(BigDecimal doubanScore) {
+		this.doubanScore = doubanScore;
+	}
+	public String getProduceYear() {
+		return produceYear;
+	}
+	public void setProduceYear(String produceYear) {
+		this.produceYear = produceYear;
+	}
 	public String getSynchronousImgUrlFlage() {
 		return synchronousImgUrlFlage;
 	}

@@ -34,7 +34,7 @@ public class GetMovieTimer {
 	private static Set visitedUrlSet = new HashSet();
 	//待访问的 url 集合  待访问的主要考虑 1:规定访问顺序;2:保证不提供重复的带访问地址;
 	private static LinkedList unVisitedUrlQueue = new LinkedList();
-	@Scheduled(cron="0 30 3 * * ?") //每天凌晨3点半执行一次  0 30 3 * * ?
+	@Scheduled(cron="0 0/2 * * * ?") //每天凌晨3点半执行一次  0 30 3 * * ?
 	public void getNewMovie(){
 		try {
 			List<WebLinksVo> webLinksList = movieService.getWebLinksVo();//每次查询两条网站初始化链接

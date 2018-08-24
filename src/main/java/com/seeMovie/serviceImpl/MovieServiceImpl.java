@@ -1,5 +1,6 @@
 package com.seeMovie.serviceImpl;
 
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,13 +12,15 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.seeMovie.mapper.MovieMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.mapper.MovieCategoryVoMapper;
-import com.seeMovie.mapper.MovieMapper;
 import com.seeMovie.pojo.MovieCategoryVo;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.pojo.WebLinksVo;
@@ -61,7 +64,7 @@ public class MovieServiceImpl implements MovieService{
 			e.printStackTrace();
 		}
 	}
-	private MovieVo getNewVoByParam(List<String> movieHrefAndImgUrl,MovieVo movieVo) {
+	private MovieVo getNewVoByParam(List<String> movieHrefAndImgUrl, MovieVo movieVo) {
 		movieVo.setCategory("teleplay");
 		if(movieHrefAndImgUrl!=null && movieHrefAndImgUrl.size()>=2){//至少存在电影名字及下载链接
 			//最多保留两张图片链接
@@ -89,35 +92,29 @@ public class MovieServiceImpl implements MovieService{
 			String describe = "";
 			for (int i=0;i<describesArr.length;i++) {
 				describe = describesArr[i];
-				/*◎译　　名　西伯利亚 
-				◎片　　名　Siberia 
-				◎年　　代　2018 
-				◎产　　地　美国 
-				◎类　　别　爱情/犯罪/惊悚 
-				◎语　　言　英语 
-				◎字　　幕　中英双字幕 
-				◎上映日期　2018-07-13(美国) 
-				◎IMDb评分 6.9/10 from 69 users 
-				◎文件格式　x264 + aac 
-				◎视频尺寸　1280 x 720 
-				◎文件大小　1CD 
-				◎导　　演　Matthew M. Ross 
-				◎主　　演　基努·里维斯 Keanu Reeves 
-				　　　　　　莫利·林沃德 Molly Ringwald 
-				　　　　　　安娜·乌拉鲁 Ana Ularu 
-				　　　　　　阿莱克斯·潘诺维奇 Aleks Paunovic 
-				　　　　　　帕沙·D.林奇尼科夫 Pasha D. Lychnikoff 
-				　　　　　　维罗尼卡·费瑞尔 Veronica Ferres 
-				　　　　　　尤金·里皮斯基 Eugene Lipinski 
-				　　　　　　詹姆斯·亚历山大 James Alexander 
-				　　　　　　布拉德利·索茨基 Bradley Sawatzky 
-				　　　　　　纳扎利·德姆克维奇 Nazariy Demkowicz 
-				　　　　　　维塔利·马卡罗夫 Vitali Makarov 
-				　　　　　　达伦·罗斯 Darren Ross
-				
-				◎简　　介　 
-				*/ 
-				
+/*◎译　　名　复仇者联盟3：无限战争/复仇者联盟3：无限之战(港)/复仇者联盟：无限之战(台)/复仇者联盟3：无尽之战/复联3/妇联3(豆友译名)/复仇者联盟3：灭霸传(豆友译名) 
+◎片　　名　Avengers: Infinity War 
+◎年　　代　2018 
+◎产　　地　美国 
+◎类　　别　动作/科幻/奇幻/冒险 
+◎语　　言　英语 
+◎字　　幕　中英双字幕 
+◎上映日期　2018-04-23(加州首映)/2018-04-27(美国)/2018-05-11(中国) 
+◎IMDb评分 8.7/10 from 407,821 users 
+◎豆瓣评分　8.2/10 from 338,916 users 
+◎文件格式　rmvb + aac 
+◎视频尺寸　1280 x 720 
+◎文件大小　1CD 
+◎片　　长　150分钟 
+◎导　　演　安东尼·卢素 Anthony Russo / 乔·卢素 Joe Russo 
+◎主　　演　小罗伯特·唐尼 Robert Downey Jr. 
+　　　　　　克里斯·海姆斯沃斯 Chris Hemsworth 
+
+◎简　　介 
+
+《复仇者联盟3：无限战争》是漫威电影宇宙10周年的历史性集结，将为影迷们带来史诗版的终极对决。面对灭霸突然发起的闪电袭击，复仇者联盟及其所有超级英雄盟友必须全力以赴，才能阻止他对全宇宙造成毁灭性的打击。  
+				 */ 
+
 				if(!StringUtils.isEmpty(describe) && describe.trim().contains("类　　别")){
 					if(describe.contains("喜剧")||describe.contains("爱情")){
 						movieVo.setCategory("category1");
@@ -142,7 +139,29 @@ public class MovieServiceImpl implements MovieService{
 						movieVo.setSynchronousFlag("Y");
 					}
 				}
-				
+
+				/*if(!StringUtils.isEmpty(describe) && describe.trim().contains("片　　名")){//◎片　　名　Avengers: Infinity War 
+					//其实影片名称前面已经截取  但是那是通过连接截取的名称  没有直接从影片简介上截取的准确
+					describe = describe.replaceAll("　　","").replaceAll("　", "");
+					movieVo.setMovieName(describe.trim().length()>2?describe.trim().substring(2,describe.trim().length()).trim():"");
+				}*/
+				 
+				if(!StringUtils.isEmpty(describe) && describe.trim().contains("年　　代")){//◎年　　代　2018 
+					describe = describe.replaceAll("　　","").replaceAll("　", "");
+					movieVo.setProduceYear(describe.trim().length()>3?describe.trim().substring(3,describe.trim().length()).trim():"");
+				}
+
+				if(!StringUtils.isEmpty(describe) && describe.trim().contains("产　　地")){//◎产　　地　美国 
+					describe = describe.replaceAll("　　","").replaceAll("　", "");
+					movieVo.setProduceCountry(describe.trim().length()>3?describe.trim().substring(3,describe.trim().length()).trim():"");
+				}
+
+				if(!StringUtils.isEmpty(describe) && describe.trim().contains("豆瓣评分")){//◎豆瓣评分　8.2/10 from 338,916 users 
+					describe = describe.replaceAll("　","");
+					describe = describe.trim().length()>8?describe.trim().substring(5,8).trim():"";//豆瓣评分8.2
+					movieVo.setDoubanScore(new BigDecimal(describe));
+				}
+
 				if(!StringUtils.isEmpty(describe) && describe.trim().contains("简　　介")){
 					if(i+1 < describesArr.length &&  !describesArr[i+1].isEmpty()){//简介换行多次后才是具体的描述值
 						if(describesArr[i+1].length()>2500){
@@ -170,7 +189,7 @@ public class MovieServiceImpl implements MovieService{
 						}
 					}
 				}
-				
+
 			}
 		}
 		return movieVo;
@@ -193,7 +212,7 @@ public class MovieServiceImpl implements MovieService{
 				}else{
 					retuenList.add(movieHref);
 				}
-				
+
 			}else{//图片链接
 				retuenList.add(getImgUrl(arr[i]));
 			}
@@ -269,7 +288,7 @@ public class MovieServiceImpl implements MovieService{
 			for (int i = 0; i < movieList.size(); i++) {
 				String movieName = movieList.get(i).getMovieName().trim().substring(0);
 				if(!StringUtils.isEmpty(movieName) && movieName.length() >=2 && isChinese(movieName.substring(0, 1))){//汉字开头
-						movieName = movieName.substring(0, 2);//截取2位作为是否名字有重复的标识	
+					movieName = movieName.substring(0, 2);//截取2位作为是否名字有重复的标识	
 				}else{//非汉字开头
 					if(movieName.length()>=8){
 						//2166/神犬小七2HDTV19.mp4  2121/神犬小七2HDTV18.mp4 类似于这种名字
