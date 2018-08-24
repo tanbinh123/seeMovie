@@ -51,7 +51,7 @@ public class MainPageController {
 				vo.setHostName(IpInfoUtils.getHostName(request));
 				vo.setSource("1");
 				vo.setUsername("访客");
-				vo.setDate(new Date());
+				vo.setVisitDate(new Date());
 				loginService.insertVisitUserInfoVo(vo);
 			}
 			//根据影片类型查找对应影片

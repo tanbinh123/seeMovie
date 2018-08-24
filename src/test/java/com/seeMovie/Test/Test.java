@@ -1,4 +1,4 @@
-package com.seeMovie.common;
+package com.seeMovie.Test;
 
 import com.seeMovie.common.utils.IpInfoUtils;
 
