@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seeMovie.mapper.SystemLogVoMapper" >
+  <resultMap id="BaseResultMap" type="com.seeMovie.pojo.SystemLogVo" >
+    <result column="log_id" property="logId" jdbcType="VARCHAR" />
+    <result column="log_name" property="logName" jdbcType="VARCHAR" />
+    <result column="log_content" property="logContent" jdbcType="VARCHAR" />
+    <result column="log_level" property="logLevel" jdbcType="VARCHAR" />
+    <result column="log_create_date" property="logCreateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.seeMovie.pojo.SystemLogVo" >
+    insert into system_log (log_id, log_name, log_content, 
+      log_level, log_create_date)
+    values (#{logId,jdbcType=VARCHAR}, #{logName,jdbcType=VARCHAR}, #{logContent,jdbcType=VARCHAR}, 
+      #{logLevel,jdbcType=VARCHAR}, #{logCreateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select log_id, log_name, log_content, log_level, log_create_date
+    from system_log
+  </select>
+</mapper>
