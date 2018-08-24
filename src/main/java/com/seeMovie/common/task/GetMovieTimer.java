@@ -45,7 +45,9 @@ public class GetMovieTimer {
 		systemLogVo.setLogId(UUID.randomUUID().toString().replaceAll("-", ""));
 		systemLogVo.setLogName("通过定时器获取新电影资源  getNewMovie()");
 		String startDate = sdf.format(new Date());
-		systemLogVo.setLogContent("定时器开始执行时间为"+startDate);
+		String startInfo = "定时器开始执行时间为"+startDate;
+		String endInfo = "";
+		int nums = 0;//定时器执行时新增或更新的数据条数
 		try {
 			List<WebLinksVo> webLinksList = movieService.getWebLinksVo();//每次查询两条网站初始化链接
 			for (WebLinksVo webLinksVo : webLinksList) {
@@ -67,6 +69,7 @@ public class GetMovieTimer {
 					Elements elements = PageParserTool.select(page,"a");
 					List<Map<String,Object>> downHrefList = getMovieInfo(elements,page);
 					movieService.insertAlldownHrefByList(downHrefList,webLinksVo);
+					nums++;
 					/*i += 1;
 					if(i==1){//每一个网址只更新一次状态
 						movieService.updateWebLinks(webLinksVo);
@@ -99,16 +102,18 @@ public class GetMovieTimer {
 				}
 			}
 			String endDate = sdf.format(new Date());
-			systemLogVo.setLogContent(systemLogVo.getLogContent()+",定时器执行结束时间为"+endDate
-					+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！");
+			endInfo = ",定时器执行结束时间为"+endDate;
+			systemLogVo.setLogContent("定时器正常执行		"+startInfo+endInfo
+					+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！  本次新增或更新数据一共"+nums+"条！");
 			systemLogVo.setLogLevel("1");
 			systemLogVo.setLogCreateDate(new Date());
 			systemLogService.insertSystemLog(systemLogVo);
 		} catch (Exception e) {
 			String endDate = sdf.format(new Date());
 			try {
-				systemLogVo.setLogContent("定时器执行异常		"+systemLogVo.getLogContent()+",定时器执行结束时间为"+endDate
-						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！"+e.getMessage().substring(0, 500));
+				endInfo = ",定时器执行结束时间为"+endDate;
+				systemLogVo.setLogContent("定时器执行异常		"+startInfo+endInfo
+						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！ 本次新增或更新数据一共"+nums+"条		异常信息为"+e.toString().substring(0, 500));
 				systemLogVo.setLogLevel("2");
 				systemLogVo.setLogCreateDate(new Date());
 				systemLogService.insertSystemLog(systemLogVo);
@@ -119,7 +124,7 @@ public class GetMovieTimer {
 		}
 	}
 	//获得电影信息
-	private List<Map<String,Object>> getMovieInfo(Elements elements, Page page) {
+	private List<Map<String,Object>> getMovieInfo(Elements elements, Page page) throws Exception{
 		List<Map<String,Object>> returnList = new ArrayList<>();
 		for (Element element : elements) {
 			if(element!=null && element.toString().contains("ftp://")){

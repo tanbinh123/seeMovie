@@ -38,11 +38,13 @@ public class UpdateMovieInfoTimer {
 		systemLogVo.setLogId(UUID.randomUUID().toString().replaceAll("-", ""));
 		systemLogVo.setLogName("更新影片类型(电影/电视剧)  UpdateMovieCategoryInfoTimer()");
 		String startDate = sdf.format(new Date());
-		systemLogVo.setLogContent("定时器开始执行时间为"+startDate);
+		String startInfo = "定时器开始执行时间为"+startDate;
+		String endInfo = "";
 		try {
 			movieService.UpdateMovieCategoryInfoTimer();
 			String endDate = sdf.format(new Date());
-			systemLogVo.setLogContent(systemLogVo.getLogContent()+",定时器执行结束时间为"+endDate
+			endInfo = ",定时器执行结束时间为"+endDate;
+			systemLogVo.setLogContent("定时器正常执行		"+startInfo+endInfo
 					+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！");
 			systemLogVo.setLogLevel("1");
 			systemLogVo.setLogCreateDate(new Date());
@@ -50,8 +52,9 @@ public class UpdateMovieInfoTimer {
 		} catch (Exception e) {
 			String endDate = sdf.format(new Date());
 			try {
-				systemLogVo.setLogContent("定时器执行异常		"+systemLogVo.getLogContent()+",定时器执行结束时间为"+endDate
-						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！"+e.getMessage().substring(0, 500));
+				endInfo = ",定时器执行结束时间为"+endDate;
+				systemLogVo.setLogContent("定时器执行异常		"+startInfo+endInfo
+						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！		异常信息为"+e.toString().substring(0, 500));
 				systemLogVo.setLogLevel("2");
 				systemLogVo.setLogCreateDate(new Date());
 				systemLogService.insertSystemLog(systemLogVo);
@@ -74,11 +77,12 @@ public class UpdateMovieInfoTimer {
 		systemLogVo.setLogId(UUID.randomUUID().toString().replaceAll("-", ""));
 		systemLogVo.setLogName("更新影片连接  UpdateMovieImgUrlInfoTimer()");
 		String startDate = sdf.format(new Date());
-		systemLogVo.setLogContent("定时器开始执行时间为"+startDate);
+		String startInfo = "定时器开始执行时间为"+startDate;
+		String endInfo = "";
 		try {
 			movieService.UpdateMovieImgUrlInfoTimer();
 			String endDate = sdf.format(new Date());
-			systemLogVo.setLogContent(systemLogVo.getLogContent()+",定时器执行结束时间为"+endDate
+			systemLogVo.setLogContent("定时器正常执行		"+startInfo+endInfo
 					+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！");
 			systemLogVo.setLogLevel("1");
 			systemLogVo.setLogCreateDate(new Date());
@@ -86,8 +90,9 @@ public class UpdateMovieInfoTimer {
 		} catch (Exception e) {
 			String endDate = sdf.format(new Date());
 			try {
-				systemLogVo.setLogContent("定时器执行异常		"+systemLogVo.getLogContent()+",定时器执行结束时间为"+endDate
-						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！"+e.getMessage().substring(0, 500));
+				endInfo = ",定时器执行结束时间为"+endDate;
+				systemLogVo.setLogContent("定时器执行异常		"+startInfo+endInfo
+						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！		异常信息为"+e.toString().substring(0, 500));
 				systemLogVo.setLogLevel("2");
 				systemLogVo.setLogCreateDate(new Date());
 				systemLogService.insertSystemLog(systemLogVo);
