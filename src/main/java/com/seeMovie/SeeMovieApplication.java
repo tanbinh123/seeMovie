@@ -17,12 +17,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableScheduling
 @MapperScan("com.seeMovie.mapper")
 public class SeeMovieApplication extends WebMvcConfigurerAdapter{
-	//这是为打war部署做准备 包括extends的SpringBootServletInitializer都是为打war包部署时使用  
+	//这是为打war部署做准备 包括extends的SpringBootServletInitializer都是为打war包部署时使用
 	/*@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SeeMovieApplication.class);
     }*/
-	//favorPathExtension表示支持后缀匹配
+	//favorPathExtension表示支持是否后缀匹配
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 	      configurer.favorPathExtension(false);

@@ -24,12 +24,16 @@
   </select>
   <!--根据用户名查询最近十次登录信息-->
   <select id="selectTheLastTenVisitsByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select id, userName, source, ip, ip_address, host_name, visit_date
-    from visit_user_info where userName = #{userName} order by visit_date desc limit 0,10
+    <if test="userName != null and userName != ''">
+      select id, userName, source, ip, ip_address, host_name, visit_date
+      from visit_user_info where userName = #{userName} order by visit_date desc limit 0,10
+    </if>
   </select>
   <!--根据用户名查询所有登录次数-->
   <select id="selectAllVisitNumsByUserName" resultType="int" parameterType="java.lang.String">
-    select count(1)
-    from visit_user_info where userName = #{userName}
+  <if test="userName != null and userName != ''">
+  select count(1)
+  from visit_user_info where userName = #{userName}
+  </if>
   </select>
 </mapper>

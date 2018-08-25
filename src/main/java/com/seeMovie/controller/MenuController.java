@@ -1,8 +1,14 @@
 package com.seeMovie.controller;
 
+import com.alibaba.druid.util.StringUtils;
+import com.seeMovie.service.MenuService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author      mym
@@ -15,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/menu")
 public class MenuController {
+	@Autowired
+	MenuService menuService;
 	/**
 	 * 
 	 * @author 		mym
@@ -26,7 +34,25 @@ public class MenuController {
 	@RequestMapping("/toMenu")
 	public ModelAndView goToLoginPage(ModelAndView model){
 		model.addObject("userName","admin");
+		model.addObject("menuName","菜单管理");
 		model.setViewName("theBackGround/systemPage/menu");
 		return model;
+	}
+
+	@RequestMapping("/selectMenuListByParam")
+	@ResponseBody
+	public Map<String,Object> selectMenuListByParam(String menuParentId,String menuName,String pageSize,String pageNumber){
+		Map<String,Object> returnMap = new HashMap<>();
+		try {
+			//封装查询参数
+			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?Integer.valueOf(pageNumber)+1:0);
+			returnMap.put("pageSize",!StringUtils.isEmpty(pageSize)?Integer.valueOf(pageSize)+1:20);
+			returnMap.put("menuName",menuName);
+			returnMap.put("menuParentId",menuParentId);
+			returnMap = menuService.selectMenuListByParam(returnMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnMap;
 	}
 }
