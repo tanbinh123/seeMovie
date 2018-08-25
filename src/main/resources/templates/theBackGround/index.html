@@ -347,12 +347,16 @@ $(function(){
             align: "center",
             width:'15%'
         },{
-            field: 'date',
+            field: 'visitDate',
             title: '访问日期',
             align: "center",
             width:'15%',
             formatter: function (value, row, index) {
-                return value;
+            	if(value != null && value != "" && value != undefined && value != "undefined"){
+            		return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+            	}else{
+            		return value;
+            	}
             }
         }]		
 	});

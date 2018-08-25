@@ -9,6 +9,6 @@ public static void main(String[] args) {
 	System.out.println("产　　地　美国".replaceAll("　　", ""));
 	System.out.println("产　　地　美国".replaceAll("　　","").replaceAll("　", ""));
 	System.out.println("产　　地　美国".replaceAll("　　","").replaceAll("　", "").trim().length()>2?"产　　地　美国".replaceAll("　　","").replaceAll("　", "").trim().substring(2,"产　　地　美国".replaceAll("　　","").replaceAll("　", "").trim().length()).trim():"");*/
-	IpInfoUtils.getIpAddress("218.192.3.42");
+	System.out.println(IpInfoUtils.getIpAddress("218.192.3.42"));
 }
 }

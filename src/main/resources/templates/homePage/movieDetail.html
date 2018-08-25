@@ -32,8 +32,8 @@ body{
 			<div style="float:left;width:50%;">
 				<span style="margin-left:28%;background:#A4D3EE;width:60%;text-align:center;"><b>${movie.movieName}</b></span>
 				<img style="height:600px;width:100%;" src="${movie.imgUrl}">
-				<p>复制下载链接到迅雷下载</p>
-				<a>${movie.downHref}</a>
+				<h5>复制下载链接到迅雷下载<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;豆瓣评分：${movie.doubanScore!'暂无'}</span></h5>
+				<a>${movie.downLoadHref}</a>
 			</div>
 			<div style="float:left;width:50%;">
 				<div>

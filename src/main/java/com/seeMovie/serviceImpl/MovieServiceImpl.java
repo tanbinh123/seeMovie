@@ -55,7 +55,7 @@ public class MovieServiceImpl implements MovieService{
 				vo.setSynchronousImgUrlFlage("N");
 				vo.setInsertDate(new Date());
 				//根据保存的截取链接判断当前数据是否存在  存在则不保存
-				int num= movieMapper.selectDownHrefVoByHref(vo.getDownHref());
+				int num= movieMapper.selectDownHrefVoByHref(vo.getDownLoadHref());
 				if(num == 0){
 					movieMapper.insertDownHrefByVo(vo);
 				}
@@ -68,7 +68,7 @@ public class MovieServiceImpl implements MovieService{
 		movieVo.setCategory("teleplay");
 		if(movieHrefAndImgUrl!=null && movieHrefAndImgUrl.size()>=2){//至少存在电影名字及下载链接
 			//最多保留两张图片链接
-			movieVo.setDownHref(movieHrefAndImgUrl.get(0));
+			movieVo.setDownLoadHref(movieHrefAndImgUrl.get(0));
 			movieVo.setMovieName(movieHrefAndImgUrl.get(1));
 			//初始化赋值
 			movieVo.setImgUrl(default_img_url);

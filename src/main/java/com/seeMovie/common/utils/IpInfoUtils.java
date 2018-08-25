@@ -85,8 +85,9 @@ public class IpInfoUtils {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));// 往对端写完数据对端服务器返回数据
 				// 以BufferedReader流来读取
 				StringBuffer buffer = new StringBuffer();
-				while (reader.readLine() != null) {
-					buffer.append(reader.readLine());
+				String infoStr = null;
+				while ((infoStr = reader.readLine()) != null) {
+					buffer.append(infoStr);
 				}
 				reader.close();
 				if(buffer != null){

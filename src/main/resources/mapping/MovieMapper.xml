@@ -1,17 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.seeMovie.mapper.MovieMapper">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seeMovie.mapper.MovieMapper" >
+  <resultMap id="BaseResultMap" type="com.seeMovie.pojo.MovieVo" >
+    <result column="movie_id" property="movieId" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="downLoad_href" property="downLoadHref" jdbcType="VARCHAR" />
+    <result column="movie_name" property="movieName" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="img_url2" property="imgUrl2" jdbcType="VARCHAR" />
+    <result column="douban_score" property="doubanScore" jdbcType="DECIMAL" />
+    <result column="produce_year" property="produceYear" jdbcType="VARCHAR" />
+    <result column="produce_country" property="produceCountry" jdbcType="VARCHAR" />
+    <result column="describes" property="describes" jdbcType="VARCHAR" />
+    <result column="synchronous_flag" property="synchronousFlag" jdbcType="VARCHAR" />
+    <result column="synchronous_imgUrl_flage" property="synchronousImgurlFlage" jdbcType="VARCHAR" />
+    <result column="insert_date" property="insertDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="search_score" property="searchScore" jdbcType="INTEGER" />
+    <result column="see_or_downLoad_score" property="seeOrdownLoadScore" jdbcType="INTEGER" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.seeMovie.pojo.MovieVo" >
+    insert into movie (movie_id, category, downLoad_href, 
+      movie_name, source, img_url, 
+      img_url2, douban_score, produce_year, 
+      produce_country, describes, synchronous_flag, 
+      synchronous_imgUrl_flage, insert_date, update_date, 
+      search_score, see_or_downLoad_score, remarks
+      )
+    values (#{movieId,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{downLoadHref,jdbcType=VARCHAR}, 
+      #{movieName,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{imgUrl2,jdbcType=VARCHAR}, #{doubanScore,jdbcType=DECIMAL}, #{produceYear,jdbcType=VARCHAR}, 
+      #{produceCountry,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, #{synchronousFlag,jdbcType=VARCHAR}, 
+      #{synchronousImgurlFlage,jdbcType=VARCHAR}, #{insertDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{searchScore,jdbcType=INTEGER}, #{seeOrdownLoadScore,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select movie_id, category, downLoad_href, movie_name, source, img_url, img_url2, douban_score, 
+    produce_year, produce_country, describes, synchronous_flag, synchronous_imgUrl_flage, 
+    insert_date, update_date, search_score, see_or_downLoad_score, remarks
+    from movie
+  </select>
   <!-- 查找所有电影信息 -->
   <select id="selectAllMovieVo" resultType="com.seeMovie.pojo.MovieVo" parameterType="map">
-	select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
-	movieName,m.category as category,m.synchronous_flag as synchronousFlag, m.source as source,m.img_url as imgUrl,m.img_url2 as imgUrl2,m.describes as
-	describes,m.insert_date as insertDate,m.remarks as remarks 
+	select m.movie_id as movieId,m.movie_name as
+	movieName,m.category as category,m.img_url as imgUrl,m.img_url2 as imgUrl2
 	from movie m
 	where 1=1
 	<if test="category != null and category != ''">
     and category =#{category}
     </if>
-	order by m.insert_date
+	order by m.insert_date desc
 	<if test="currentPage != null and pageSize !=null">
 	LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
 	</if>
@@ -24,34 +65,42 @@
   </if>
   </select>
  <!-- 保存当前电影资源-->
-  <insert id="insertDownHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
-    insert into movie (movie_id,category, down_href, movie_name, 
-      source,douban_score,produce_year,produce_country,img_url,img_url2, describes, 
-      insert_date, remarks,synchronous_flag)
-    values (#{movieId,jdbcType=VARCHAR},#{category,jdbcType=VARCHAR}, #{downHref,jdbcType=VARCHAR}, #{movieName,jdbcType=VARCHAR}, 
-      #{source,jdbcType=VARCHAR},#{doubanScore,jdbcType=DECIMAL},#{produceYear,jdbcType=VARCHAR},#{produceCountry,jdbcType=VARCHAR},#{imgUrl,jdbcType=VARCHAR},#{imgUrl2,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, 
-      #{insertDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR},#{synchronousFlag,jdbcType=VARCHAR})
+  <insert id="insertdownLoadHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
+    insert into movie (movie_id, category, downLoad_href, 
+      movie_name, source, img_url, 
+      img_url2, douban_score, produce_year, 
+      produce_country, describes, synchronous_flag, 
+      synchronous_imgUrl_flage, insert_date, update_date, 
+      search_score, see_or_downLoad_score, remarks
+      )
+    values (#{movieId,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{downLoadHref,jdbcType=VARCHAR}, 
+      #{movieName,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{imgUrl2,jdbcType=VARCHAR}, #{doubanScore,jdbcType=DECIMAL}, #{produceYear,jdbcType=VARCHAR}, 
+      #{produceCountry,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, #{synchronousFlag,jdbcType=VARCHAR}, 
+      #{synchronousImgurlFlage,jdbcType=VARCHAR}, #{insertDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{searchScore,jdbcType=INTEGER}, #{seeOrdownLoadScore,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}
+      )
   </insert>
   <!-- 根据保存的截取链接判断当前数据是否存在  存在则不保存 -->
-  <select id="selectDownHrefVoByHref" parameterType="java.lang.String" resultType="int">
+  <select id="selectdownLoadHrefVoByHref" parameterType="java.lang.String" resultType="int">
   select count(1) from movie where 1=1
   <if test="value !=null and value !=''">
-  and down_href = #{value}
+  and downLoad_href = #{value}
   </if>
   </select>
   <!-- 根据电影id查看电影详情-->
-  <select id="getMovieDetail" resultType="com.seeMovie.pojo.MovieVo" parameterType="java.lang.String">
-  select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
-	movieName,m.source as source,m.img_url as imgUrl,m.img_url2 as imgUrl2,m.describes as
-	describes,m.insert_date as insertDate,m.remarks as remarks,m.category as category,m.synchronous_flag as synchronousFlag from movie m
+  <select id="getMovieDetail" resultMap="BaseResultMap" parameterType="java.lang.String">
+  select movie_id,downLoad_href,movie_name,img_url,img_url2,describes,
+	douban_score,produce_year, produce_country,see_or_downLoad_score
+	from movie
 	where 1=1
 	<if test="value != null and value != ''">
- 	and m.movie_id =#{value}	
+ 	and movie_id =#{value}	
 	</if>
   </select>
   <!-- 根绝条件查询对应的影片-->
-  <select id="getAllMovie" resultType="com.seeMovie.pojo.MovieVo">
-  select m.movie_id as movieId,m.down_href as downHref,m.movie_name as
+  <select id="getAllMovie" resultType="com.seeMovie.pojo.MovieVo" parameterType="map">
+  select m.movie_id as movieId,m.downLoad_href as downLoadHref,m.movie_name as
 	movieName,m.img_url as imgUrl,m.img_url2 as imgUrl2 from movie m
 	where 1=1 
 	<!-- 影片类别 -->

@@ -23,7 +23,7 @@ public class MovieVo implements Serializable{
 	/**
 	 * 下载连接
 	 */
-	private String downHref;
+	private String downLoadHref;
 	/**
 	 * 影片类型(teleplay电视剧   除了电视剧都是电影）
 	 */
@@ -73,6 +73,14 @@ public class MovieVo implements Serializable{
 	 */
 	private String synchronousFlag;
 	/**
+	 * 电影搜索指数
+	 */
+	private Integer searchScore;
+	/**
+	 * 电影查看详情(或者下载)指数
+	 */
+    private Integer seeOrdownLoadScore;
+	/**
 	 * 更新日期
 	 */
 	private Date updateDate;
@@ -80,6 +88,12 @@ public class MovieVo implements Serializable{
 	 * 影片类型(电影/电视剧)同步标志(Y/N)
 	 */
 	private String synchronousImgUrlFlage;		
+	public Integer getSearchScore() {
+		return searchScore;
+	}
+	public void setSearchScore(Integer searchScore) {
+		this.searchScore = searchScore;
+	}
 	public String getProduceCountry() {
 		return produceCountry;
 	}
@@ -129,12 +143,6 @@ public class MovieVo implements Serializable{
 	public void setMovieId(String movieId) {
 		this.movieId = movieId;
 	}
-	public String getDownHref() {
-		return downHref;
-	}
-	public void setDownHref(String downHref) {
-		this.downHref = downHref;
-	}
 	public String getMovieName() {
 		return movieName;
 	}
@@ -176,6 +184,18 @@ public class MovieVo implements Serializable{
 	}
 	public void setInsertDate(Date insertDate) {
 		this.insertDate = insertDate;
+	}
+	public String getDownLoadHref() {
+		return downLoadHref;
+	}
+	public void setDownLoadHref(String downLoadHref) {
+		this.downLoadHref = downLoadHref;
+	}
+	public Integer getSeeOrdownLoadScore() {
+		return seeOrdownLoadScore;
+	}
+	public void setSeeOrdownLoadScore(Integer seeOrdownLoadScore) {
+		this.seeOrdownLoadScore = seeOrdownLoadScore;
 	}
 
 }
