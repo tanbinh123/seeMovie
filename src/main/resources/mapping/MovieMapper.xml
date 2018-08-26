@@ -189,6 +189,7 @@
   </update>
   <!-- 查找所有电影生产国家 -->
   <select id="selectAlCountryList" resultType="java.lang.String" parameterType="map">
-   select distinct(ifnull(produce_country,'未知产地')) from movie order by produce_country
+   select distinct(ifnull(produce_country,'未知产地')) as countryName from movie
+   order by countryName
    </select>
 </mapper>
