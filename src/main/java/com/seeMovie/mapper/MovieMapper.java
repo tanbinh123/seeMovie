@@ -1,20 +1,19 @@
 package com.seeMovie.mapper;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.pojo.WebLinksVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 public interface MovieMapper {
 	int insert(MovieVo vo);
 	
     List<MovieVo> selectAll();
 	//保存当前电影资源
-	void insertDownHrefByVo(MovieVo vo);
+	void insertDownLoadHrefByVo(MovieVo vo);
 	//根据保存的截取链接判断当前数据是否存在  存在则不保存
-	int selectDownHrefVoByHref(String downHref);
+	int selectDownLoadHrefVoByLoadHref(String downLoadHref);
 	//查找所有电影信息
 	List<MovieVo> selectAllMovieVo(Map<String, Object> paramMap);
 	//查找所有总数
@@ -31,4 +30,6 @@ public interface MovieMapper {
 	List<WebLinksVo> getWebLinksVo();
 	//将当前已经爬取过的网站爬取状态改为Y
 	void updateWebLinks(WebLinksVo webLinksVo);
+	//查找所有电影生产国家
+	List<String> selectAlCountryList();
 }

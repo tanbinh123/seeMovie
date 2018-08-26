@@ -14,7 +14,7 @@
     <result column="produce_country" property="produceCountry" jdbcType="VARCHAR" />
     <result column="describes" property="describes" jdbcType="VARCHAR" />
     <result column="synchronous_flag" property="synchronousFlag" jdbcType="VARCHAR" />
-    <result column="synchronous_imgUrl_flage" property="synchronousImgurlFlage" jdbcType="VARCHAR" />
+    <result column="synchronous_imgUrl_flage" property="synchronousImgUrlFlage" jdbcType="VARCHAR" />
     <result column="insert_date" property="insertDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="search_score" property="searchScore" jdbcType="INTEGER" />
@@ -33,7 +33,7 @@
       #{movieName,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
       #{imgUrl2,jdbcType=VARCHAR}, #{doubanScore,jdbcType=DECIMAL}, #{produceYear,jdbcType=VARCHAR}, 
       #{produceCountry,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, #{synchronousFlag,jdbcType=VARCHAR}, 
-      #{synchronousImgurlFlage,jdbcType=VARCHAR}, #{insertDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{synchronousImgUrlFlage,jdbcType=VARCHAR}, #{insertDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
       #{searchScore,jdbcType=INTEGER}, #{seeOrdownLoadScore,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}
       )
   </insert>
@@ -52,6 +52,12 @@
 	<if test="category != null and category != ''">
     and category =#{category}
     </if>
+    <if test="countryName != null and countryName != ''">
+    and produce_country =#{countryName}
+    </if>
+    <if test="noCountry != null and noCountry != ''">
+    and (produce_country is null or  produce_country  = '')
+    </if>
 	order by m.insert_date desc
 	<if test="currentPage != null and pageSize !=null">
 	LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
@@ -63,10 +69,16 @@
   <if test="category != null and category != ''">
   and category =#{category}
   </if>
+  <if test="countryName != null and countryName != ''">
+  and produce_country =#{countryName}
+  </if>
+  <if test="noCountry != null and noCountry != ''">
+  and (produce_country is null or  produce_country  = '')
+  </if>
   </select>
  <!-- 保存当前电影资源-->
-  <insert id="insertdownLoadHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
-    insert into movie (movie_id, category, downLoad_href, 
+  <insert id="insertDownLoadHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
+   insert into movie (movie_id, category, downLoad_href,
       movie_name, source, img_url, 
       img_url2, douban_score, produce_year, 
       produce_country, describes, synchronous_flag, 
@@ -77,12 +89,12 @@
       #{movieName,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
       #{imgUrl2,jdbcType=VARCHAR}, #{doubanScore,jdbcType=DECIMAL}, #{produceYear,jdbcType=VARCHAR}, 
       #{produceCountry,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, #{synchronousFlag,jdbcType=VARCHAR}, 
-      #{synchronousImgurlFlage,jdbcType=VARCHAR}, #{insertDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{synchronousImgUrlFlage,jdbcType=VARCHAR}, #{insertDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
       #{searchScore,jdbcType=INTEGER}, #{seeOrdownLoadScore,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}
       )
   </insert>
   <!-- 根据保存的截取链接判断当前数据是否存在  存在则不保存 -->
-  <select id="selectdownLoadHrefVoByHref" parameterType="java.lang.String" resultType="int">
+  <select id="selectDownLoadHrefVoByLoadHref" parameterType="java.lang.String" resultType="int">
   select count(1) from movie where 1=1
   <if test="value !=null and value !=''">
   and downLoad_href = #{value}
@@ -157,4 +169,8 @@
   update web_links set crawl_flag = 'Y',update_date = now()
   where web_id = #{webId}
   </update>
+  <!-- 查找所有电影生产国家 -->
+  <select id="selectAlCountryList" resultType="java.lang.String" parameterType="map">
+   select distinct(ifnull(produce_country,'未知产地')) from movie order by produce_country
+   </select>
 </mapper>

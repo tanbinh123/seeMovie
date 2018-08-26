@@ -8,7 +8,7 @@ import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.pojo.WebLinksVo;
 public interface MovieService {
 	//新增电影资源
-	void insertAlldownHrefByList(List<Map<String, Object>> downHrefList, WebLinksVo webLinksVo);
+	int insertAlldownHrefByList(List<Map<String, Object>> downHrefList, WebLinksVo webLinksVo);
 	//根据电影id查看电影详情
 	MovieVo getMovieDetail(String movieId);
 	//定时更新影片信息  例如影片类型、影片分类等

@@ -1,30 +1,23 @@
 package com.seeMovie.serviceImpl;
 
-import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.seeMovie.mapper.MovieMapper;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.mapper.MovieCategoryVoMapper;
+import com.seeMovie.mapper.MovieMapper;
 import com.seeMovie.pojo.MovieCategoryVo;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.pojo.WebLinksVo;
 import com.seeMovie.service.MovieService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 @Service
 @Transactional
 public class MovieServiceImpl implements MovieService{
@@ -35,7 +28,8 @@ public class MovieServiceImpl implements MovieService{
 	@Autowired
 	MovieCategoryVoMapper movieCategoryVoMapper;
 	@Override
-	public void insertAlldownHrefByList(List<Map<String, Object>> downHrefList,WebLinksVo webLinksVo) {
+	public int insertAlldownHrefByList(List<Map<String, Object>> downHrefList,WebLinksVo webLinksVo) {
+		int teturnType = 0;
 		try {
 			MovieVo vo = new MovieVo();
 			for (Map<String, Object> map : downHrefList) {
@@ -55,14 +49,16 @@ public class MovieServiceImpl implements MovieService{
 				vo.setSynchronousImgUrlFlage("N");
 				vo.setInsertDate(new Date());
 				//根据保存的截取链接判断当前数据是否存在  存在则不保存
-				int num= movieMapper.selectDownHrefVoByHref(vo.getDownLoadHref());
+				int num= movieMapper.selectDownLoadHrefVoByLoadHref(vo.getDownLoadHref());
 				if(num == 0){
-					movieMapper.insertDownHrefByVo(vo);
+					movieMapper.insertDownLoadHrefByVo(vo);
+					teturnType = 1;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return teturnType;
 	}
 	private MovieVo getNewVoByParam(List<String> movieHrefAndImgUrl, MovieVo movieVo) {
 		movieVo.setCategory("teleplay");
@@ -361,6 +357,9 @@ public class MovieServiceImpl implements MovieService{
 			map.put("pageSize", pagingUtil.getPageSize());
 			//查找影片集合
 			List<MovieVo> movieVoList =  movieMapper.selectAllMovieVo(map);
+			//查找电影产地数据源
+            List<String> countryList = movieMapper.selectAlCountryList();
+            countryList.add(0,"全部");
 			//查找影片分类集合
 			List<MovieCategoryVo> movieCategoryList =  movieCategoryVoMapper.selectAll();
 			if(map.get("showType")!=null && map.get("showType").toString().trim().equals("picture")){
@@ -395,6 +394,7 @@ public class MovieServiceImpl implements MovieService{
 				pagingUtil.setTotalPageSize(total/pagingUtil.getPageSize()+1);
 			}
 			map.put("movieCategoryList", movieCategoryList);
+            map.put("countryList", countryList);
 			map.put("pagingUtil", pagingUtil);
 		} catch (Exception e) {
 			e.printStackTrace();

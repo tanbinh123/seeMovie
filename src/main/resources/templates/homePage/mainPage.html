@@ -30,6 +30,19 @@ body{
 	</div>
 	<div>
 		<ul class="nav nav-pills" style="margin-top:10px;">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					国家
+				</a>
+				<#if countryList?exists && (countryList?size > 0)>
+				<!-- 循环取值 -->
+				<ul class="dropdown-menu">
+					<#list countryList as country>
+					<li><a href="#" class="country_class" id="${country}" onclick="findMovieByCountryName('${country}')">${country}</a></li>
+				</#list>
+				</ul>
+				</#if>
+			</li>
 			<li><a href="#" onclick="findMovieByParam('teleplay')">电视剧</a></li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -55,8 +68,8 @@ body{
 					影片展示方式
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#" onclick="setShowType('picture')">图片方式显示</a></li>
-					<li><a href="#" onclick="setShowType('list')">列表方式显示</a></li>
+					<li><a href="#" class="picture_class" id="picture" onclick="setShowType('picture')">图片方式显示</a></li>
+					<li><a href="#" class="picture_class" id="list" onclick="setShowType('list')">列表方式显示</a></li>
 				</ul>
 			</li>
 			<!-- <li>
@@ -79,10 +92,10 @@ body{
 					每行显示影片条数
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#" onclick="refreshMovieDataByRowNum(2)">每行2个</a></li>
-					<li><a href="#" onclick="refreshMovieDataByRowNum(4)">每行4个</a></li>
-					<li><a href="#" onclick="refreshMovieDataByRowNum(6)">每行6个</a></li>
-					<li><a href="#" onclick="refreshMovieDataByRowNum(12)">每行12个</a></li>
+					<li><a href="#" class="rowNum_class" id="2" onclick="refreshMovieDataByRowNum(2)">每行2个</a></li>
+					<li><a href="#" class="rowNum_class" id="4" onclick="refreshMovieDataByRowNum(4)">每行4个</a></li>
+					<li><a href="#" class="rowNum_class" id="6" onclick="refreshMovieDataByRowNum(6)">每行6个</a></li>
+					<li><a href="#" class="rowNum_class" id="12" onclick="refreshMovieDataByRowNum(12)">每行12个</a></li>
 				</ul>
 			</li>
 			</#if>
@@ -128,6 +141,8 @@ body{
    <input id="rowNum_id" type="hidden" value="${rowNum!''}">
    <!-- 隐藏数据显示方式-->
    <input id="showType_id" type="hidden" value="${showType!''}">
+   <!--国家-->
+   <input id="countryName_id" type="hidden" value="${countryName!''}">
 </div>
 <!-- 底部分页条 -->
 <div>
@@ -164,7 +179,8 @@ $(function() {
             var category = $("#category_id").val();
             var rowNum = $("#rowNum_id").val();
             var showType = $("#showType_id").val();
-            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType;
+            var countryName = $("#countryName_id").val();
+            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
         }
 	});
 	//遍历每页显示记录数   将对应的option选中
@@ -173,12 +189,31 @@ $(function() {
 			$(this).prop("selected",true);
 		}
 	});
-	//遍历影片类型   将对应的option选中
-	/* $(".movieCategory").each(function(){
+	//遍历影片类型   改变对应a标签背景色
+	 $(".movieCategory").each(function(){
 		if($(this).attr("id") == $("#category_id").val()){
-			$(this).prop("active",true);
+            $(this).css("backgroundColor", "#FC9D99");
+			/*$(this).prop("active",true);*/
 		}
-	}); */
+	});
+    //遍历展示方式   改变对应a标签背景色
+    $(".rowNum_class").each(function(){
+        if($(this).attr("id") == $("#rowNum_id").val()){
+            $(this).css("backgroundColor", "#FC9D99");
+        }
+    });
+    //遍历每行显示条数   改变对应a标签背景色
+    $(".picture_class").each(function(){
+        if($(this).attr("id") == $("#showType_id").val()){
+            $(this).css("backgroundColor", "#FC9D99");
+        }
+    });
+    //遍历显示国家  改变对应a标签背景色
+    $(".country_class").each(function(){
+        if($(this).attr("id") == $("#countryName_id").val()){
+            $(this).css("backgroundColor", "#FC9D99");
+        }
+    });
 });
 
 //根据影片类型及影片分类查找对应影片
@@ -189,7 +224,19 @@ function findMovieByParam(category){
 	var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
     var rowNum = $("#rowNum_id").val();
-    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType;
+    var countryName = $("#countryName_id").val();
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
+}
+//根据影片名称查找影片
+function findMovieByCountryName(countryName){
+    //隐藏影片类型
+    $("#countryName_id").val(countryName);
+    var showType = $("#showType_id").val();
+    var pathName = document.location.pathname;
+    var index = pathName.substr(1).indexOf("/");
+    var rowNum = $("#rowNum_id").val();
+    var category = $("#category_id").val();
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
 }
 //根据影片类型及影片分类查找对应影片
 function setShowType(showType){
@@ -199,7 +246,8 @@ function setShowType(showType){
     var index = pathName.substr(1).indexOf("/");
     var rowNum = $("#rowNum_id").val();
 	var category = $("#category_id").val();
-    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType;
+    var countryName = $("#countryName_id").val();
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
 }
 //根绝影片id查看影片详情
 function goToThisPage(movieId){
@@ -218,7 +266,8 @@ function refreshMovieData(){
 	var category = $("#category_id").val();
 	var rowNum = $("#rowNum_id").val();
 	var showType = $("#showType_id").val();
-	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+pageSize+"&rowNum="+rowNum+"&showType="+showType;
+    var countryName = $("#countryName_id").val();
+	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+pageSize+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
 }
 //每行显示电影数目   重新加载数据
 function refreshMovieDataByRowNum(rowNum){
@@ -226,7 +275,8 @@ function refreshMovieDataByRowNum(rowNum){
 	var index = pathName.substr(1).indexOf("/");
 	var category = $("#category_id").val();
 	var showType = $("#showType_id").val();
-	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum+"&showType="+showType;
+    var countryName = $("#countryName_id").val();
+	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
 }
 </script>
 </html>
