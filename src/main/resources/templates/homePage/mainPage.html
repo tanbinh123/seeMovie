@@ -1,24 +1,62 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>看吧</title>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="stylesheet" href="/css/bootstrap.css">  
-<link rel="stylesheet" href="/css/pagination.css">  
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-<!-- 分页 -->
-<script src="/js/jquery.pagination.js"></script>
-<!-- 回到顶部特效 -->
-<script src="/js/scrolltopcontrol.js"></script>
+<#assign ctx=request.getContextPath()>
+<#include "../homePage-header.html"/>
 <style>
 body{
     font-size: 16px;
     background-color:#D6D5B7;
 }
+.footer{position:absolute;bottom:0;width:100%;height:100%;}
 #n{margin:10px auto; width:920px; border:1px solid #CCC;font-size:12px; line-height:30px;}
 #n a{ padding:0 4px; color:#333}
+/*搜索框样式*/
+div.search {
+	padding:10px 0;
+}
+.search_form {
+	position:relative;
+	width:100px;
+	margin:0 auto;
+}
+.search_input,.search_button {
+	border:none;
+	outline:none;
+}
+.search_input {
+	width:95%;
+	height:42px;
+	padding-left:13px;
+}
+.search_button {
+	height:42px;
+	width:42px;
+	cursor:pointer;
+	position:absolute;
+}
+/*搜索框6*/
+.bar6 .search_form {
+	height:42px;
+}
+.bar6 .search_input {
+	width:250px;
+	border-radius:42px;
+	border:2px solid #324B4E;
+	background:#F9F0DA;
+	transition:.3s linear;
+	float:right;
+}
+.bar6 .search_input:focus {
+	width:300px;
+}
+.bar6 .search_button {
+	background:none;
+	top:-3px;
+	right:30px;
+}
+.bar6 .search_button:before {
+	content:"Search";
+	font-family:FontAwesome;
+	color:#324b4e;
+}
 </style>
 </head>
 <body>
@@ -38,12 +76,23 @@ body{
 				<!-- 循环取值 -->
 				<ul class="dropdown-menu">
 					<#list countryList as country>
-					<li><a href="#" class="country_class" id="${country}" onclick="findMovieByCountryName('${country}')">${country}</a></li>
+					<li><a href="#" class="country_class" id="${country}" onclick="findMovieByParam('countryName','${country}')">${country}</a></li>
 				</#list>
 				</ul>
 				</#if>
 			</li>
-			<li><a href="#" onclick="findMovieByParam('teleplay')">电视剧</a></li>
+		    <li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					年代
+				</a>
+				<!-- onclick="findMovieByParam('year',$('#year_search').val())"-->
+				<ul class="dropdown-menu">
+					<input id="year_search" value="${year!''}" onClick="WdatePicker({dateFmt:'yyyy'})" class="button button-rounded button-tiny" style="width:80px;background:#FC9D99;">
+					<!--<button onclick="findMovieByParam('year',$('#year_search').val())"></button>-->
+					<a href="#" onclick="findMovieByParam('year',$('#year_search').val())" class="button button-primary button-pill button-tiny">Go</a><!--button button-primary button-pill button-small-->
+				</ul>
+			</li>
+			<li><a href="#" onclick="findMovieByParam('category','teleplay')">电视剧</a></li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 					电影
@@ -52,7 +101,7 @@ body{
    					<!-- 循环取值 -->
    					<ul class="dropdown-menu">
    					<#list movieCategoryList as movieCategory>
-   						<li><a href="#" class="movieCategory" id="${movieCategory.movieCategoryCode}" onclick="findMovieByParam('${movieCategory.movieCategoryCode}')">${movieCategory.movieCategoryName}</a></li>
+   						<li><a href="#" class="movieCategory" id="${movieCategory.movieCategoryCode}" onclick="findMovieByParam('category','${movieCategory.movieCategoryCode}')">${movieCategory.movieCategoryName}</a></li>
    					</#list>
    					</ul>
    				</#if>
@@ -68,38 +117,32 @@ body{
 					影片展示方式
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#" class="picture_class" id="picture" onclick="setShowType('picture')">图片方式显示</a></li>
-					<li><a href="#" class="picture_class" id="list" onclick="setShowType('list')">列表方式显示</a></li>
+					<li><a href="#" class="picture_class" id="picture" onclick="findMovieByParam('showType','picture')">图片方式显示</a></li>
+					<li><a href="#" class="picture_class" id="list" onclick="findMovieByParam('showType','list')">列表方式显示</a></li>
 				</ul>
 			</li>
-			<!-- <li>
-			<#if showType?exists && (showType == "picture")>
-			<select id="show_type_id" onchange="setShowType()">
-			<option id="picture_id" value="picture" selected="selected">图片方式显示</option>
-			<option id="list_id" value="list">列表方式显示</option>
-			</select>
-   			</#if>
-			<#if showType?exists && (showType == "list")>
-			<select id="show_type_id" onchange="setShowType()">
-			<option id="picture_id" value="picture">图片方式显示</option>
-			<option id="list_id" value="list" selected="selected">列表方式显示</option>
-			</select>
-   			</#if>
-			</li> -->
-			<#if showType?exists && (showType == "picture")>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 					每行显示影片条数
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#" class="rowNum_class" id="2" onclick="refreshMovieDataByRowNum(2)">每行2个</a></li>
-					<li><a href="#" class="rowNum_class" id="4" onclick="refreshMovieDataByRowNum(4)">每行4个</a></li>
-					<li><a href="#" class="rowNum_class" id="6" onclick="refreshMovieDataByRowNum(6)">每行6个</a></li>
-					<li><a href="#" class="rowNum_class" id="12" onclick="refreshMovieDataByRowNum(12)">每行12个</a></li>
+					<li><a href="#" class="rowNum_class" id="2" onclick="findMovieByParam('rowNum',2)">每行2个</a></li>
+					<li><a href="#" class="rowNum_class" id="4" onclick="findMovieByParam('rowNum',4)">每行4个</a></li>
+					<li><a href="#" class="rowNum_class" id="6" onclick="findMovieByParam('rowNum',6)">每行6个</a></li>
+					<li><a href="#" class="rowNum_class" id="12" onclick="findMovieByParam('rowNum',12)">每行12个</a></li>
 				</ul>
 			</li>
-			</#if>
+			<li>
+			<!--搜索框-->
+			<div class="search bar6" style="margin-left:250px;margin-top:-10px;">
+				<form class="search_form">
+					<input class="search_input" type="text" placeholder="请输入电影名称" name="movieName" id="movieName_search" value="${movieName!''}">
+					<button class="search_button" type="button" onclick="findMovieByParam('movieName',$('#movieName_search').val())"></button>
+				</form>
+			</div>
+			</li>
 		</ul>
+
 	</div>
 	</div>
 </nav>
@@ -143,17 +186,23 @@ body{
    <input id="showType_id" type="hidden" value="${showType!''}">
    <!--国家-->
    <input id="countryName_id" type="hidden" value="${countryName!''}">
+   <!--年代-->
+   <input id="year_id" type="hidden" value="${year!''}">
+   <!--电影名称-->
+   <input id="movieName_id" type="hidden" value="${movieName!''}">
 </div>
 <!-- 底部分页条 -->
 <div>
 <div class="M-box" style="margin-top:20px;margin-left:18%;"></div>
 </div>
-
-<nav class="navbar navbar-default" role="navigation" style="background:#AEEEEE;margin-top:25px;">
-	<div class="container-fluid">
-		&nbsp;&nbsp;&nbsp;&nbsp;本站严禁提供任何带色情，违法内容的影片！欢迎大家监督，有问题可发邮件到seeMovie@seemovies.com.cn,本站所有资源来源于网友交流,只供网络测试、请在24小时内删除所下内容，开始清理无版权的内容，请大家支持正版到影院观看或购买正版CD!
-	</div>
-</nav>
+<!--页脚-->
+<footer>
+	<nav class="navbar navbar-default" role="navigation" style="background:#AEEEEE;margin-top:25px;">
+		<div class="container-fluid">
+			&nbsp;&nbsp;&nbsp;&nbsp;本站严禁提供任何带色情，违法内容的影片！欢迎大家监督，有问题可发邮件到seeMovie@seemovies.com.cn,本站所有资源来源于网友交流,只供网络测试、请在24小时内删除所下内容，开始清理无版权的内容，请大家支持正版到影院观看或购买正版CD!
+		</div>
+	</nav>
+</footer>
 </body>
 <script type="text/javascript">
 $(function() {
@@ -180,7 +229,9 @@ $(function() {
             var rowNum = $("#rowNum_id").val();
             var showType = $("#showType_id").val();
             var countryName = $("#countryName_id").val();
-            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
+            var year = $("#year_id").val();
+            var movieName = $("#movieName_search").val();
+            window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+nextPage+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName+"&year="+year+"&movieName="+movieName;
         }
 	});
 	//遍历每页显示记录数   将对应的option选中
@@ -214,19 +265,36 @@ $(function() {
             $(this).css("backgroundColor", "#FC9D99");
         }
     });
+    //将年代筛选条件附上值
+    //$("#year_search").val(${year!''});
 });
 
-//根据影片类型及影片分类查找对应影片
-function findMovieByParam(category){
-	//隐藏影片类型
-	$("#category_id").val(category);
-	var showType = $("#showType_id").val();
-	var pathName = document.location.pathname;
+//多条件查询影片
+function findMovieByParam(type,value){
+    if(type != null && type != '' && type != undefined && type != "undefined"){
+        $("#"+type+"_id").val(value);
+    }
+    var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
+    var pageSize = $(".pageSize").val();
+    if(pageSize == null || pageSize == "" || pageSize == undefined || pageSize == "undefined"){
+        return false;
+    }
+    var category = $("#category_id").val();
     var rowNum = $("#rowNum_id").val();
+    var showType = $("#showType_id").val();
     var countryName = $("#countryName_id").val();
-    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
+    var year = $("#year_id").val();
+    var movieName = $("#movieName_search").val();
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+pageSize+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName+"&year="+year+"&movieName="+movieName;
 }
+//根据影片id查看影片详情
+function goToThisPage(movieId){
+    var pathName = document.location.pathname;
+    var index = pathName.substr(1).indexOf("/");
+    window.open(pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId);
+}
+/*
 //根据影片名称查找影片
 function findMovieByCountryName(countryName){
     //隐藏影片类型
@@ -249,12 +317,6 @@ function setShowType(showType){
     var countryName = $("#countryName_id").val();
     window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+${pagingUtil.pageSize}+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
 }
-//根绝影片id查看影片详情
-function goToThisPage(movieId){
-	var pathName = document.location.pathname;
-    var index = pathName.substr(1).indexOf("/");
-    window.open(pathName.substr(0,index+1)+"/movieDetail.html?movieId="+movieId);
-}
 //根据更改的每页显示记录数   重新加载数据
 function refreshMovieData(){
 	var pathName = document.location.pathname;
@@ -271,6 +333,7 @@ function refreshMovieData(){
 }
 //每行显示电影数目   重新加载数据
 function refreshMovieDataByRowNum(rowNum){
+    $("#rowNum_id").val(rowNum);
 	var pathName = document.location.pathname;
 	var index = pathName.substr(1).indexOf("/");
 	var category = $("#category_id").val();
@@ -278,5 +341,6 @@ function refreshMovieDataByRowNum(rowNum){
     var countryName = $("#countryName_id").val();
 	window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+$(".pageSize").val()+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName;
 }
+*/
 </script>
 </html>

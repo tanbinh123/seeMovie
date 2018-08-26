@@ -35,7 +35,8 @@ public class MainPageController {
 	 * 进入主页面
 	 */
 	@RequestMapping("/mainPage")
-	public ModelAndView toMainPage(PagingUtil pagingUtil,String category,String rowNum,String showType,String countryName,HttpServletRequest request){
+	public ModelAndView toMainPage(PagingUtil pagingUtil,String category,String rowNum,String movieName,
+								   String year,String showType,String countryName,HttpServletRequest request){
 		ModelAndView mv = new ModelAndView();
 		//封装参数
 		Map<String,Object> map = new HashMap<>();
@@ -53,13 +54,12 @@ public class MainPageController {
 				vo.setVisitDate(new Date());
 				loginService.insertVisitUserInfoVo(vo);
 			}
-			//根据影片类型查找对应影片
-            if(!StringUtils.isEmpty(category) && category.equals("all")){
-                map.put("category", null);
-            }else{
-                map.put("category", category);
-            }
 			//根据影片分类查找对应影片   (喜剧爱情)
+            map.put("category", category);
+			//年代
+			map.put("year", year);
+			//电影名称
+			map.put("movieName", movieName);
 			//每行显示影片数目
 			map.put("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);//默认每行显示4个
 			//展示方式
@@ -86,6 +86,8 @@ public class MainPageController {
 			mv.addObject("movieCategoryList",map.get("movieCategoryList"));//影片分类集合
 			mv.addObject("pagingUtil",map.get("pagingUtil"));
 			//以下参数在再次查询时有用 默认记住用户上一次查询的条件
+			mv.addObject("movieName", movieName);
+			mv.addObject("year", year);
 			mv.addObject("category",category);
 			mv.addObject("countryName",countryName);
 			mv.addObject("rowNum",!StringUtils.isEmpty(rowNum)?Integer.valueOf(rowNum):4);

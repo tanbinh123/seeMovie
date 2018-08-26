@@ -43,20 +43,29 @@
     insert_date, update_date, search_score, see_or_downLoad_score, remarks
     from movie
   </select>
-  <!-- 查找所有电影信息 -->
+  <!-- 查找所有符合条件电影信息 -->
   <select id="selectAllMovieVo" resultType="com.seeMovie.pojo.MovieVo" parameterType="map">
 	select m.movie_id as movieId,m.movie_name as
 	movieName,m.category as category,m.img_url as imgUrl,m.img_url2 as imgUrl2
 	from movie m
 	where 1=1
-	<if test="category != null and category != ''">
+	<if test="category != null and category != '' and category != 'all'">
     and category =#{category}
+    </if>
+    <if test="category != null and category == 'all'">
+    and category != 'teleplay'<!-- 全部 既是类型不是电视剧的 -->
     </if>
     <if test="countryName != null and countryName != ''">
     and produce_country =#{countryName}
     </if>
     <if test="noCountry != null and noCountry != ''">
     and (produce_country is null or  produce_country  = '')
+    </if>
+    <if test="year != null and year != ''">
+    and produce_year like concat("%",#{year},"%"}
+    </if>
+    <if test="movieName != null and movieName != ''">
+        and movie_name like concat("%",#{movieName},"%")
     </if>
 	order by m.insert_date desc
 	<if test="currentPage != null and pageSize !=null">
@@ -66,15 +75,24 @@
  <!-- 查找所有符合条件的总数 -->
   <select id="selectMovieVoCount" resultType="int" parameterType="map">
   select count(1) from movie where 1=1
-  <if test="category != null and category != ''">
-  and category =#{category}
-  </if>
-  <if test="countryName != null and countryName != ''">
-  and produce_country =#{countryName}
-  </if>
-  <if test="noCountry != null and noCountry != ''">
-  and (produce_country is null or  produce_country  = '')
-  </if>
+      <if test="category != null and category != 'all'">
+          and category =#{category}
+      </if>
+      <if test="category != null and category == 'all'">
+          and category != 'teleplay'<!-- 全部 既是类型不是电视剧的 -->
+      </if>
+      <if test="countryName != null and countryName != ''">
+          and produce_country =#{countryName}
+      </if>
+      <if test="noCountry != null and noCountry != ''">
+          and (produce_country is null or  produce_country  = '')
+      </if>
+      <if test="year != null and year != ''">
+          and produce_year =#{year}
+      </if>
+      <if test="movieName != null and movieName != ''">
+          and movie_name like concat("%",#{movieName},"%")
+      </if>
   </select>
  <!-- 保存当前电影资源-->
   <insert id="insertDownLoadHrefByVo" parameterType="com.seeMovie.pojo.MovieVo">
@@ -110,7 +128,7 @@
  	and movie_id =#{value}	
 	</if>
   </select>
-  <!-- 根绝条件查询对应的影片-->
+  <!-- 根据条件查询对应的影片-->
   <select id="getAllMovie" resultType="com.seeMovie.pojo.MovieVo" parameterType="map">
   select m.movie_id as movieId,m.downLoad_href as downLoadHref,m.movie_name as
 	movieName,m.img_url as imgUrl,m.img_url2 as imgUrl2 from movie m
