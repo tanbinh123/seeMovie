@@ -62,7 +62,7 @@
     and (produce_country is null or  produce_country  = '')
     </if>
     <if test="year != null and year != ''">
-    and produce_year like concat("%",#{year},"%"}
+    and produce_year = #{year}
     </if>
     <if test="movieName != null and movieName != ''">
         and movie_name like concat("%",#{movieName},"%")
