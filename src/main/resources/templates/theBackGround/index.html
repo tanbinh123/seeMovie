@@ -125,12 +125,12 @@
 $(function(){
 	$("#VisitUserInfoVo").bootstrapTable('destroy').bootstrapTable({
 		//url: ${ctx}+"/login/selectLoginListByUserName.html",
-		method:"post",
+		//method:"post",
 		url: "/login/selectLoginListByUserName.html",
         sidePagination: "server",
         queryParams: function (params) {
             return {
-            	userName:"${userName}",//其实应该传主键id
+            	userName:"${userName!''}",//其实应该传主键id
                 pageSize: params.limit,
                 pageNumber: params.offset,
                 sortOrder: params.order,
