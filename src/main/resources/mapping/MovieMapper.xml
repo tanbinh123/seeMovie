@@ -75,7 +75,7 @@
  <!-- 查找所有符合条件的总数 -->
   <select id="selectMovieVoCount" resultType="int" parameterType="map">
   select count(1) from movie where 1=1
-      <if test="category != null and category != 'all'">
+      <if test="category != null and category  != '' and category != 'all'">
           and category =#{category}
       </if>
       <if test="category != null and category == 'all'">

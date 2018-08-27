@@ -94,7 +94,7 @@
 		this.filling = function(index){
 			/******   by  mym ***/
 			var html = '<span style="margin-left:-120px;height:38px;">'
-				+'<select class="form-control pageSize" style="width:200px;" onchange="refreshMovieData()">'
+				+'<select class="form-control pageSize" style="width:200px;" onchange="findMovieByParam(null,null)">'
 				+'<option value="24">选择每页显示记录数</option>'
 				+'<option value="12">每页12条电影</option>'
 				+'<option value="24">每页24条电影</option>'

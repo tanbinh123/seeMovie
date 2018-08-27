@@ -271,14 +271,17 @@ $(function() {
 
 //多条件查询影片
 function findMovieByParam(type,value){
+    var currentPage = 1;
     if(type != null && type != '' && type != undefined && type != "undefined"){
         $("#"+type+"_id").val(value);
-    }
+    }else{
+        currentPage = ${pagingUtil.currentPage};
+	}
     var pathName = document.location.pathname;
     var index = pathName.substr(1).indexOf("/");
     var pageSize = $(".pageSize").val();
     if(pageSize == null || pageSize == "" || pageSize == undefined || pageSize == "undefined"){
-        return false;
+        pageSize = 24;
     }
     var category = $("#category_id").val();
     var rowNum = $("#rowNum_id").val();
@@ -286,7 +289,7 @@ function findMovieByParam(type,value){
     var countryName = $("#countryName_id").val();
     var year = $("#year_id").val();
     var movieName = $("#movieName_search").val();
-    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage=1"+"&category="+category+"&pageSize="+pageSize+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName+"&year="+year+"&movieName="+movieName;
+    window.location.href=pathName.substr(0,index+1)+"/mainPage.html?currentPage="+currentPage+"&category="+category+"&pageSize="+pageSize+"&rowNum="+rowNum+"&showType="+showType+"&countryName="+countryName+"&year="+year+"&movieName="+movieName;
 }
 //根据影片id查看影片详情
 function goToThisPage(movieId){
