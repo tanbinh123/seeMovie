@@ -55,7 +55,7 @@ public class GetMovieTimer {
 				//int i = 0;
 				unVisitedUrlQueue.add(webLinksVo.getWebLink());
 				//定义过滤器，例如提取以 http://www.dytt8.net/html/gndy/ 开头的链接
-				//循环条件：待抓取的链接不空且每次最多抓取500的链接
+				//循环条件：待抓取的链接不空且每次最多抓取600的链接
 				while (unVisitedUrlQueue!=null) {
 					
 					//先从待访问的序列中取出第一个；
@@ -84,7 +84,7 @@ public class GetMovieTimer {
 					visitedUrlSet.add(visitUrl);
 
 
-					//if(unVisitedUrlQueue.size()<=500){
+					//if(unVisitedUrlQueue.size()<=600){
 						//得到超链接
 						Set<String> links = PageParserTool.getLinks(page,"a");
 						for (String link : links) {
@@ -93,7 +93,7 @@ public class GetMovieTimer {
 									&& !unVisitedUrlQueue.contains(link) && link.startsWith("http")){
 								unVisitedUrlQueue.add(link);
 							}
-							/*if(unVisitedUrlQueue.size()<=500){//超过500不在添加新链接
+							/*if(unVisitedUrlQueue.size()<=600){//超过600不在添加新链接
 								continue;
 							}else{
 								break;
@@ -114,7 +114,7 @@ public class GetMovieTimer {
 			try {
 				endInfo = ",定时器执行结束时间为"+endDate;
 				systemLogVo.setLogContent("定时器执行异常，		"+startInfo+endInfo
-						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！ 本次新增数据一共"+nums+"条！		异常信息为"+e.toString().substring(0, e.toString().length()>500?500:e.toString().length()));
+						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！ 本次新增数据一共"+nums+"条！		异常信息为"+e.toString().substring(0, e.toString().length()>600?600:e.toString().length()));
 				systemLogVo.setLogLevel("2");
 				systemLogVo.setLogCreateDate(new Date());
 				systemLogService.insertSystemLog(systemLogVo);

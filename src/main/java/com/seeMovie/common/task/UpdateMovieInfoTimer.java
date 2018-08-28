@@ -54,7 +54,7 @@ public class UpdateMovieInfoTimer {
 			try {
 				endInfo = ",定时器执行结束时间为"+endDate;
 				systemLogVo.setLogContent("定时器执行异常，		"+startInfo+endInfo
-						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！		异常信息为"+e.toString().substring(0, e.toString().length()>500?500:e.toString().length()));
+						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！		异常信息为"+e.toString().substring(0, e.toString().length()>600?600:e.toString().length()));
 				systemLogVo.setLogLevel("2");
 				systemLogVo.setLogCreateDate(new Date());
 				systemLogService.insertSystemLog(systemLogVo);
@@ -92,7 +92,7 @@ public class UpdateMovieInfoTimer {
 			try {
 				endInfo = ",定时器执行结束时间为"+endDate;
 				systemLogVo.setLogContent("定时器执行异常，		"+startInfo+endInfo
-						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！		异常信息为"+e.toString().substring(0, e.toString().length()>500?500:e.toString().length()));
+						+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！		异常信息为"+e.toString().substring(0, e.toString().length()>600?600:e.toString().length()));
 				systemLogVo.setLogLevel("2");
 				systemLogVo.setLogCreateDate(new Date());
 				systemLogService.insertSystemLog(systemLogVo);
