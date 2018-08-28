@@ -27,4 +27,9 @@ public class MenuServiceImpl implements MenuService {
 		}
 		return returnMap;
 	}
+	//新增菜单
+	@Override
+	public void insertMenuVo(MenuVo menuVo) {
+		menuVoMapper.insert(menuVo);
+	}
 }

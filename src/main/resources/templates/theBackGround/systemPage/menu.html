@@ -18,7 +18,7 @@
 						</div>
 						<div class="panel-body" id="contentid">
 							<div id="toolbar">
-								<a href="javascript:void(0);" class="btn btn-primary btn-xs" onclick="addModel();"><i class="icon iconfont">&#xe611;</i>新增</a>
+								<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal"><i class="icon iconfont">&#xe611;</i>新增</a>
 								<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="editModal();"><i class="icon iconfont">&#xe612;</i>编辑</a>
 								<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteRows();"><i class="icon iconfont">&#xe612;</i>删除</a>
 							</div>
@@ -27,6 +27,39 @@
 						</div>
 					</div><!-- /.col -->
 				</div><!-- /.row -->
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					新增菜单
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form id="addMenu_form_id">
+					选择父级菜单
+					<select name="">
+						<option value="0" name="menuParentId">无</option>
+
+					</select>
+					菜单名称<input name="menuName"/>
+					菜单链接<input name="menuHref"/>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary" onclick="addData()">
+					提交
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
 			</div><!-- /.page-content -->
 		</div>
 	</div><!-- /.main-content -->
@@ -104,11 +137,26 @@
             }]
         });
 	}
-	//新增
+	//弹出新增窗口
 	function addModel(){
 		alert("add");
 	}
-    //编辑
+	//实际新增数据
+    function addData(){
+        var menuVo = $('#addMenu_form_id').serializeObject();
+	    $.ajax({
+                 	url:"/menu/insertMenu.html",
+                	dataType:"json",
+                	method:"post",
+					data:{menuVo:menuVo},
+				  	success:function(data){
+							if(data.state != null && data.state == success){
+							alert("新增才当成功");
+							}
+					}
+		});
+    }
+    //弹出编辑窗口
     function editModal(){
         alert("edit");
     }

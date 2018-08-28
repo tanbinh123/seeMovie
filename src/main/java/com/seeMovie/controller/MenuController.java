@@ -1,14 +1,20 @@
 package com.seeMovie.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.seeMovie.common.utils.JsonData;
+import com.seeMovie.pojo.MenuVo;
 import com.seeMovie.service.MenuService;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author      mym
@@ -54,5 +60,30 @@ public class MenuController {
 			e.printStackTrace();
 		}
 		return returnMap;
+	}
+	/**
+	 * @author      mym
+	 * @date        2018/8/28 0028 20:56
+	 * @describe    新增菜单
+	 * @version     V1.0
+	 * @param
+	 * @return      com.seeMovie.common.utils.JsonData
+	*/
+	@RequestMapping("/insertMenu")
+	@ResponseBody
+	public JsonData insertMenu(MenuVo menuVo){
+		JsonData jsonData = new JsonData();
+		try {
+			if(menuVo != null){
+				menuVo.setMenuId(UUID.randomUUID().toString().replaceAll("-",""));
+				menuVo.setMenuFlag("Y");
+				menuVo.setCreateDate(new Date());
+				menuService.insertMenuVo(menuVo);
+				jsonData.setState(false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonData;
 	}
 }

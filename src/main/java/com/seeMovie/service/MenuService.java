@@ -1,5 +1,7 @@
 package com.seeMovie.service;
 
+import com.seeMovie.pojo.MenuVo;
+
 import java.util.Map;
 
 /**
@@ -20,4 +22,13 @@ public interface MenuService {
 	 * @return      java.util.Map<java.lang.String,java.lang.Object>
 	*/
 	Map<String, Object> selectMenuListByParam(Map<String, Object> returnMap);
+	/**
+	 * @author      mym
+	 * @date        2018/8/28 0028 20:57
+	 * @describe    新增菜单
+	 * @version     V1.0
+	 * @param       [menuVo]
+	 * @return      void
+	*/
+    void insertMenuVo(MenuVo menuVo);
 }
