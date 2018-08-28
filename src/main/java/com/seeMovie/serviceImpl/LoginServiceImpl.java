@@ -1,6 +1,9 @@
 package com.seeMovie.serviceImpl;
 
+import com.seeMovie.mapper.MenuVoMapper;
 import com.seeMovie.mapper.VisitUserInfoVoMapper;
+import com.seeMovie.pojo.MenuQueryVo;
+import com.seeMovie.pojo.MenuVo;
 import com.seeMovie.pojo.VisitUserInfoVo;
 import com.seeMovie.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +19,8 @@ import java.util.List;
 public class LoginServiceImpl implements LoginService {
 	@Autowired
 	VisitUserInfoVoMapper VisitUserInfoVoMapper;
+	@Autowired
+	MenuVoMapper menuVoMapper;
 
 	public LoginServiceImpl() {
 	}
@@ -43,5 +49,16 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public int selectTotalVisitOfToday() {
 		return VisitUserInfoVoMapper.selectTotalVisitOfToday();
+	}
+	//查找所有菜单数据集合
+	@Override
+	public List<MenuQueryVo> selectAllMenuList() {
+		//根据条件查询对应菜单
+		List<MenuQueryVo> returnMenuQueryVoList = menuVoMapper.selectAllParentMenu("0");//先查父级菜单
+		for (MenuQueryVo menuQueryVo : returnMenuQueryVoList) {
+			List<MenuQueryVo> returnMenuVoList = menuVoMapper.selectAllParentMenu(menuQueryVo.getMenuId());//根据父级菜单查询子菜单
+			menuQueryVo.setMenuQueryVoList(returnMenuVoList);
+		}
+		return returnMenuQueryVoList;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.seeMovie.pojo.MenuQueryVo;
 import com.seeMovie.pojo.VisitUserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,9 @@ public class LoginController {
 			//查询系统当日首页访问量   访问ip去重总数
 			int totalVisitOfToday = loginService.selectTotalVisitOfToday();
 			model.addObject("totalVisitOfToday",totalVisitOfToday);
+			//查找所有菜单数据集合
+			List<MenuQueryVo> menuQueryVoList = loginService.selectAllMenuList();
+			model.addObject("menuQueryVoList",menuQueryVoList);
 			if(!StringUtils.isEmpty(userName)&&!StringUtils.isEmpty(password)&&userName.equals("admin")&&password.equals("admin")){
 				//登录成功后将当前登录IP等信息存起来
 				VisitUserInfoVo vo = new VisitUserInfoVo();
@@ -90,7 +94,7 @@ public class LoginController {
 	 * @author		mym
 	 * @date     	2018年8月24日下午9:30:09
 	 * @return   	Map<String,Object>
-	 * @describe    查询当前登录这最近10次登录信息
+	 * @describe   查询当前登录这最近10次登录信息
 	 *
 	 */
 	@RequestMapping("/selectLoginListByUserName")

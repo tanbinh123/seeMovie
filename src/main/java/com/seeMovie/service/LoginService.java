@@ -1,5 +1,6 @@
 package com.seeMovie.service;
 
+import com.seeMovie.pojo.MenuQueryVo;
 import com.seeMovie.pojo.VisitUserInfoVo;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface LoginService {
 	public int selectAllVisitNumsByUserName(String userName);
 	//查询系统当日首页访问量   访问ip去重总数
     int selectTotalVisitOfToday();
+	//查找所有菜单数据集合
+    List<MenuQueryVo> selectAllMenuList();
 }

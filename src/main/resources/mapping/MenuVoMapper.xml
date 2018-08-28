@@ -51,4 +51,13 @@
       and menu_name like concat("%",#{menuName},"$")
     </if>
   </select>
+  <!--根据条件查询对应菜单-->
+    <select id="selectAllParentMenu" resultType="com.seeMovie.pojo.MenuQueryVo" parameterType="java.lang.String">
+      select menu_id, menu_name, menu_href, menu_parent_id, menu_flag, menu_icon, create_date,
+          update_date
+          from menu where 1=1
+          <if test="value !=null and value !=''">
+          and menu_parent_id = #{value}
+          </if>
+    </select>
 </mapper>

@@ -111,7 +111,14 @@
                 field: 'menuParentId',
                 title: '是否顶级菜单',
                 align: "center",
-                width:'15%'
+                width:'15%',
+                formatter: function (value, row, index) {
+                    if(value != null && value == "0"){
+                        return "是"
+                    }else{
+                        return "否";
+                    }
+                }
             },{
                 field: 'menuName',
                 title: '菜单名称',

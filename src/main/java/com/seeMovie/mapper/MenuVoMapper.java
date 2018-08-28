@@ -1,5 +1,6 @@
 package com.seeMovie.mapper;
 
+import com.seeMovie.pojo.MenuQueryVo;
 import com.seeMovie.pojo.MenuVo;
 import java.util.List;
 import java.util.Map;
@@ -12,4 +13,6 @@ public interface MenuVoMapper {
     int selectCountMenuListByParam(Map<String, Object> returnMap);
     //查询符合条件的菜单数据
     List<MenuVo> selectMenuListByParam(Map<String, Object> returnMap);
+    //根据条件查询对应菜单
+    List<MenuQueryVo> selectAllParentMenu(Object o);
 }
