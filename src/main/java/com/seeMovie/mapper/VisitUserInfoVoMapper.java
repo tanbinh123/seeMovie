@@ -13,4 +13,6 @@ public interface VisitUserInfoVoMapper {
     List<VisitUserInfoVo> selectTheLastTenVisitsByUserName(@Param("userName") String userName);
     //根据用户名查询所有登录次数
     int selectAllVisitNumsByUserName(@Param("userName")String userName);
+    //查询系统当日首页访问量   访问ip去重总数
+    int selectTotalVisitOfToday();
 }

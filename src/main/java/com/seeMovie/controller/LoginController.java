@@ -55,6 +55,9 @@ public class LoginController {
 	public ModelAndView login(ModelAndView model,String userName,String password,HttpServletRequest request){
 		//因为后台管理不对外开放  所以此处进行伪登录
 		try {
+			//查询系统当日首页访问量   访问ip去重总数
+			int totalVisitOfToday = loginService.selectTotalVisitOfToday();
+			model.addObject("totalVisitOfToday",totalVisitOfToday);
 			if(!StringUtils.isEmpty(userName)&&!StringUtils.isEmpty(password)&&userName.equals("admin")&&password.equals("admin")){
 				//登录成功后将当前登录IP等信息存起来
 				VisitUserInfoVo vo = new VisitUserInfoVo();

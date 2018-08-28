@@ -39,4 +39,9 @@ public class LoginServiceImpl implements LoginService {
 	public int selectAllVisitNumsByUserName(String userName) {
 		return VisitUserInfoVoMapper.selectAllVisitNumsByUserName(userName);
 	}
+	//查询系统当日首页访问量   访问ip去重总数
+	@Override
+	public int selectTotalVisitOfToday() {
+		return VisitUserInfoVoMapper.selectTotalVisitOfToday();
+	}
 }

@@ -19,4 +19,6 @@ public interface LoginService {
 	public List<VisitUserInfoVo> selectTheLastTenVisitsByUserName(String userName);
 
 	public int selectAllVisitNumsByUserName(String userName);
+	//查询系统当日首页访问量   访问ip去重总数
+    int selectTotalVisitOfToday();
 }
