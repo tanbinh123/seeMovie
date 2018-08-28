@@ -67,11 +67,11 @@ public class LoginController {
 				vo.setVisitDate(new Date());
 				loginService.insertVisitUserInfoVo(vo);
 				//查询后端用户最近十次登录信息及总的登录次数
-				//List<VisitUserInfoVo> VisitUserInfoVoList = loginService.selectTheLastTenVisitsByUserName("admin");//其实应该用用户id查询
+				List<VisitUserInfoVo> VisitUserInfoVoList = loginService.selectTheLastTenVisitsByUserName("admin");//其实应该用用户id查询
 				int loginNum = loginService.selectAllVisitNumsByUserName("admin");
 				model.addObject("userName","admin");
 				model.addObject("loginNum",loginNum);
-				//model.addObject("VisitUserInfoVoList",VisitUserInfoVoList);
+				model.addObject("VisitUserInfoVoList",VisitUserInfoVoList);
 				model.setViewName("theBackGround/index");	
 			}else{
 				model.addObject("errorInfo","用户名或者密码错误请重新输入！");

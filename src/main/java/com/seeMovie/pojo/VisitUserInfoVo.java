@@ -18,7 +18,16 @@ public class VisitUserInfoVo implements Serializable {
 
     private Date visitDate;
 
+    private String visitDateStr;
     private static final long serialVersionUID = 1L;
+
+    public String getVisitDateStr() {
+        return visitDateStr;
+    }
+
+    public void setVisitDateStr(String visitDateStr) {
+        this.visitDateStr = visitDateStr;
+    }
 
     public String getId() {
         return id;
