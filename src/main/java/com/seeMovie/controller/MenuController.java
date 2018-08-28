@@ -1,16 +1,20 @@
 package com.seeMovie.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.seeMovie.common.utils.JsonData;
 import com.seeMovie.pojo.MenuVo;
 import com.seeMovie.service.MenuService;
 import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.awt.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +55,7 @@ public class MenuController {
 		Map<String,Object> returnMap = new HashMap<>();
 		try {
 			//封装查询参数
-			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?Integer.valueOf(pageNumber)+1:0);
+			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?Integer.valueOf(pageNumber):0);
 			returnMap.put("pageSize",!StringUtils.isEmpty(pageSize)?Integer.valueOf(pageSize)+1:20);
 			returnMap.put("menuName",menuName);
 			returnMap.put("menuParentId",menuParentId);
@@ -71,15 +75,16 @@ public class MenuController {
 	*/
 	@RequestMapping("/insertMenu")
 	@ResponseBody
-	public JsonData insertMenu(MenuVo menuVo){
+	public JsonData insertMenu(String vo){
 		JsonData jsonData = new JsonData();
 		try {
-			if(menuVo != null){
+			if(!StringUtils.isEmpty(vo)){
+				MenuVo menuVo = JSON.parseObject(vo,MenuVo.class);
 				menuVo.setMenuId(UUID.randomUUID().toString().replaceAll("-",""));
 				menuVo.setMenuFlag("Y");
 				menuVo.setCreateDate(new Date());
 				menuService.insertMenuVo(menuVo);
-				jsonData.setState(false);
+				jsonData.setState(true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

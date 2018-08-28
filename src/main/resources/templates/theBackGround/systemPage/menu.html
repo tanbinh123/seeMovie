@@ -43,9 +43,8 @@
 			<div class="modal-body">
 				<form id="addMenu_form_id">
 					选择父级菜单
-					<select name="">
-						<option value="0" name="menuParentId">无</option>
-
+					<select name="menuParentId">
+						<option value="0">无</option>
 					</select>
 					菜单名称<input name="menuName"/>
 					菜单链接<input name="menuHref"/>
@@ -76,8 +75,9 @@
             url: url,
             method: "post",
             pagination: true,
-            pageList: [20,50,100],
+            pageNumber:1,
             pageSize: 20,
+            pageList: [20,50,100],
             sidePagination: "server",
             queryParams: function (params) {
                 return {
@@ -143,15 +143,17 @@
 	}
 	//实际新增数据
     function addData(){
-        var menuVo = $('#addMenu_form_id').serializeObject();
+        var vo = $('#addMenu_form_id').serializeJSON();
 	    $.ajax({
                  	url:"/menu/insertMenu.html",
                 	dataType:"json",
                 	method:"post",
-					data:{menuVo:menuVo},
+					data:{vo:vo},
 				  	success:function(data){
-							if(data.state != null && data.state == success){
-							alert("新增才当成功");
+							if(data.state != null && data.state == true){
+								alert("新增菜单成功！");
+								$("#myModal").modal("hide");
+                                searchData("/menu/selectMenuListByParam.html");
 							}
 					}
 		});
