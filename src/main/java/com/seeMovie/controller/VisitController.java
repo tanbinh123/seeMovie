@@ -33,7 +33,7 @@ public class VisitController {
 	@RequestMapping("/toVisitPage")
 	public ModelAndView goToLoginPage(ModelAndView model){
 		model.addObject("userName","admin");
-		model.addObject("menuName","菜单管理");
+		model.addObject("menuName","访客管理");
 		model.setViewName("theBackGround/visitPage/visitPage");
 		return model;
 	}

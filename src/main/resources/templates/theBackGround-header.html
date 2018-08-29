@@ -180,16 +180,18 @@ div .th-inner {
 						<b class="arrow"></b>
 					<!--有子菜单-->
 					<#if menuQueryVo.menuQueryVoList?exists && (menuQueryVo.menuQueryVoList?size>0)>
+						<#list menuQueryVo.menuQueryVoList as menuVo>
 						<ul class="submenu">
 							<li class="">
-								<a href="${menuHref}">
+								<a href="${menuVo.menuHref}">
 									<i class="menu-icon fa fa-caret-right"></i>
-									${menuQueryVo.menuName}
+									${menuVo.menuName}
 								</a>
 
 								<b class="arrow"></b>
 							</li>
 						</ul>
+					    </#list>
 				    </#if>
 				    </li>
 				    </#list>

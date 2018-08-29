@@ -26,7 +26,11 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	public void insertVisitUserInfoVo(VisitUserInfoVo vo) {
-		VisitUserInfoVoMapper.insert(vo);
+		try{
+			VisitUserInfoVoMapper.insert(vo);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	// 根据用户名查询最近十次登录信息
