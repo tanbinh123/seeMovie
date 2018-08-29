@@ -45,8 +45,8 @@
       select count(1) from visit_user_info vui
   </select>
   <!--多条件查询访问者详细信息-->
-  <select id="selectAllVisitInfoByParam" resultType="com.seeMovie.pojo.VisitUserInfoVo" parameterType="map">
-    select id, userName, source, ip, ip_address, host_name, visit_date from visit_user_info vui
+  <select id="selectAllVisitInfoByParam" resultMap="BaseResultMap" parameterType="map">
+    select id , userName, source, ip, ip_address, host_name, visit_date from visit_user_info vui
     order by visit_date desc
     <if test="currentPage != null and pageSize !=null">
       LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
