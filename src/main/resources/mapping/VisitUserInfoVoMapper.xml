@@ -40,4 +40,16 @@
   <select id="selectTotalVisitOfToday" resultType="int">
       select count(distinct(vui.ip)) from visit_user_info vui where vui.source ='1' and left(vui.visit_date,10) = left(now(),10)
   </select>
+  <!--多条件查询访问者总条数-->
+  <select id="selectAllVisitInfoCountByParam" resultType="int" parameterType="map">
+      select count(1) from visit_user_info vui
+  </select>
+  <!--多条件查询访问者详细信息-->
+  <select id="selectAllVisitInfoByParam" resultType="com.seeMovie.pojo.VisitUserInfoVo" parameterMap="map">
+    select id, userName, source, ip, ip_address, host_name, visit_date from visit_user_info vui
+    order by visit_date desc
+    <if test="currentPage != null and pageSize !=null">
+      LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
+    </if>
+  </select>
 </mapper>

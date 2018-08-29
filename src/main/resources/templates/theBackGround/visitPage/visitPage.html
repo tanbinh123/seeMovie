@@ -1,0 +1,87 @@
+<#assign ctx=request.getContextPath()>
+<#include "../../theBackGround-header.html"/>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="panel-body">
+							<form action="" class="form-horizontal row-border">
+									<a class="btn btn-success-alt btn-sm"
+									   style="margin-left:10px;float:left;" onclick="searchData('/visit/selectAllVisitInfoByParam.html')" data-type="btn-search"> <i
+											class="fa fa-search"></i>
+									</a>
+								</div>
+							</form>
+						</div>
+						<div class="panel-body" id="contentid">
+							<table id="visitTable">
+							</table>
+						</div>
+					</div><!-- /.col -->
+				</div><!-- /.row -->
+			</div><!-- /.page-content -->
+		</div>
+	</div><!-- /.main-content -->
+<#include "../../theBackGround-footer.html"/>
+<script type="text/javascript">
+    //url = "/menu/selectMenuListByParam.html";
+	var url = "";
+    $(function(){
+        searchData("/visit/selectAllVisitInfoByParam.html");
+    });
+    //查询数据
+	function searchData(url){
+        $("#visitTable").bootstrapTable('destroy').bootstrapTable({
+            url: url,
+            method: "post",
+            pagination: true,
+            pageNumber:1,
+            pageSize: 20,
+            pageList: [20,50,100],
+            sidePagination: "server",
+            queryParams: function (params) {
+                return {
+                    //menuParentId:$("#menuParentId_id").val(),//父级菜单id
+                    //menuName:$("#menuName_id").val(),
+                	pageSize: params.limit,
+                    pageNumber: params.offset,
+                    sortOrder: params.order,
+                    sortName: params.sort
+            }
+            },
+            striped:true,
+            clickToSelect: true,
+            toolbar: "#toolbar",
+            locale: "zh-CN",
+            columns: [{
+            field: 'Number',
+            title: '序号',
+            align: "center",
+            width:'3%',
+            formatter: function (value, row, index) {
+                return index + 1;
+            }
+        },{
+            field: 'ip',
+            title: 'ip',
+            align: "center",
+            width:'15%'
+        },{
+            field: 'ipAddress',
+            title: 'ipAddress',
+            align: "center",
+            width:'15%'
+        },{
+            field: 'visitDate',
+            title: '访问日期',
+            align: "center",
+            width:'15%',
+            formatter: function (value, row, index) {
+                if(value != null && value != "" && value != undefined && value != "undefined"){
+                    return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                }else{
+                    return value;
+                }
+            }
+        }]
+        });
+	}
+</script>

@@ -48,7 +48,14 @@ public class MenuController {
 		model.setViewName("theBackGround/systemPage/menu");
 		return model;
 	}
-
+	/**
+	 * @author      mym
+	 * @date        2018/8/29 0029 9:11
+	 * @describe    多条件查询菜单数据集合
+	 * @version     V1.0
+	 * @param       [menuParentId, menuName, pageSize, pageNumber]
+	 * @return      java.util.Map<java.lang.String,java.lang.Object>
+	*/
 	@RequestMapping("/selectMenuListByParam")
 	@ResponseBody
 	public Map<String,Object> selectMenuListByParam(String menuParentId,String menuName,String pageSize,String pageNumber){

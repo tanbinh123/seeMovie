@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.seeMovie.mapper.MenuVoMapper" >
-  <resultMap id="BaseResultMap" type="com.seeMovie.pojo.MenuVo" >
-    <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
-    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
-    <result column="menu_href" property="menuHref" jdbcType="VARCHAR" />
-    <result column="menu_parent_id" property="menuParentId" jdbcType="VARCHAR" />
-    <result column="menu_flag" property="menuFlag" jdbcType="VARCHAR" />
-    <result column="menu_icon" property="menuIcon" jdbcType="VARCHAR" />
-    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <insert id="insert" parameterType="com.seeMovie.pojo.MenuVo" >
-    insert into menu (menu_id, menu_name, menu_href, 
-      menu_parent_id, menu_flag, menu_icon, 
+    <resultMap id="BaseResultMap" type="com.seeMovie.pojo.MenuVo" >
+        <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+        <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+        <result column="menu_href" property="menuHref" jdbcType="VARCHAR" />
+        <result column="menu_parent_id" property="menuParentId" jdbcType="VARCHAR" />
+        <result column="menu_flag" property="menuFlag" jdbcType="VARCHAR" />
+        <result column="menu_icon" property="menuIcon" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.seeMovie.pojo.MenuVo" >
+    insert into menu (menu_id, menu_name, menu_href,
+      menu_parent_id, menu_flag, menu_icon,
       create_date, update_date)
-    values (#{menuId,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, #{menuHref,jdbcType=VARCHAR}, 
-      #{menuParentId,jdbcType=VARCHAR}, #{menuFlag,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, 
+    values (#{menuId,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, #{menuHref,jdbcType=VARCHAR},
+      #{menuParentId,jdbcType=VARCHAR}, #{menuFlag,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR},
       #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select menu_id, menu_name, menu_href, menu_parent_id, menu_flag, menu_icon, create_date, 
+    <select id="selectAll" resultMap="BaseResultMap" >
+    select menu_id, menu_name, menu_href, menu_parent_id, menu_flag, menu_icon, create_date,
     update_date
     from menu
   </select>
-  <!--查询符合条件的菜单数据-->
-  <select id="selectMenuListByParam" resultMap="BaseResultMap" parameterType="map">
-    select menu_id, menu_name, menu_href, menu_parent_id, menu_flag, menu_icon, create_date,
-    update_date
-    from menu where menu_flag = "Y"
-    <if test="menuParentId != null and menuParentId != ''">
-      and menu_parent_id = #{menuParentId}
-    </if>
-    <if test="menuName != null and menuName != ''">
-    and menu_name like concat("%",#{menuName},"$")
-    </if>
-    order by create_date desc
-    <if test="currentPage != null and pageSize !=null">
-      LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
-    </if>
-  </select>
-  <!--查询符合条件的菜单总数-->
-  <select id="selectCountMenuListByParam" resultType="int" parameterType="map">
-    select count(1)
-    from menu where menu_flag = "Y"
-    <if test="menuParentId != null and menuParentId != ''">
-      and menu_parent_id = #{menuParentId}
-    </if>
-    <if test="menuName != null and menuName != ''">
-      and menu_name like concat("%",#{menuName},"$")
-    </if>
-  </select>
-  <!--根据条件查询对应菜单-->
+    <!--查询符合条件的菜单数据-->
+    <select id="selectMenuListByParam" resultMap="BaseResultMap" parameterType="map">
+        select menu_id, menu_name, menu_href, menu_parent_id, menu_flag, menu_icon, create_date,
+        update_date
+        from menu where menu_flag = "Y"
+        <if test="menuParentId != null and menuParentId != ''">
+            and menu_parent_id = #{menuParentId}
+        </if>
+        <if test="menuName != null and menuName != ''">
+            and menu_name like concat("%",#{menuName},"$")
+        </if>
+        order by create_date desc
+        <if test="currentPage != null and pageSize !=null">
+            LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
+        </if>
+    </select>
+    <!--查询符合条件的菜单总数-->
+    <select id="selectCountMenuListByParam" resultType="int" parameterType="map">
+        select count(1)
+        from menu where menu_flag = "Y"
+        <if test="menuParentId != null and menuParentId != ''">
+            and menu_parent_id = #{menuParentId}
+        </if>
+        <if test="menuName != null and menuName != ''">
+            and menu_name like concat("%",#{menuName},"$")
+        </if>
+    </select>
+    <!--根据条件查询对应菜单-->
     <select id="selectAllParentMenu" resultType="com.seeMovie.pojo.MenuQueryVo" parameterType="java.lang.String">
-      select menu_id, menu_name, menu_href, menu_parent_id, menu_flag, menu_icon, create_date,
-          update_date
-          from menu where 1=1
-          <if test="value !=null and value !=''">
-          and menu_parent_id = #{value}
-          </if>
+        select menu_id as menuId, menu_name as menuName, menu_href as menuHref, menu_parent_id as menuParentId,
+        menu_flag as menuFlag, menu_icon as menuIcon, create_date as createDate,update_date as updateDate
+        from menu where 1=1
+        <if test="value !=null and value !=''">
+            and menu_parent_id = #{value}
+        </if>
     </select>
 </mapper>
