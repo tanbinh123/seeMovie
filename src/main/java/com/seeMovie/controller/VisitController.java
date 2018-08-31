@@ -1,6 +1,8 @@
 package com.seeMovie.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.seeMovie.pojo.MenuQueryVo;
+import com.seeMovie.service.LoginService;
 import com.seeMovie.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 /**
  * @author      mym
@@ -21,6 +24,8 @@ import java.util.Map;
 @RequestMapping("/visit")
 public class VisitController {
 	@Autowired
+	LoginService loginService;
+	@Autowired
 	VisitService visitService;
 	/**
 	 * @author      mym
@@ -32,9 +37,16 @@ public class VisitController {
 	*/
 	@RequestMapping("/toVisitPage")
 	public ModelAndView goToLoginPage(ModelAndView model){
-		model.addObject("userName","admin");
-		model.addObject("menuName","访客管理");
-		model.setViewName("theBackGround/visitPage/visitPage");
+		try{
+			//查找所有菜单数据集合
+			List<MenuQueryVo> menuQueryVoList = loginService.selectAllMenuList();
+			model.addObject("menuQueryVoList",menuQueryVoList);
+			model.addObject("userName","admin");
+			model.addObject("menuName","访客管理");
+			model.setViewName("theBackGround/visitPage/visitPage");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return model;
 	}
 	/**

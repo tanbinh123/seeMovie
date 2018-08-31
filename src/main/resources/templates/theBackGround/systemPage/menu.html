@@ -1,8 +1,7 @@
 <#assign ctx=request.getContextPath()>
 <#include "../../theBackGround-header.html"/>
 				<div class="row">
-					<div class="col-xs-12">
-						<div class="panel-body">
+						<div class="panel-body col-xs-12">
 							<form action="" class="form-horizontal row-border">
 										菜单名称<input type="text"  id="menuName_id"
 											   placeholder="请输入:菜单名称">
@@ -13,19 +12,17 @@
 									   style="margin-left:10px;float:left;" onclick="searchData('/menu/selectMenuListByParam.html')" data-type="btn-search"> <i
 											class="fa fa-search"></i>
 									</a>
-								</div>
 							</form>
 						</div>
 						<div class="panel-body" id="contentid">
-							<div id="toolbar">
-								<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal"><i class="icon iconfont">&#xe611;</i>新增</a>
-								<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="editModal();"><i class="icon iconfont">&#xe612;</i>编辑</a>
-								<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteRows();"><i class="icon iconfont">&#xe612;</i>删除</a>
-							</div>
+								<div class="button-group" style="float:right">
+									<button type="button" class="button button-pill button-small button-primary" data-toggle="modal" data-target="#myModal">新增</button>
+									<button type="button" class="button button-pill button-small button-primary">编辑</button>
+									<button type="button" class="button button-pill button-small button-primary">删除</button>
+								</div>
 							<table id="menuTable">
 							</table>
 						</div>
-					</div><!-- /.col -->
 				</div><!-- /.row -->
 
 <!-- 模态框（Modal） -->
@@ -65,7 +62,7 @@
 <#include "../../theBackGround-footer.html"/>
 <script type="text/javascript">
     //url = "/menu/selectMenuListByParam.html";
-	var url = "";
+	var url = "/menu/selectMenuListByParam.html";
     $(function(){
         searchData(url);
     });

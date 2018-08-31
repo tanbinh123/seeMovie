@@ -1,31 +1,26 @@
 <#assign ctx=request.getContextPath()>
 <#include "../../theBackGround-header.html"/>
 				<div class="row">
-					<div class="col-xs-12">
-						<div class="panel-body">
-							<form action="" class="form-horizontal row-border">
-									<a class="btn btn-success-alt btn-sm"
-									   style="margin-left:10px;float:left;" onclick="searchData('/visit/selectAllVisitInfoByParam.html')" data-type="btn-search"> <i
-											class="fa fa-search"></i>
-									</a>
-								</div>
-							</form>
-						</div>
+					<div class="panel-body col-xs-12">
+						<form action="" class="form-horizontal row-border">
+							访问日期<input type="text"  id="menuName_id" placeholder="请输入:菜单名称">
+							<a class="btn btn-success-alt btn-sm"
+							   style="margin-left:10px;float:left;" onclick="searchData('/visit/selectAllVisitInfoByParam.html')" data-type="btn-search"> <i
+									class="fa fa-search"></i>
+							</a>
+						</form>
+					</div>
 						<div class="panel-body" id="contentid">
 							<table id="visitTable">
 							</table>
 						</div>
 					</div><!-- /.col -->
 				</div><!-- /.row -->
-			</div><!-- /.page-content -->
-		</div>
-	</div><!-- /.main-content -->
 <#include "../../theBackGround-footer.html"/>
 <script type="text/javascript">
-    //url = "/menu/selectMenuListByParam.html";
-	var url = "";
+    var url = "/visit/selectAllVisitInfoByParam.html";
     $(function(){
-        searchData("/visit/selectAllVisitInfoByParam.html");
+        searchData(url);
     });
     //查询数据
 	function searchData(url){
@@ -41,7 +36,7 @@
                 return {
                     //menuParentId:$("#menuParentId_id").val(),//父级菜单id
                     //menuName:$("#menuName_id").val(),
-                	pageSize: params.limit,
+                    pageSize: params.limit,
                     pageNumber: params.offset,
                     sortOrder: params.order,
                     sortName: params.sort

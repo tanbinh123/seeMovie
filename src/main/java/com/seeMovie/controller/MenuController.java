@@ -3,7 +3,9 @@ package com.seeMovie.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.seeMovie.common.utils.JsonData;
+import com.seeMovie.pojo.MenuQueryVo;
 import com.seeMovie.pojo.MenuVo;
+import com.seeMovie.service.LoginService;
 import com.seeMovie.service.MenuService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.awt.*;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,6 +35,8 @@ import java.util.UUID;
 @RequestMapping("/menu")
 public class MenuController {
 	@Autowired
+	LoginService loginService;
+	@Autowired
 	MenuService menuService;
 	/**
 	 * 
@@ -43,9 +48,16 @@ public class MenuController {
 	 */
 	@RequestMapping("/toMenu")
 	public ModelAndView goToLoginPage(ModelAndView model){
-		model.addObject("userName","admin");
-		model.addObject("menuName","菜单管理");
-		model.setViewName("theBackGround/systemPage/menu");
+		try{
+			//查找所有菜单数据集合
+			List<MenuQueryVo> menuQueryVoList = loginService.selectAllMenuList();
+			model.addObject("menuQueryVoList",menuQueryVoList);
+			model.addObject("userName","admin");
+			model.addObject("menuName","菜单管理");
+			model.setViewName("theBackGround/systemPage/menu");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return model;
 	}
 	/**
