@@ -2,8 +2,10 @@ package com.seeMovie.common.task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import com.seeMovie.pojo.MovieVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -80,7 +82,10 @@ public class UpdateMovieInfoTimer {
 		String startInfo = "定时器开始执行时间为"+startDate;
 		String endInfo = "";
 		try {
-			movieService.UpdateMovieImgUrlInfoTimer();
+			List<MovieVo> movieList = movieService.selectAllNoUpdateImgUrlVo();
+			for(MovieVo movieVo : movieList){//批量更新校验图片链接耗时太长 事物长久不提交  所以改成单条提交
+				movieService.UpdateMovieImgUrlInfoTimer(movieVo);
+			}
 			String endDate = sdf.format(new Date());
 			systemLogVo.setLogContent("定时器正常执行，		"+startInfo+endInfo
 					+"。此次定时器持续时间为"+(sdf.parse(endDate).getTime()-sdf.parse(startDate).getTime())/1000+"秒！");

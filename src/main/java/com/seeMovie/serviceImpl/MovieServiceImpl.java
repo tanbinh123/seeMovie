@@ -22,7 +22,9 @@ import java.util.regex.Pattern;
 @Transactional
 public class MovieServiceImpl implements MovieService{
 	//默认图片链接
-	private static final String default_img_url = "https://img1.doubanio.com/dae/niffler/niffler/images/ba356172-7825-11e8-9fa1-0242ac110017.png";
+	//https://img3.doubanio.com/view/photo/l/public/p2532900730.webp
+	//https://img1.doubanio.com/dae/niffler/niffler/images/ba356172-7825-11e8-9fa1-0242ac110017.png
+	private static final String default_img_url = "https://img3.doubanio.com/view/photo/l/public/p2532900730.webp";
 	@Autowired
 	MovieMapper movieMapper;
 	@Autowired
@@ -149,7 +151,8 @@ public class MovieServiceImpl implements MovieService{
 
 				if(!StringUtils.isEmpty(describe) && describe.trim().contains("产　　地")){//◎产　　地　美国 
 					describe = describe.replaceAll("　　","").replaceAll("　", "");
-					movieVo.setProduceCountry(describe.trim().length()>3?describe.trim().substring(3,describe.trim().length()).trim():"");
+					movieVo.setProduceCountry((describe.trim().length()>3 && describe.trim().contains("/"))?
+							describe.trim().substring(3,describe.trim().length()).trim().split("/")[0]:"");//有多个国家名字的用第一个国家名字作为电影产地
 				}
 
 				if(!StringUtils.isEmpty(describe) && describe.trim().contains("豆瓣评分")){//◎豆瓣评分　8.2/10 from 338,916 users 
@@ -403,8 +406,30 @@ public class MovieServiceImpl implements MovieService{
 	}
 	//定时更新影片的图片链接信息 无法访问的图片链接用默认图片代替
 	@Override
-	public void UpdateMovieImgUrlInfoTimer() {
-		Map<String,Object> paramMap = new HashMap<String, Object>();
+	public void UpdateMovieImgUrlInfoTimer(MovieVo movieVo) {
+		try{
+			boolean status = false;
+			movieVo.setSynchronousImgUrlFlage("Y");//更新图片检查标识为Y
+			status = checkImgUrlCanUseOrNo(movieVo.getImgUrl());
+			if(status){//图片1可访问
+				status = checkImgUrlCanUseOrNo(movieVo.getImgUrl2());
+					if(!status){//图片2不可访问
+						movieVo.setImgUrl2(movieVo.getImgUrl());
+					}
+			}else{//图片1不可访问
+				movieVo.setImgUrl(default_img_url);
+				status = checkImgUrlCanUseOrNo(movieVo.getImgUrl2());
+					if(!status){//图片2不可访问
+						movieVo.setImgUrl2(default_img_url);
+					}else{
+						movieVo.setImgUrl(movieVo.getImgUrl2());
+					}
+				}
+				movieMapper.updateMovieImgUrlByMovieVo(movieVo);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		/*Map<String,Object> paramMap = new HashMap<String, Object>();
 		try {
 			paramMap.put("synchronousImgUrlFlage","N");//影片图片链接同步标志(Y/N)   接进来时为N
 			boolean status = false;
@@ -426,13 +451,14 @@ public class MovieServiceImpl implements MovieService{
 						movieVo.setImgUrl(movieVo.getImgUrl2());
 					}
 				}
+				movieMapper.updateMovieImgUrlByMovieVo(movieVo);
 			}
-			if(!movieList.isEmpty()){
+			*//*if(!movieList.isEmpty()){   批量更细  如果中间校验图片链接时发生异常 则全不更新  改成单条更新
 				movieMapper.updateMovieByList(movieList);
-			}
+			}*//*
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	/**
 	 * 
@@ -491,5 +517,18 @@ public class MovieServiceImpl implements MovieService{
 	public void updateWebLinks(WebLinksVo webLinksVo) {
 		//将当前已经爬取过的网站爬取状态改为Y
 		movieMapper.updateWebLinks(webLinksVo);
+	}
+	//查询所有没有更应图片链接的影片信息
+	@Override
+	public List<MovieVo> selectAllNoUpdateImgUrlVo() {
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		List<MovieVo> movieList =  new ArrayList<>();
+		try {
+			paramMap.put("synchronousImgUrlFlage", "N");//影片图片链接同步标志(Y/N)   接进来时为N
+			movieList = movieMapper.getAllMovie(paramMap);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return movieList;
 	}
 }

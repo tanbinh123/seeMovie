@@ -168,7 +168,12 @@
    </foreach>
   </if>
   </update>
-  <!-- 根据影片id更新影片信息，更新已存在值得对应字段-->
+    <!-- 单条更新图片imgUrl -->
+    <update id="updateMovieImgUrlByMovieVo" parameterType="com.seeMovie.pojo.MovieVo">
+    update movie set img_url=#{imgUrl},img_url2=#{imgUrl2},synchronous_imgUrl_flage='Y'
+	where movie_id=#{movieId}
+    </update>
+  <!-- 多条更新图片imgUrl-->
   <update id="updateMovieByList" parameterType="java.util.List">
   <foreach collection="updateMovieList" item="item" separator=";">
     update movie set img_url=#{item.imgUrl},img_url2=#{item.imgUrl2},synchronous_imgUrl_flage='Y'
@@ -189,7 +194,12 @@
   </update>
   <!-- 查找所有电影生产国家 -->
   <select id="selectAlCountryList" resultType="java.lang.String" parameterType="map">
-   select distinct(ifnull(produce_country,'未知产地')) as countryName from movie
-   order by countryName
+   SELECT IFNULL(lastData.countryName,'未知产地') AS countryName
+FROM
+(
+SELECT DISTINCT(IFNULL(produce_country, NULL)) AS countryName
+FROM movie
+ORDER BY countryName
+)lastData
    </select>
 </mapper>

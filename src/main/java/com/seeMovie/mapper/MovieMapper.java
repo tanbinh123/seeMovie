@@ -32,4 +32,6 @@ public interface MovieMapper {
 	void updateWebLinks(WebLinksVo webLinksVo);
 	//查找所有电影生产国家
 	List<String> selectAlCountryList();
+	//单条更新图片imgUrl
+	void updateMovieImgUrlByMovieVo(MovieVo movieVo);
 }
