@@ -52,7 +52,7 @@
         </if>
     </select>
     <!--根据条件查询对应菜单-->
-    <select id="selectAllParentMenu" resultType="com.seeMovie.pojo.MenuQueryVo" parameterType="java.lang.String">
+    <select id="selectAllMenuByParam" resultType="com.seeMovie.pojo.MenuQueryVo" parameterType="java.lang.String">
         select menu_id as menuId, menu_name as menuName, menu_href as menuHref, menu_parent_id as menuParentId,
         menu_flag as menuFlag, menu_icon as menuIcon, create_date as createDate,update_date as updateDate
         from menu where 1=1
@@ -60,4 +60,9 @@
             and menu_parent_id = #{value}
         </if>
     </select>
+    <!--查询所有的父级菜单-->
+        <select id="selectAllParentMenu" resultType="com.seeMovie.pojo.MenuQueryVo">
+            select menu_id as menuId, menu_name as menuName
+                  from menu where menu_parent_id ='0' and menu_flag = "Y"
+        </select>
 </mapper>

@@ -34,4 +34,8 @@ public interface MovieMapper {
 	List<String> selectAlCountryList();
 	//单条更新图片imgUrl
 	void updateMovieImgUrlByMovieVo(MovieVo movieVo);
+	//查询符合条件的影片总数
+    int selectCountMovieListByParam(Map<String, Object> returnMap);
+	//查询符合条件的影片信息
+	List<MovieVo> selectMovieListByParam(Map<String, Object> returnMap);
 }

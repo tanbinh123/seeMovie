@@ -24,7 +24,7 @@ public class FileTool {
         url = url.substring(7);
         //text/html 类型
         if (contentType.indexOf("html") != -1) {
-            url = url.replaceAll("[\\?/:*|<>\"]", "_") + ".html";
+            url = url.replaceAll("[\\?/:*|<>\"]", "_") + "movieManagePage.html";
             return url;
         }
         //如 application/pdf 类型

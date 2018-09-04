@@ -32,4 +32,14 @@ public class MenuServiceImpl implements MenuService {
 	public void insertMenuVo(MenuVo menuVo) {
 		menuVoMapper.insert(menuVo);
 	}
+	//查询所有的父级菜单
+	@Override
+	public List<MenuVo> selectAllParentMenu() {
+		try{
+			return menuVoMapper.selectAllParentMenu();
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

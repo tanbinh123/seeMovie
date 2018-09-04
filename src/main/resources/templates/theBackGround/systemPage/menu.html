@@ -6,7 +6,7 @@
 										菜单名称<input type="text"  id="menuName_id"
 											   placeholder="请输入:菜单名称">
 										选择父菜单<select id="menuParentId_id">
-											<option value="0">新增</option>
+											<option value="0">顶级菜单</option>
 										</select>
 									<a class="btn btn-success-alt btn-sm"
 									   style="margin-left:10px;float:left;" onclick="searchData('/menu/selectMenuListByParam.html')" data-type="btn-search"> <i
@@ -40,7 +40,7 @@
 			<div class="modal-body">
 				<form id="addMenu_form_id">
 					选择父级菜单
-					<select name="menuParentId">
+					<select name="menuParentId" id="menuParentId_add">
 						<option value="0">无</option>
 					</select>
 					菜单名称<input name="menuName"/>
@@ -61,10 +61,14 @@
 	</div><!-- /.main-content -->
 <#include "../../theBackGround-footer.html"/>
 <script type="text/javascript">
+	var parentMenuOption = "";
     //url = "/menu/selectMenuListByParam.html";
 	var url = "/menu/selectMenuListByParam.html";
     $(function(){
+        //加载菜单表格
         searchData(url);
+        //查询所有的顶级菜单  即父级菜单
+		selectAllParentMenu();
     });
     //查询数据
 	function searchData(url){
@@ -85,12 +89,6 @@
             }
             },
             striped:true,
-            /*showAdd:true,
-            addMethod:'addModel',//增加方法名
-            showEdit:true,
-            editMethod:'editModal',//编辑方法名
-            showDel:true,
-            delMethod:'deleteRows',//删除方法名*/
             clickToSelect: true,
             toolbar: "#toolbar",
             locale: "zh-CN",
@@ -139,10 +137,24 @@
             }]
         });
 	}
-	//弹出新增窗口
-	function addModel(){
-		alert("add");
-	}
+	//查找所有的父级菜单
+    function selectAllParentMenu() {
+        parentMenuOption = "";
+        $.ajax({
+            url:"/menu/selectAllParentMenu.html",
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+                if(data != null){
+                    for(var i=0;i<data.length;i++){
+                        parentMenuOption = parentMenuOption+"<option value=\""+data[i].menuId+"\">"+data[i].menuName+"</option>";
+                    }
+                }
+                $("#menuParentId_id").append(parentMenuOption);
+                $("#menuParentId_add").append(parentMenuOption);
+            }
+        });
+    }
 	//实际新增数据
     function addData(){
         var vo = $('#addMenu_form_id').serializeJSON();

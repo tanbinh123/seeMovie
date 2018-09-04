@@ -2,6 +2,7 @@ package com.seeMovie.service;
 
 import com.seeMovie.pojo.MenuVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,4 +32,13 @@ public interface MenuService {
 	 * @return      void
 	*/
     void insertMenuVo(MenuVo menuVo);
+	/**
+	 * @author      mym
+	 * @date        2018/9/4 0004 10:44
+	 * @describe    查询所有的父级菜单
+	 * @version     V1.0
+	 * @param       []
+	 * @return      java.util.List<com.seeMovie.pojo.MenuVo>
+	*/
+    List<MenuVo> selectAllParentMenu();
 }

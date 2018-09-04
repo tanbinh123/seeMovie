@@ -1,0 +1,141 @@
+<#assign ctx=request.getContextPath()>
+<#include "../../theBackGround-header.html"/>
+				<div class="row">
+					<div class="panel-body col-xs-12">
+						<form action="" class="form-horizontal row-border">
+							影片名称<input type="text"  id="movieName_id" placeholder="请输入:影片，名称">
+							<a class="btn btn-success-alt btn-sm"
+							   style="margin-left:10px;float:left;" onclick="searchData('/movieManage/selectAllMovieByParam.html')" data-type="btn-search"> <i
+									class="fa fa-search"></i>
+							</a>
+						</form>
+					</div>
+						<div class="panel-body" id="contentid">
+							<table id="movieTable">
+							</table>
+						</div>
+					</div><!-- /.col -->
+				</div><!-- /.row -->
+<#include "../../theBackGround-footer.html"/>
+<script type="text/javascript">
+    var url = "/movieManage/selectAllMovieByParam.html";
+    $(function(){
+        searchData(url);
+    });
+    //查询数据
+	function searchData(url){
+        $("#movieTable").bootstrapTable('destroy').bootstrapTable({
+            url: url,
+            pagination: true,
+            pageSize: 100,
+            pageList: [100,300,500,1000,1500],
+            sidePagination: "server",
+            queryParams: function (params) {
+                return {
+                    movieName:$("#movieName_id").val(),
+                    pageSize: params.limit,
+                    pageNumber: params.offset,
+                    sortOrder: params.order,
+                    sortName: params.sort
+            }
+            },
+            striped:true,
+            clickToSelect: true,
+            toolbar: "#toolbar",
+            locale: "zh-CN",
+            columns: [{
+            field: 'Number',
+            title: '序号',
+            align: "center",
+            width:'3%',
+            formatter: function (value, row, index) {
+                return index + 1;
+            }
+        },{
+             field: 'movieName',
+             title: '名称',
+             align: "center",
+			 width:'8%'
+        },{
+            field: 'produceCountry',
+            title: '产地',
+            align: "center",
+            width:'3%'
+        },{
+            field: 'produceYear',
+            title: '年代',
+            align: "center",
+            width:'3%'
+        }, {
+                field: 'source',
+                title: '来源',
+                align: "center",
+                width:'6%'
+            },{
+                field: 'category',
+                title: '分类',
+                align: "center",
+                width:'3%'
+            },{
+                field: 'doubanScore',
+                title: '评分',
+                align: "center",
+                width:'3%'
+            }, {
+                field: 'downLoadHref',
+                title: '下载链接',
+                align: "center",
+                width:'10%'
+            },{
+                field: 'imgUrl',
+                title: '图片链接1',
+                align: "center",
+                width:'10%'
+            },{
+                field: 'imgUrl2',
+                title: '图片链接2',
+                align: "center",
+                width:'10%'
+            },{
+            field: 'describes',
+                title: '简介',
+                align: "center",
+                width:'25%'
+        }, {
+            field: 'searchScore',
+                title: '搜索指数',
+                align: "center",
+                width:'3%'
+        },{
+            field: 'seeOrdownLoadScore',
+                title: '下载指数',
+                align: "center",
+                width:'3%'
+        },{
+            field: 'insertDate',
+            title: '接入日期',
+            align: "center",
+            width:'5%',
+            formatter: function (value, row, index) {
+                if(value != null && value != "" && value != undefined && value != "undefined"){
+                    return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                }else{
+                    return value;
+                }
+            }
+        },{
+            field: 'updateDate',
+                title: '更新日期',
+                align: "center",
+                width:'5%',
+                formatter: function (value, row, index) {
+                if(value != null && value != "" && value != undefined && value != "undefined"){
+                    return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                }else{
+                    return value;
+                }
+            }
+        }]
+        });
+	}
+</script>

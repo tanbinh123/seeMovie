@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.common.utils.PagingUtil;
 import com.seeMovie.mapper.MovieCategoryVoMapper;
 import com.seeMovie.mapper.MovieMapper;
+import com.seeMovie.pojo.MenuVo;
 import com.seeMovie.pojo.MovieCategoryVo;
 import com.seeMovie.pojo.MovieVo;
 import com.seeMovie.pojo.WebLinksVo;
@@ -530,5 +531,18 @@ public class MovieServiceImpl implements MovieService{
 			e.printStackTrace();
 		}
 		return movieList;
+	}
+	//多条件查询影片信息
+	@Override
+	public Map<String, Object> selectAllMovieByParam(Map<String, Object> returnMap) {
+		try{
+			int total = movieMapper.selectCountMovieListByParam(returnMap);
+			List<MovieVo> movieVoList = movieMapper.selectMovieListByParam(returnMap);
+			returnMap.put("total",total);
+			returnMap.put("rows",movieVoList);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return returnMap;
 	}
 }

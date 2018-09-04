@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.awt.*;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author      mym
@@ -109,5 +106,24 @@ public class MenuController {
 			e.printStackTrace();
 		}
 		return jsonData;
+	}
+	/**
+	 * @author      mym
+	 * @date        2018/9/4 0004 10:44
+	 * @describe    查询所有的父级菜单
+	 * @version     V1.0
+	 * @param       []
+	 * @return      java.util.List<com.seeMovie.pojo.MenuVo>
+	*/
+	@RequestMapping("/selectAllParentMenu")
+	@ResponseBody
+	public List<MenuVo> selectAllParentMenu(){
+		List<MenuVo> returnList= new ArrayList<>();
+		try {
+			returnList = menuService.selectAllParentMenu();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnList;
 	}
 }

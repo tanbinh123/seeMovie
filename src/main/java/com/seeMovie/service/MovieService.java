@@ -23,4 +23,6 @@ public interface MovieService {
 	void updateWebLinks(WebLinksVo webLinksVo);
 	//查询所有没有更应图片链接的影片信息
     List<MovieVo> selectAllNoUpdateImgUrlVo();
+	//多条件查询影片信息
+    Map<String, Object> selectAllMovieByParam(Map<String, Object> returnMap);
 }

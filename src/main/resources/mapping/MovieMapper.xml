@@ -202,4 +202,26 @@ FROM movie
 ORDER BY countryName
 )lastData
    </select>
+    <!-- 根据条件查询对应的影片-->
+    <select id="selectMovieListByParam" resultMap="BaseResultMap" parameterType="map">
+        select movie_id, category, downLoad_href, movie_name, source, img_url, img_url2, douban_score,
+        produce_year, produce_country, describes, synchronous_flag, synchronous_imgUrl_flage,
+        insert_date, update_date, search_score, see_or_downLoad_score, remarks
+        from movie where 1=1
+        <if test="movieVo.movieName != null and movieVo.movieName !=''">
+            and movie_name like concat("%",#{movieVo.movieName},"%")
+        </if>
+        order by insert_date desc
+        <if test="currentPage != null and pageSize !=null">
+            LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
+        </if>
+    </select>
+    <!-- 根据条件查询对应的影片总数-->
+    <select id="selectCountMovieListByParam" resultType="int" parameterType="map">
+        select count(1)
+        from movie where 1=1
+        <if test="movieVo.movieName != null and movieVo.movieName !=''">
+            and movie_name like concat("%",#{movieVo.movieName},"%")
+        </if>
+    </select>
 </mapper>

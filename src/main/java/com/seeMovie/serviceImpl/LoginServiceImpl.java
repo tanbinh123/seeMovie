@@ -58,9 +58,9 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public List<MenuQueryVo> selectAllMenuList() {
 		//根据条件查询对应菜单
-		List<MenuQueryVo> returnMenuQueryVoList = menuVoMapper.selectAllParentMenu("0");//先查父级菜单
+		List<MenuQueryVo> returnMenuQueryVoList = menuVoMapper.selectAllMenuByParam("0");//先查父级菜单
 		for (MenuQueryVo menuQueryVo : returnMenuQueryVoList) {
-			List<MenuQueryVo> returnMenuVoList = menuVoMapper.selectAllParentMenu(menuQueryVo.getMenuId());//根据父级菜单查询子菜单
+			List<MenuQueryVo> returnMenuVoList = menuVoMapper.selectAllMenuByParam(menuQueryVo.getMenuId());//根据父级菜单查询子菜单
 			menuQueryVo.setMenuQueryVoList(returnMenuVoList);
 		}
 		return returnMenuQueryVoList;
