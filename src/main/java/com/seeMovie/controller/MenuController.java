@@ -74,7 +74,7 @@ public class MenuController {
 		Map<String,Object> returnMap = new HashMap<>();
 		try {
 			//封装查询参数
-			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?Integer.valueOf(pageNumber)+1:1);
+			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?(Integer.valueOf(pageNumber)/Integer.valueOf(pageSize))+1:1);
 			returnMap.put("pageSize",!StringUtils.isEmpty(pageSize)?Integer.valueOf(pageSize):20);
 			returnMap.put("menuName",menuName);
 			returnMap.put("menuParentId",menuParentId);

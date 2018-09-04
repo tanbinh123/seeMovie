@@ -24,26 +24,6 @@
 									<div class="col-sm-6">
 									<div class="panel-body" id="contentid">
 										<table id="VisitUserInfoVo">
-											<thead>
-											<tr>
-												<th style="text-align: center; width: 5%;">序号</th>
-												<th style="text-align: center; width: 10%;">IP</th>
-												<th style="text-align: center; width: 10%;">ipAddress</th>
-												<th style="text-align: center; width: 10%;">访问日期</th>
-											</tr>
-											</thead>
-											<#if VisitUserInfoVoList?exists && (VisitUserInfoVoList?size>0)>
-											<tbody>
-											<#list VisitUserInfoVoList as VisitUser>
-													<tr>
-														<td style="text-align: center; width: 5%;">${VisitUser_index + 1}</td>
-														<td style="text-align: center; width: 10%;">${VisitUser.ip!''}</td>
-														<td style="text-align: center; width: 10%;">${VisitUser.ipAddress!''}</td>
-														<td style="text-align: center; width: 10%;">${VisitUser.visitDateStr!''}</td>
-													</tr>
-											</#list>
-											</tbody>
-										    </#if>
 										</table>
 									</div>
 							</div>
@@ -146,16 +126,12 @@
 $(function(){
 	$("#VisitUserInfoVo").bootstrapTable('destroy').bootstrapTable({
 		//url: ${ctx}+"/login/selectLoginListByUserName.html",
-		//method:"post",
-		url: "",
+		url: "/login/selectLoginListByUserName.html",
+        pagination: true,
         sidePagination:'server',//指定服务器端分页
-        //pageNumber: 1, //初始化加载第一页，默认第一页
-        //pageSize:10,//单页记录数
         queryParams: function (params) {
             return {
             	userName:"${userName!''}",//其实应该传主键id
-                pageSize: params.limit,
-                pageNumber: params.offset,
                 sortOrder: params.order,
                 sortName: params.sort
             }
@@ -163,7 +139,7 @@ $(function(){
         striped:true,
         showAdd:true,
         locale: "zh-CN",
-        /*columns: [{
+        columns: [{
             field: 'Number',
             title: '序号',
             align: "center",
@@ -193,10 +169,10 @@ $(function(){
             		return value;
             	}
             }
-        }],*/
-        onLoadSuccess:function(data){
+        }],
+        /*onLoadSuccess:function(data){
             alert(data.total);
-        }
+        }*/
 	});
 });
 </script>

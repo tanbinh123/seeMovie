@@ -7,6 +7,7 @@ import com.seeMovie.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
@@ -63,7 +64,7 @@ public class VisitController {
 		Map<String,Object> returnMap = new HashMap<>();
 		try {
 			//封装查询参数
-			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?Integer.valueOf(pageNumber)+1:1);
+			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?(Integer.valueOf(pageNumber)/Integer.valueOf(pageSize))+1:1);
 			returnMap.put("pageSize",!StringUtils.isEmpty(pageSize)?Integer.valueOf(pageSize):20);
 			returnMap = visitService.selectAllVisitInfoByParam(returnMap);
 		} catch (Exception e) {

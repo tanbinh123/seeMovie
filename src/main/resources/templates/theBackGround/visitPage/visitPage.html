@@ -26,9 +26,7 @@
 	function searchData(url){
         $("#visitTable").bootstrapTable('destroy').bootstrapTable({
             url: url,
-            method: "post",
             pagination: true,
-            pageNumber:1,
             pageSize: 20,
             pageList: [20,50,100],
             sidePagination: "server",
