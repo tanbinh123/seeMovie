@@ -43,4 +43,13 @@ public class WebLinksServiceImpl implements WebLinksService {
 			e.printStackTrace();
 		}
 	}
+	//根据主键id编辑待爬取网站信息
+	@Override
+	public void updateWebLinkVo(WebLinksVo webLinksVo) {
+		try{
+			webLinksVoMapper.updateWebLinkVo(webLinksVo);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }

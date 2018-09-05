@@ -13,7 +13,7 @@
 						<div class="panel-body" id="contentid">
 							<div class="button-group" style="float:right">
 								<button type="button" class="button button-pill button-small button-primary" data-toggle="modal" data-target="#myModal">新增</button>
-								<button type="button" class="button button-pill button-small button-primary">编辑</button>
+								<button type="button" class="button button-pill button-small button-primary" onclick="beforeEdit()">编辑</button>
 								<button type="button" class="button button-pill button-small button-primary">删除</button>
 							</div>
 							<table id="movieTable">
@@ -35,7 +35,7 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-				<form id="addMenu_form_id">
+				<form id="add_form_id">
 					网站名称<input name="webName"/>
 					网站链接<input name="webLink"/>
 				</form>
@@ -49,6 +49,36 @@
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
+
+	<!-- 编辑模态框（Modal） -->
+	<div class="modal fade" id="myModal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_edit" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel_edit">
+						编辑待爬取网站
+					</h4>
+				</div>
+				<div class="modal-body">
+					<form id="edit_form_id">
+						<input type="hidden" name="webId" id="webId_edit_id">
+						网站名称<input name="webName" id="webName_edit_id"/>
+						网站链接<input name="webLink" id="webLink_edit_id"/>
+						网站链接<input name="crawlFlag" id="crawlFlag_edit_id"/>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" onclick="editData()">
+						提交
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
 <#include "../../theBackGround-footer.html"/>
 <script type="text/javascript">
     var url = "/webLinks/selectAllWebLinksByParam.html";
@@ -77,6 +107,12 @@
             toolbar: "#toolbar",
             locale: "zh-CN",
             columns: [{
+                field: "select",
+                checkbox: true,
+                width:'3%',
+                align: "center",
+                valign: "middle"
+         },{
             field: 'Number',
             title: '序号',
             align: "center",
@@ -128,7 +164,7 @@
 	}
     //实际新增数据
     function addData(){
-        var vo = $('#addMenu_form_id').serializeJSON();
+        var vo = $('#add_form_id').serializeJSON();
         $.ajax({
             url:"/webLinks/insertWebLink.html",
             dataType:"json",
@@ -137,6 +173,36 @@
             success:function(data){
                 if(data.state != null && data.state == true){
                     alert("新增待爬取网站成功！");
+                    $("#myModal").modal("hide");
+                    searchData("/webLinks/selectAllWebLinksByParam.html");
+                }
+            }
+        });
+    }
+    //编辑数据前选中行
+	function beforeEdit(){
+        var selectRow =  $('#movieTable').bootstrapTable('getSelections');
+        if(selectRow == null || selectRow == ''||selectRow.length>1){
+            alert("仅能选择一条要编辑的记录！");
+        }else {
+			$("#webId_edit_id").val(selectRow[0].webId);
+            $("#webName_edit_id").val(selectRow[0].webName);
+            $("#webLink_edit_id").val(selectRow[0].webLink);
+            $("#crawlFlag_edit_id").val(selectRow[0].crawlFlag);
+            $("#myModal_edit").modal({backdrop: 'static', keyboard: false});
+        }
+	}
+	//实际编辑数据
+    function editData(){
+        var vo = $('#edit_form_id').serializeJSON();
+        $.ajax({
+            url:"/webLinks/updateWebLink.html",
+            dataType:"json",
+            method:"post",
+            data:{vo:vo},
+            success:function(data){
+                if(data.state != null && data.state == true){
+                    alert("编辑待爬取网站成功！");
                     $("#myModal").modal("hide");
                     searchData("/webLinks/selectAllWebLinksByParam.html");
                 }

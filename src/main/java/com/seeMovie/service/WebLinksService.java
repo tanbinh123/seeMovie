@@ -17,4 +17,6 @@ public interface WebLinksService {
 	Map<String, Object> selectAllWebLinksByParam(Map<String, Object> returnMap);
 
 	void insertWebLinkVo(WebLinksVo webLinksVo);
+	//根据主键id编辑待爬取网站信息
+	void updateWebLinkVo(WebLinksVo webLinksVo);
 }

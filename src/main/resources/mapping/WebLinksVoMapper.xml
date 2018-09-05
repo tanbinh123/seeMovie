@@ -40,4 +40,26 @@
       and web_name like concat("%",#{webLinksVo.webName},"%")
     </if>
   </select>
+  <!--根据主键id编辑待爬取网站信息-->
+  <update id="updateWebLinkVo" parameterType="com.seeMovie.pojo.WebLinksVo">
+    UPDATE web_links
+    <set>
+      <if test="webName != null">
+        web_name = #{webName,jdbcType=VARCHAR},
+      </if>
+      <if test="webLink != null">
+        web_link = #{webLink,jdbcType=VARCHAR},
+      </if>
+      <if test="crawlFlag != null">
+        crawl_flag = #{crawlFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="insertDate != null">
+        insert_date = #{insertDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+      </if>
+    </set>
+    WHERE web_id = #{webId,jdbcType=VARCHAR}
+  </update>
 </mapper>

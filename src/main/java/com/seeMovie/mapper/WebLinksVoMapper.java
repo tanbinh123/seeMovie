@@ -12,4 +12,6 @@ public interface WebLinksVoMapper {
     List<WebLinksVo> selectAllWebLinksByParam(Map<String, Object> returnMap);
     //查询符合条件数据总数
     int selectAllWebLinksCountByParam(Map<String, Object> returnMap);
+    //根据主键id编辑待爬取网站信息
+    void updateWebLinkVo(WebLinksVo webLinksVo);
 }
