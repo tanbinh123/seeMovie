@@ -1,0 +1,146 @@
+<#assign ctx=request.getContextPath()>
+<#include "../../theBackGround-header.html"/>
+				<div class="row">
+					<div class="panel-body col-xs-12">
+						<form action="" class="form-horizontal row-border">
+							网站名称<input type="text"  id="webName_id" placeholder="请输入:网站名称">
+							<a class="btn btn-success-alt btn-sm"
+							   style="margin-left:10px;float:left;" onclick="searchData('/webLinks/selectAllWebLinksByParam.html')" data-type="btn-search"> <i
+									class="fa fa-search"></i>
+							</a>
+						</form>
+					</div>
+						<div class="panel-body" id="contentid">
+							<div class="button-group" style="float:right">
+								<button type="button" class="button button-pill button-small button-primary" data-toggle="modal" data-target="#myModal">新增</button>
+								<button type="button" class="button button-pill button-small button-primary">编辑</button>
+								<button type="button" class="button button-pill button-small button-primary">删除</button>
+							</div>
+							<table id="movieTable">
+							</table>
+						</div>
+					</div><!-- /.col -->
+				</div><!-- /.row -->
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					新增待爬取网站
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form id="addMenu_form_id">
+					网站名称<input name="webName"/>
+					网站链接<input name="webLink"/>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary" onclick="addData()">
+					提交
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+<#include "../../theBackGround-footer.html"/>
+<script type="text/javascript">
+    var url = "/webLinks/selectAllWebLinksByParam.html";
+    $(function(){
+        searchData(url);
+    });
+    //查询数据
+	function searchData(url){
+        $("#movieTable").bootstrapTable('destroy').bootstrapTable({
+            url: url,
+            pagination: true,
+            pageSize: 100,
+            pageList: [100,300,500,1000,1500],
+            sidePagination: "server",
+            queryParams: function (params) {
+                return {
+                    webName:$("#webName_id").val(),
+                    pageSize: params.limit,
+                    pageNumber: params.offset,
+                    sortOrder: params.order,
+                    sortName: params.sort
+            }
+            },
+            striped:true,
+            clickToSelect: true,
+            toolbar: "#toolbar",
+            locale: "zh-CN",
+            columns: [{
+            field: 'Number',
+            title: '序号',
+            align: "center",
+            width:'3%',
+            formatter: function (value, row, index) {
+                return index + 1;
+            }
+        },{
+             field: 'webName',
+             title: '名称',
+             align: "center",
+			 width:'8%'
+        },{
+            field: 'webLink',
+            title: '网站链接',
+            align: "center",
+            width:'15%'
+        },{
+            field: 'crawlFlag',
+            title: '爬取标志',
+            align: "center",
+            width:'3%'
+        },{
+            field: 'insertDate',
+            title: '增加链接时时间',
+            align: "center",
+            width:'8%',
+            formatter: function (value, row, index) {
+                if(value != null && value != "" && value != undefined && value != "undefined"){
+                    return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                }else{
+                    return value;
+                }
+            }
+        },{
+            field: 'updateDate',
+                title: '更新链接状态时间',
+                align: "center",
+                width:'8%',
+                formatter: function (value, row, index) {
+                if(value != null && value != "" && value != undefined && value != "undefined"){
+                    return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                }else{
+                    return value;
+                }
+            }
+        }]
+        });
+	}
+    //实际新增数据
+    function addData(){
+        var vo = $('#addMenu_form_id').serializeJSON();
+        $.ajax({
+            url:"/webLinks/insertWebLink.html",
+            dataType:"json",
+            method:"post",
+            data:{vo:vo},
+            success:function(data){
+                if(data.state != null && data.state == true){
+                    alert("新增待爬取网站成功！");
+                    $("#myModal").modal("hide");
+                    searchData("/webLinks/selectAllWebLinksByParam.html");
+                }
+            }
+        });
+    }
+</script>

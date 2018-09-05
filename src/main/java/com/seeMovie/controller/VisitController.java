@@ -44,7 +44,7 @@ public class VisitController {
 			model.addObject("menuQueryVoList",menuQueryVoList);
 			model.addObject("userName","admin");
 			model.addObject("menuName","访客管理");
-			model.setViewName("theBackGround/visitPage/visitPage");
+			model.setViewName("theBackGround/actionPage/visitPage");
 		}catch(Exception e){
 			e.printStackTrace();
 		}

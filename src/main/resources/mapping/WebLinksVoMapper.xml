@@ -21,4 +21,23 @@
     select web_id, web_name, web_link, crawl_flag, insert_date, update_date
     from web_links
   </select>
+  <!--查询符合条件数据集合-->
+  <select id="selectAllWebLinksByParam" resultMap="BaseResultMap" parameterType="map">
+    select web_id, web_name, web_link, crawl_flag, insert_date, update_date
+    from web_links
+    <if test="webLinksVo.webName != null and webLinksVo.webName !=''">
+      and web_name like concat("%",#{webLinksVo.webName},"%")
+    </if>
+    order by insert_date desc
+    <if test="currentPage != null and pageSize !=null">
+      LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
+    </if>
+  </select>
+  <!--查询符合条件数据总数-->
+  <select id="selectAllWebLinksCountByParam" resultType="int" parameterType="map">
+    select count(1) from web_links
+    <if test="webLinksVo.webName != null and webLinksVo.webName !=''">
+      and web_name like concat("%",#{webLinksVo.webName},"%")
+    </if>
+  </select>
 </mapper>
