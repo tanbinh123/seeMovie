@@ -180,11 +180,11 @@
 	where movie_id=#{item.movieId}
   </foreach>
   </update>
-  <!-- 每次查询两条网站初始化链接-->
+  <!-- 每次查询crawl_flag为Y的网站初始化链接-->
   <select id="getWebLinksVo" resultType="com.seeMovie.pojo.WebLinksVo">
   select web_id as webId, web_name as webName, web_link as webLink, crawl_flag as crawlFlag, insert_date as insertDate, update_date as updateDate
     from web_links
-	where crawl_flag = "N"
+	where crawl_flag = "Y"
 	<!-- limit 2 -->
   </select>
   <!-- 将当前已经爬取过的网站爬取状态改为Y -->

@@ -2,6 +2,8 @@ package com.seeMovie.mapper;
 
 import com.seeMovie.pojo.MenuQueryVo;
 import com.seeMovie.pojo.MenuVo;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,4 +19,8 @@ public interface MenuVoMapper {
     List<MenuQueryVo> selectAllMenuByParam(Object o);
     //查询所有的父级菜单
     List<MenuVo> selectAllParentMenu();
+    //根据菜单id删除菜单
+    void deleteMenu(@Param("ids")String[] ids);
+    //根据菜单id更新菜单数据
+    void updateMenuVo(MenuVo menuVo);
 }

@@ -65,4 +65,42 @@
             select menu_id as menuId, menu_name as menuName
                   from menu where menu_parent_id ='0' and menu_flag = "Y"
         </select>
+      <!--根据菜单id删除菜单-->
+          <delete id="deleteMenu" parameterType="java.util.List">
+          <if test="ids != null">
+              delete from menu
+              where menu_id in
+              <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+                  #{item}
+              </foreach>
+          </if>
+          </delete>
+          <!--根据菜单id更新菜单数据-->
+            <update id="updateMenuVo" parameterType="com.seeMovie.pojo.MenuVo">
+              UPDATE menu
+              <set>
+                <if test="menuName != null">
+                  menu_name = #{menuName,jdbcType=VARCHAR},
+                </if>
+                <if test="menuHref != null">
+                  menu_href = #{menuHref,jdbcType=VARCHAR},
+                </if>
+                <if test="menuParentId != null">
+                  menu_parent_id = #{menuParentId,jdbcType=VARCHAR},
+                </if>
+                <if test="menuFlag != null">
+                  menu_flag = #{menuFlag,jdbcType=VARCHAR},
+                </if>
+                <if test="menuIcon != null">
+                  menu_icon = #{menuIcon,jdbcType=VARCHAR}
+                </if>
+                <if test="createDate != null">
+                  create_date = #{createDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="updateDate != null">
+                  update_date = #{updateDate,jdbcType=TIMESTAMP}
+                </if>
+              </set>
+              WHERE menu_id = #{menuId,jdbcType=VARCHAR}
+            </update>
 </mapper>

@@ -41,4 +41,22 @@ public interface MenuService {
 	 * @return      java.util.List<com.seeMovie.pojo.MenuVo>
 	*/
     List<MenuVo> selectAllParentMenu();
+	/**
+	 * @author      mym
+	 * @date        2018/9/8 0008 16:07
+	 * @describe    根据菜单id删除菜单
+	 * @version     V1.0
+	 * @param       [strings]
+	 * @return      int
+	*/
+    int deleteMenu(String[] ids);
+	/**
+	 * @author      mym
+	 * @date        2018/9/8 0008 17:20
+	 * @describe    [menuVo] 更新菜单数据
+	 * @version     V1.0
+	 * @param       [menuVo]
+	 * @return      void
+	*/
+	void updateMenuVo(MenuVo menuVo);
 }

@@ -62,4 +62,14 @@
     </set>
     WHERE web_id = #{webId,jdbcType=VARCHAR}
   </update>
+  <!--根据待爬取网站id删除对应数据-->
+  <delete id="deleteMenu" parameterType="java.util.List">
+    <if test="ids != null">
+      delete from web_links
+      where web_id in
+      <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </delete>
 </mapper>

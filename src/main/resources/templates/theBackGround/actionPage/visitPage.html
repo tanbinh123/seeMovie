@@ -2,14 +2,29 @@
 <#include "../../theBackGround-header.html"/>
 				<div class="row">
 					<div class="panel-body col-xs-12">
-						<form action="" class="form-horizontal row-border">
-							访问日期<input type="text"  id="menuName_id" placeholder="请输入:菜单名称">
-							<a class="btn btn-success-alt btn-sm"
-							   style="margin-left:10px;float:left;" onclick="searchData('/visit/selectAllVisitInfoByParam.html')" data-type="btn-search"> <i
+						<form  autocomplete="off">
+							<div>
+								来源
+									<select id="source_search">
+										<option value="">无</option>
+										<option value="1" selected="selected">前台</option>
+										<option value="2">后端</option>
+									</select>
+								访问日期
+									<input id="visitTimeStart_search" class="dataInput-left" placeholder="开始日期" onfocus="this.blur()"
+										   onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' ,maxDate:'#F{$dp.$D(\'visitTimeEnd_search\')}'})">
+									<span class="dataInput-dvision">-</span>
+									<input id="visitTimeEnd_search" class="dataInput-right" placeholder="结束日期" onfocus="this.blur()"
+										   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' ,minDate:'#F{$dp.$D(\'visitTimeStart_search\')}'});" />
+								IP
+								<input type="text" id="ip_search">
+
+								<a class="btn btn-success-alt btn-sm"
+							   style="margin-right:366px;float:right;" onclick="searchData('/visit/selectAllVisitInfoByParam.html')" data-type="btn-search"> <i
 									class="fa fa-search"></i>
-							</a>
+							    </a>
+							</div>
 						</form>
-					</div>
 						<div class="panel-body" id="contentid">
 							<table id="visitTable">
 							</table>
@@ -27,13 +42,15 @@
         $("#visitTable").bootstrapTable('destroy').bootstrapTable({
             url: url,
             pagination: true,
-            pageSize: 20,
-            pageList: [20,50,100],
+            pageSize: 50,
+            pageList: [50,300,500,1000],
             sidePagination: "server",
             queryParams: function (params) {
                 return {
-                    //menuParentId:$("#menuParentId_id").val(),//父级菜单id
-                    //menuName:$("#menuName_id").val(),
+                    source:$("#source_search").val(),
+                    visitTimeStart:$("#visitTimeStart_search").val(),
+				    visitTimeEnd:$("#visitTimeEnd_search").val(),
+                    ip:$("#ip_search").val(),
                     pageSize: params.limit,
                     pageNumber: params.offset,
                     sortOrder: params.order,
@@ -53,6 +70,11 @@
                 return index + 1;
             }
         },{
+                field: 'source',
+                title: '来源',
+                align: "center",
+                width:'15%'
+			},{
             field: 'ip',
             title: 'ip',
             align: "center",

@@ -42,4 +42,21 @@ public class MenuServiceImpl implements MenuService {
 			return null;
 		}
 	}
+	//根据菜单id删除菜单
+	@Override
+	public int deleteMenu(String[] ids) {
+		int returnType = 0;
+		try{
+			menuVoMapper.deleteMenu(ids);
+		}catch (Exception e){
+			returnType =1;
+			e.printStackTrace();
+		}
+		return returnType;
+	}
+	//根据菜单id更新菜单数据
+	@Override
+	public void updateMenuVo(MenuVo menuVo) {
+		menuVoMapper.updateMenuVo(menuVo);
+	}
 }

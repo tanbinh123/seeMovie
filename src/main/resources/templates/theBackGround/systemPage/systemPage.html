@@ -1,0 +1,103 @@
+<#assign ctx=request.getContextPath()>
+<#include "../../theBackGround-header.html"/>
+<div class="row">
+	<div class="panel-body col-xs-12">
+		<form  autocomplete="off">
+			<div>
+				日志产生日期
+				<input id="startTime_search" class="dataInput-left" placeholder="开始日期" onfocus="this.blur()"
+					   onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' ,maxDate:'#F{$dp.$D(\'endTime_search\')}'})">
+				<span class="dataInput-dvision">-</span>
+				<input id="endTime_search" class="dataInput-right" placeholder="结束日期" onfocus="this.blur()"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss' ,minDate:'#F{$dp.$D(\'startTime_search\')}'});" />
+
+				<a class="btn btn-success-alt btn-sm"
+				   style="margin-right:366px;float:right;" onclick="searchData('/system/selectAllSystemLogInfoByParam.html')" data-type="btn-search"> <i
+						class="fa fa-search"></i>
+				</a>
+			</div>
+		</form>
+		<div class="panel-body" id="contentid">
+			<table id="systemTable">
+			</table>
+		</div>
+	</div><!-- /.col -->
+</div><!-- /.row -->
+<#include "../../theBackGround-footer.html"/>
+<script type="text/javascript">
+    var url = "/system/selectAllSystemLogInfoByParam.html";
+    $(function(){
+        searchData(url);
+    });
+    //查询数据
+    function searchData(url){
+        $("#systemTable").bootstrapTable('destroy').bootstrapTable({
+            url: url,
+            pagination: true,
+            pageSize: 50,
+            pageList: [50,300,500,1000],
+            sidePagination: "server",
+            queryParams: function (params) {
+                return {
+                    startTime:$("#startTime_search").val(),
+                    endTime:$("#endTime_search").val(),
+                    pageSize: params.limit,
+                    pageNumber: params.offset,
+                    sortOrder: params.order,
+                    sortName: params.sort
+                }
+            },
+            striped:true,
+            clickToSelect: true,
+            toolbar: "#toolbar",
+            locale: "zh-CN",
+            columns: [{
+                field: 'Number',
+                title: '序号',
+                align: "center",
+                width:'3%',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            },{
+                field: 'logName',
+                title: '日志名称',
+                align: "center",
+                width:'15%'
+            },{
+                field: 'logLevel',
+                title: '日志等级',
+                align: "center",
+                width:'5%',
+                formatter: function (value, row, index) {
+                    if(value != null && value == "1"){
+                        return "普通";
+                    }else if(value != null && value == "2"){
+                        return "严重";
+                    }else if(value != null && value == "3"){
+                        return "致命";
+					}else{
+                        return "";
+					}
+                }
+            },{
+                field: 'logCreateDate',
+                title: '产生日期',
+                align: "center",
+                width:'10%',
+                formatter: function (value, row, index) {
+                    if(value != null && value != "" && value != undefined && value != "undefined"){
+                        return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                    }else{
+                        return value;
+                    }
+                }
+            },{
+                field: 'logContent',
+                title: '日志详情',
+                align: "center",
+                width:'67%'
+            }]
+        });
+    }
+</script>

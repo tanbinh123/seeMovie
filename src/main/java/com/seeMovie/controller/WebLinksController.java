@@ -4,7 +4,6 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.seeMovie.common.utils.JsonData;
 import com.seeMovie.pojo.MenuQueryVo;
-import com.seeMovie.pojo.MenuVo;
 import com.seeMovie.pojo.WebLinksVo;
 import com.seeMovie.service.LoginService;
 import com.seeMovie.service.WebLinksService;
@@ -84,18 +83,22 @@ public class WebLinksController {
 	 * @param       [vo]
 	 * @return      com.seeMovie.common.utils.JsonData
 	*/
-	@RequestMapping("/insertWebLink")
+	@RequestMapping("/addOrUpdateWebLink")
 	@ResponseBody
-	public JsonData insertWebLink(String vo){
+	public JsonData addOrUpdateWebLink(String vo){
 		JsonData jsonData = new JsonData();
 		try {
 			if(!StringUtils.isEmpty(vo)){
 				WebLinksVo webLinksVo = JSON.parseObject(vo,WebLinksVo.class);
-				webLinksVo.setWebId(UUID.randomUUID().toString().replaceAll("-",""));
-				webLinksVo.setCrawlFlag("N");
-				webLinksVo.setInsertDate(new Date());
-				webLinksService.insertWebLinkVo(webLinksVo);
-				jsonData.setState(true);
+				if(StringUtils.isEmpty(webLinksVo.getWebId())){
+					webLinksVo.setWebId(UUID.randomUUID().toString().replaceAll("-",""));
+					webLinksVo.setCrawlFlag("Y");
+					webLinksVo.setInsertDate(new Date());
+					webLinksService.insertWebLinkVo(webLinksVo);
+				}else{
+					webLinksService.updateWebLinkVo(webLinksVo);
+				}
+				jsonData.setStatus(true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,7 +122,29 @@ public class WebLinksController {
 				WebLinksVo webLinksVo = JSON.parseObject(vo,WebLinksVo.class);
 				webLinksVo.setUpdateDate(new Date());
 				webLinksService.updateWebLinkVo(webLinksVo);
-				jsonData.setState(true);
+				jsonData.setStatus(true);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonData;
+	}
+	/**
+	 * @author      mym
+	 * @date        2018/9/8 0008 16:43
+	 * @describe    [ids] 根据待爬取网站id删除对应数据
+	 * @version     V1.0
+	 * @param       [ids]
+	 * @return      com.seeMovie.common.utils.JsonData
+	*/
+	@RequestMapping("/deleteWebLink")
+	@ResponseBody
+	public JsonData deleteWebLink(String ids){
+		JsonData jsonData= new JsonData();
+		try {
+			int returnType = webLinksService.deleteWebLink(!StringUtils.isEmpty(ids)?ids.split(","):null);
+			if(returnType == 0){
+				jsonData.setStatus(true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -25,14 +25,14 @@ public class JsonData implements Serializable {
     /**
      * 执行状态
     */
-    private boolean state = false;
+    private boolean status = false;
 
-    public boolean isState() {
-        return state;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setState(boolean state) {
-        this.state = state;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public String getMsg() {

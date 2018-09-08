@@ -84,23 +84,28 @@ public class MenuController {
 	/**
 	 * @author      mym
 	 * @date        2018/8/28 0028 20:56
-	 * @describe    新增菜单
+	 * @describe    新增或者编辑菜单
 	 * @version     V1.0
 	 * @param
 	 * @return      com.seeMovie.common.utils.JsonData
 	*/
-	@RequestMapping("/insertMenu")
+	@RequestMapping("/addOrUpdateMenu")
 	@ResponseBody
-	public JsonData insertMenu(String vo){
+	public JsonData addOrUpdateMenu(String vo){
 		JsonData jsonData = new JsonData();
 		try {
 			if(!StringUtils.isEmpty(vo)){
 				MenuVo menuVo = JSON.parseObject(vo,MenuVo.class);
-				menuVo.setMenuId(UUID.randomUUID().toString().replaceAll("-",""));
-				menuVo.setMenuFlag("Y");
-				menuVo.setCreateDate(new Date());
-				menuService.insertMenuVo(menuVo);
-				jsonData.setState(true);
+				if(StringUtils.isEmpty(menuVo.getMenuId())){//新增
+					menuVo.setMenuId(UUID.randomUUID().toString().replaceAll("-",""));
+					menuVo.setMenuFlag("Y");
+					menuVo.setCreateDate(new Date());
+					menuService.insertMenuVo(menuVo);
+				}else{//编辑
+					menuVo.setUpdateDate(new Date());
+					menuService.updateMenuVo(menuVo);
+				}
+				jsonData.setStatus(true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,5 +130,27 @@ public class MenuController {
 			e.printStackTrace();
 		}
 		return returnList;
+	}
+	/**
+	 * @author      mym
+	 * @date        2018/9/8 0008 16:05
+	 * @describe    根据菜单id删除菜单
+	 * @version     V1.0
+	 * @param       [ids]
+	 * @return      com.seeMovie.common.utils.JsonData
+	*/
+	@RequestMapping("/deleteMenu")
+	@ResponseBody
+	public JsonData deleteMenu(String ids){
+		JsonData jsonData= new JsonData();
+		try {
+			int returnType = menuService.deleteMenu(!StringUtils.isEmpty(ids)?ids.split(","):null);
+			if(returnType == 0){
+				jsonData.setStatus(true);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonData;
 	}
 }

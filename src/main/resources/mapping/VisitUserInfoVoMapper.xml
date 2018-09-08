@@ -42,11 +42,38 @@
   </select>
   <!--多条件查询访问者总条数-->
   <select id="selectAllVisitInfoCountByParam" resultType="int" parameterType="map">
-      select count(1) from visit_user_info vui
+    select count(1) from visit_user_info vui where 1=1
+    <if test="source != null and source != ''">
+      and source = #{source}
+    </if>
+    <if test="ip != null and ip != ''">
+      and ip like concat("%",#{ip},"%")
+    </if>
+    <if test="visitTimeStart != null and visitTimeStart != ''">
+      and visit_date &gt; #{visitTimeStart}
+    </if>
+    <if test="visitTimeEnd != null and visitTimeEnd != ''">
+      and visit_date &lt; #{visitTimeEnd}
+    </if>
   </select>
   <!--多条件查询访问者详细信息-->
   <select id="selectAllVisitInfoByParam" resultMap="BaseResultMap" parameterType="map">
-    select id , userName, source, ip, ip_address, host_name, visit_date from visit_user_info vui
+    select id , userName, ip, ip_address, host_name, visit_date,
+    case when source = "1" then "首页" else "后台" end as source
+    from visit_user_info vui
+    where 1=1
+    <if test="source != null and source != ''">
+        and source = #{source}
+    </if>
+    <if test="ip != null and ip != ''">
+      and ip like concat("%",#{ip},"%")
+    </if>
+    <if test="visitTimeStart != null and visitTimeStart != ''">
+        and visit_date &gt; #{visitTimeStart}
+    </if>
+    <if test="visitTimeEnd != null and visitTimeEnd != ''">
+        and visit_date &lt; #{visitTimeEnd}
+    </if>
     order by visit_date desc
     <if test="currentPage != null and pageSize !=null">
       LIMIT ${(currentPage-1)*pageSize}, ${pageSize}

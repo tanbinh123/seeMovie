@@ -18,4 +18,31 @@
     select log_id, log_name, log_content, log_level, log_create_date
     from system_log
   </select>
+  <!--多条件查询系统日志总数-->
+  <select id="selectAllSystemLogCountInfoByParam" resultType="int" parameterType="map">
+    select count(1)
+    from system_log
+    where 1=1
+    <if test="startTime != null and startTime != ''">
+      and log_create_date &gt; #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and log_create_date &lt; #{endTime}
+    </if>
+  </select>
+  <!--多条件查询系统日志详细列表-->
+  <select id="selectAllSystemLogInfoByParam" resultMap="BaseResultMap" parameterType="map">
+    select log_id, log_name, log_content, log_level, log_create_date
+    from system_log where 1=1
+    <if test="startTime != null and startTime != ''">
+      and log_create_date &gt; #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and log_create_date &lt; #{endTime}
+    </if>
+    order by log_create_date desc
+    <if test="currentPage != null and pageSize !=null">
+      LIMIT ${(currentPage-1)*pageSize}, ${pageSize}
+    </if>
+  </select>
 </mapper>

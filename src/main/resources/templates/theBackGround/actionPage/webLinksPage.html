@@ -2,7 +2,7 @@
 <#include "../../theBackGround-header.html"/>
 				<div class="row">
 					<div class="panel-body col-xs-12">
-						<form action="" class="form-horizontal row-border">
+						<form action="" class="form-horizontal row-border" autocomplete="off">
 							网站名称<input type="text"  id="webName_id" placeholder="请输入:网站名称">
 							<a class="btn btn-success-alt btn-sm"
 							   style="margin-left:10px;float:left;" onclick="searchData('/webLinks/selectAllWebLinksByParam.html')" data-type="btn-search"> <i
@@ -14,7 +14,7 @@
 							<div class="button-group" style="float:right">
 								<button type="button" class="button button-pill button-small button-primary" data-toggle="modal" data-target="#myModal">新增</button>
 								<button type="button" class="button button-pill button-small button-primary" onclick="beforeEdit()">编辑</button>
-								<button type="button" class="button button-pill button-small button-primary">删除</button>
+								<button type="button" class="button button-pill button-small button-primary" onclick="deleteData()">删除</button>
 							</div>
 							<table id="movieTable">
 							</table>
@@ -35,9 +35,9 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-				<form id="add_form_id">
-					网站名称<input name="webName"/>
-					网站链接<input name="webLink"/>
+				<form id="add_form_id" autocomplete="off">
+					网站名称<input  type="text" name="webName"/>
+					网站链接<input  type="text" name="webLink" width="280px;"/>
 				</form>
 			</div>
 			<div class="modal-footer">
@@ -47,38 +47,18 @@
 					提交
 				</button>
 			</div>
+		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
 
-	<!-- 编辑模态框（Modal） -->
-	<div class="modal fade" id="myModal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_edit" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
-					<h4 class="modal-title" id="myModalLabel_edit">
-						编辑待爬取网站
-					</h4>
-				</div>
-				<div class="modal-body">
-					<form id="edit_form_id">
+	<!-- 编辑form -->
+					<form id="edit_form" style="display: none" autocomplete="off">
 						<input type="hidden" name="webId" id="webId_edit_id">
+						<input type="hidden" name="crawlFlag" id="crawlFlag_edit_hidden_id"/>
 						网站名称<input name="webName" id="webName_edit_id"/>
 						网站链接<input name="webLink" id="webLink_edit_id"/>
-						网站链接<input name="crawlFlag" id="crawlFlag_edit_id"/>
+						网站爬取状态<input type="checkbox" id="crawlFlag_edit_id"/>
 					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-					</button>
-					<button type="button" class="btn btn-primary" onclick="editData()">
-						提交
-					</button>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal -->
 <#include "../../theBackGround-footer.html"/>
 <script type="text/javascript">
     var url = "/webLinks/selectAllWebLinksByParam.html";
@@ -166,14 +146,17 @@
     function addData(){
         var vo = $('#add_form_id').serializeJSON();
         $.ajax({
-            url:"/webLinks/insertWebLink.html",
+            url:"/webLinks/addOrUpdateWebLink.html",
             dataType:"json",
             method:"post",
             data:{vo:vo},
             success:function(data){
-                if(data.state != null && data.state == true){
-                    alert("新增待爬取网站成功！");
+                if(data.status != null && data.status == true){
                     $("#myModal").modal("hide");
+                    bootbox.alert({
+                        message: "新增待爬取网站成功！",
+                        size: 'small'
+                    });
                     searchData("/webLinks/selectAllWebLinksByParam.html");
                 }
             }
@@ -183,30 +166,117 @@
 	function beforeEdit(){
         var selectRow =  $('#movieTable').bootstrapTable('getSelections');
         if(selectRow == null || selectRow == ''||selectRow.length>1){
-            alert("仅能选择一条要编辑的记录！");
+            bootbox.alert({
+                message: "仅能选择一条要编辑的记录！",
+                size: 'small'
+            });
         }else {
 			$("#webId_edit_id").val(selectRow[0].webId);
             $("#webName_edit_id").val(selectRow[0].webName);
             $("#webLink_edit_id").val(selectRow[0].webLink);
-            $("#crawlFlag_edit_id").val(selectRow[0].crawlFlag);
-            $("#myModal_edit").modal({backdrop: 'static', keyboard: false});
+            if(selectRow[0].crawlFlag == "Y"){
+                $("#crawlFlag_edit_id").prop("checked",true);
+			}else if(selectRow[0].crawlFlag == "N"){
+                $("#crawlFlag_edit_id").prop("checked",false);
+			}
+			$("#edit_form").css("display","");
+            bootbox.confirm({
+                title: "确定修改当前数据?",
+                message: $("#edit_form"),
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if($("#crawlFlag_edit_id").prop("checked") == true){
+						$("#crawlFlag_edit_hidden_id").val("Y");
+                    }else{
+                        $("#crawlFlag_edit_hidden_id").val("N");
+                    }
+                    var vo = $('#edit_form').serializeJSON();
+                    if(result == true){
+                        $.ajax({
+                            url:"/webLinks/addOrUpdateWebLink.html",
+                            dataType:"json",
+                            method:"post",
+                            data:{vo:vo},
+                            success:function(data){
+                                if(data!= null && data.status == true){
+                                    bootbox.alert({
+                                        message: "编辑数据成功！",
+                                        size: 'small'
+                                    });
+                                    searchData("/webLinks/selectAllWebLinksByParam.html");
+                                }else{
+                                    bootbox.alert({
+                                        message: "编辑数据失败！",
+                                        size: 'small'
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+            });
         }
 	}
-	//实际编辑数据
-    function editData(){
-        var vo = $('#edit_form_id').serializeJSON();
-        $.ajax({
-            url:"/webLinks/updateWebLink.html",
-            dataType:"json",
-            method:"post",
-            data:{vo:vo},
-            success:function(data){
-                if(data.state != null && data.state == true){
-                    alert("编辑待爬取网站成功！");
-                    $("#myModal").modal("hide");
-                    searchData("/webLinks/selectAllWebLinksByParam.html");
-                }
+    //删除
+    function deleteData(){
+        var selectRow =  $('#movieTable').bootstrapTable('getSelections');
+        if(selectRow == null || selectRow == ''){
+            bootbox.alert({
+                message: "请先选择要删除的数据！",
+                size: 'small'
+            });
+        }else {
+            var ids = new Array();
+            for(var i = 0;i < selectRow.length; i++) {
+                ids.push(selectRow[i].webId);
             }
-        });
+            ids = ids.join(",");
+            bootbox.confirm({
+                message: "确定要删除选择的数据吗?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if(result == true){
+                        $.ajax({
+                            type: "POST",
+                            url: "/webLinks/deleteWebLink.html",
+                            data: {ids:ids},
+                            dataType: "json",
+                            success:function(data){
+                                if(data.status != null && data.status == true){
+                                    bootbox.alert({
+                                        message: "删除数据成功！",
+                                        size: 'small'
+                                    });
+                                    searchData("/webLinks/selectAllWebLinksByParam.html");
+                                }else{
+                                    bootbox.alert({
+                                        message: "删除数据失败！",
+                                        size: 'small'
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        }
     }
 </script>

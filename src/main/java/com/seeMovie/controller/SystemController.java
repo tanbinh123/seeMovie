@@ -3,48 +3,49 @@ package com.seeMovie.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.seeMovie.pojo.MenuQueryVo;
 import com.seeMovie.service.LoginService;
+import com.seeMovie.service.SystemLogService;
 import com.seeMovie.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
  * @author      mym
- * @date        2018/8/29 0029 9:03
- * @describe    访客管理controller
+ * @date        2018/9/8 0008 13:39
+ * @describe    系统运行日志相关管理
  * @version     V1.0
- * @param       访客管理controller
+ * @param       系统运行日志相关管理
  * @return      
 */
 @Controller
-@RequestMapping("/visit")
-public class VisitController {
+@RequestMapping("/system")
+public class SystemController {
 	@Autowired
 	LoginService loginService;
 	@Autowired
-	VisitService visitService;
+	SystemLogService systemLogService;
 	/**
 	 * @author      mym
-	 * @date        2018/8/29 0029 9:04
-	 * @describe    [model]
+	 * @date        2018/9/8 0008 13:40
+	 * @describe    进入系统日志管理页面
 	 * @version     V1.0
 	 * @param       [model]
 	 * @return      org.springframework.web.servlet.ModelAndView
 	*/
-	@RequestMapping("/toVisitPage")
-	public ModelAndView goToLoginPage(ModelAndView model){
+	@RequestMapping("/toSystemPage")
+	public ModelAndView goToSystemPage(ModelAndView model){
 		try{
 			//查找所有菜单数据集合
 			List<MenuQueryVo> menuQueryVoList = loginService.selectAllMenuList();
 			model.addObject("menuQueryVoList",menuQueryVoList);
 			model.addObject("userName","admin");
-			model.addObject("menuName","访客管理");
-			model.setViewName("theBackGround/actionPage/visitPage");
+			model.addObject("menuName","系统日志");
+			model.setViewName("theBackGround/systemPage/systemPage");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -52,26 +53,23 @@ public class VisitController {
 	}
 	/**
 	 * @author      mym
-	 * @date        2018/8/29 0029 9:12
-	 * @describe    根据条件查询对应访问者的ip信息
+	 * @date        2018/9/8 0008 13:41
+	 * @describe    [pageSize, pageNumber, source, ip, visitTimeStart, visitTimeEnd]多条件查询系统日志
 	 * @version     V1.0
-	 * @param       [menuParentId, menuName, pageSize, pageNumber]
+	 * @param       [pageSize, pageNumber, source, ip, visitTimeStart, visitTimeEnd]
 	 * @return      java.util.Map<java.lang.String,java.lang.Object>
 	*/
-	@RequestMapping("/selectAllVisitInfoByParam")
+	@RequestMapping("/selectAllSystemLogInfoByParam")
 	@ResponseBody
-	public Map<String,Object> selectAllVisitInfoByParam(String pageSize,String pageNumber,String source,
-														String ip,String visitTimeStart,String visitTimeEnd){
+	public Map<String,Object> selectAllSystemLogInfoByParam(String pageSize,String pageNumber,String startTime,String endTime){
 		Map<String,Object> returnMap = new HashMap<>();
 		try {
 			//封装查询参数
 			returnMap.put("currentPage", !StringUtils.isEmpty(pageNumber)?(Integer.valueOf(pageNumber)/Integer.valueOf(pageSize))+1:1);
 			returnMap.put("pageSize",!StringUtils.isEmpty(pageSize)?Integer.valueOf(pageSize):20);
-			returnMap.put("source",source);
-			returnMap.put("visitTimeStart",visitTimeStart);
-			returnMap.put("visitTimeEnd",visitTimeEnd);
-			returnMap.put("ip",ip);
-			returnMap = visitService.selectAllVisitInfoByParam(returnMap);
+			returnMap.put("startTime",startTime);
+			returnMap.put("endTime",endTime);
+			returnMap = systemLogService.selectAllSystemLogInfoByParam(returnMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

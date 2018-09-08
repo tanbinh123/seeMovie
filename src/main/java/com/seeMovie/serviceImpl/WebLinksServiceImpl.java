@@ -37,19 +37,23 @@ public class WebLinksServiceImpl implements WebLinksService {
 
 	@Override
 	public void insertWebLinkVo(WebLinksVo webLinksVo) {
-		try{
 			webLinksVoMapper.insert(webLinksVo);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	//根据主键id编辑待爬取网站信息
 	@Override
 	public void updateWebLinkVo(WebLinksVo webLinksVo) {
-		try{
 			webLinksVoMapper.updateWebLinkVo(webLinksVo);
-		}catch(Exception e){
+	}
+	//根据待爬取网站id删除对应数据
+	@Override
+	public int deleteWebLink(String[] ids) {
+		int returnType = 0;
+		try{
+			webLinksVoMapper.deleteMenu(ids);
+		}catch (Exception e){
+			returnType =1;
 			e.printStackTrace();
 		}
+		return returnType;
 	}
 }

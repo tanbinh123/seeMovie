@@ -2,30 +2,33 @@
 <#include "../../theBackGround-header.html"/>
 				<div class="row">
 						<div class="panel-body col-xs-12">
-							<form action="" class="form-horizontal row-border">
-										菜单名称<input type="text"  id="menuName_id"
+							<form action="" class="form-horizontal row-border" autocomplete="off">
+								<div>
+									菜单名称<input type="text" id="menuName_id"
 											   placeholder="请输入:菜单名称">
-										选择父菜单<select id="menuParentId_id">
+									选择父菜单<select id="menuParentId_id">
+											<option value="">无</option>
 											<option value="0">顶级菜单</option>
 										</select>
 									<a class="btn btn-success-alt btn-sm"
-									   style="margin-left:10px;float:left;" onclick="searchData('/menu/selectMenuListByParam.html')" data-type="btn-search"> <i
+									   style="margin-right:500px;float:right;" onclick="searchData('/menu/selectMenuListByParam.html')" data-type="btn-search"> <i
 											class="fa fa-search"></i>
 									</a>
+								</div>
 							</form>
 						</div>
 						<div class="panel-body" id="contentid">
 								<div class="button-group" style="float:right">
 									<button type="button" class="button button-pill button-small button-primary" data-toggle="modal" data-target="#myModal">新增</button>
-									<button type="button" class="button button-pill button-small button-primary">编辑</button>
-									<button type="button" class="button button-pill button-small button-primary">删除</button>
+									<button type="button" class="button button-pill button-small button-primary" onclick="beforeEdit()">编辑</button>
+									<button type="button" class="button button-pill button-small button-primary" onclick="deleteData()">删除</button>
 								</div>
 							<table id="menuTable">
 							</table>
 						</div>
 				</div><!-- /.row -->
 
-<!-- 模态框（Modal） -->
+<!-- 新增模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -38,13 +41,16 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-				<form id="addMenu_form_id">
-					选择父级菜单
-					<select name="menuParentId" id="menuParentId_add">
-						<option value="0">无</option>
-					</select>
-					菜单名称<input name="menuName"/>
-					菜单链接<input name="menuHref"/>
+				<form id="addMenu_form_id" autocomplete="off">
+					<div>
+						选择父级菜单<select name="menuParentId" id="menuParentId_add">
+								<option value="0">顶级菜单</option>
+							</select>
+						菜单名称<input type="text" name="menuName" style="width:300px;"/>
+					</div>
+					<div>
+						菜单链接<input type="text" name="menuHref" style="width:100%"/>
+					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
@@ -54,12 +60,28 @@
 					提交
 				</button>
 			</div>
+		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
+
+						<!--编辑数据的form-->
+						<form action="" class="form-horizontal row-border" style="display: none" id="edit_form" autocomplete="off">
+							<!--隐藏菜单id-->
+							<input type="hidden" id="menuId_edit" name="menuId">
+							<div class="form-group  col-xs-12">
+								<label class="col-xs-2 control-label Require">菜单名称</label>
+								<div class="col-xs-3">
+									<input type="text" name="menuName" id="menuName_edit" class="form-control"/>
+								</div>
+								<label class="col-xs-2 control-label Require">菜单链接</label>
+								<div class="col-xs-5">
+									<input type="text" name="menuHref" id="menuHref_edit" class="form-control"/>
+								</div>
+							</div>
+						</form>
 <#include "../../theBackGround-footer.html"/>
 <script type="text/javascript">
 	var parentMenuOption = "";
-    //url = "/menu/selectMenuListByParam.html";
 	var url = "/menu/selectMenuListByParam.html";
     $(function(){
         //加载菜单表格
@@ -90,6 +112,12 @@
             toolbar: "#toolbar",
             locale: "zh-CN",
             columns: [{
+                field: "select",
+                checkbox: true,
+                width:'3%',
+                align: "center",
+                valign: "middle"
+            },{
                 field: 'Number',
                 title: '序号',
                 align: "center",
@@ -156,25 +184,127 @@
     function addData(){
         var vo = $('#addMenu_form_id').serializeJSON();
 	    $.ajax({
-                 	url:"/menu/insertMenu.html",
+                 	url:"/menu/addOrUpdateMenu.html",
                 	dataType:"json",
                 	method:"post",
 					data:{vo:vo},
 				  	success:function(data){
-							if(data.state != null && data.state == true){
-								alert("新增菜单成功！");
-								$("#myModal").modal("hide");
+							if(data.status != null && data.status == true){
+                                $("#myModal").modal("hide");
+                                bootbox.alert({
+                                    message: "新增菜单成功！",
+                                    size: 'small'
+                                });
                                 searchData("/menu/selectMenuListByParam.html");
 							}
 					}
 		});
     }
-    //弹出编辑窗口
-    function editModal(){
-        alert("edit");
+    //编辑数据前选中行
+    function beforeEdit(){
+        var selectRow =  $('#menuTable').bootstrapTable('getSelections');
+        if(selectRow == null || selectRow == ''||selectRow.length>1){
+            bootbox.alert({
+                message: "仅能选择一条要编辑的记录！",
+                size: 'small'
+            });
+        }else {
+            $("#menuName_edit").val(selectRow[0].menuName);
+            $("#menuHref_edit").val(selectRow[0].menuHref);
+            $("#menuId_edit").val(selectRow[0].menuId);
+            $("#edit_form").css("display","");
+            bootbox.confirm({
+                title: "确定修改当前数据?",
+                message: $("#edit_form"),
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    var vo = $('#edit_form').serializeJSON();
+                    if(result == true){
+                        $.ajax({
+                            url:"/menu/addOrUpdateMenu.html",
+                            dataType:"json",
+                            method:"post",
+                            data:{vo:vo},
+                            success:function(data){
+                                if(data!= null && data.status == true){
+                                    bootbox.alert({
+                                        message: "编辑数据成功！",
+                                        size: 'small'
+                                    });
+                                    searchData("/menu/selectMenuListByParam.html");
+                                }else{
+                                    bootbox.alert({
+                                        message: "编辑数据失败！",
+                                        size: 'small'
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        }
     }
     //删除
-    function deleteRows(){
-        alert("delete");
+    function deleteData(){
+        var selectRow =  $('#menuTable').bootstrapTable('getSelections');
+        if(selectRow == null || selectRow == ''){
+            bootbox.alert({
+                message: "请先选择要删除的数据！",
+                size: 'small'
+            });
+        }else {
+            var ids = new Array();
+            for(var i = 0;i < selectRow.length; i++) {
+                ids.push(selectRow[i].menuId);
+            }
+            ids = ids.join(",");
+            bootbox.confirm({
+                message: "确定要删除选择的数据吗?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if(result == true){
+                        $.ajax({
+                            type: "POST",
+                            url: "/menu/deleteMenu.html",
+                            data: {ids:ids},
+                            dataType: "json",
+                            success:function(data){
+                                if(data!= null && data.status == true){
+                                    bootbox.alert({
+                                        message: "删除数据成功！",
+                                        size: 'small'
+                                    });
+                                    searchData("/menu/selectMenuListByParam.html");
+                                }else{
+                                    bootbox.alert({
+                                        message: "删除数据失败！",
+                                        size: 'small'
+                                    });
+                                }
+                            }
+                        })
+					}
+                }
+            });
+        }
     }
 </script>
