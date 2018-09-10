@@ -1,21 +1,53 @@
 <#assign ctx=request.getContextPath()>
 <#include "../../theBackGround-header.html"/>
-				<div class="row">
-					<div class="panel-body col-xs-12">
-						<form action="" class="form-horizontal row-border" autocomplete="off">
-							影片名称<input type="text"  id="movieName_id" placeholder="请输入:影片，名称">
-							<a class="btn btn-success-alt btn-sm"
-							   style="margin-left:10px;float:left;" onclick="searchData('/movieManage/selectAllMovieByParam.html')" data-type="btn-search"> <i
-									class="fa fa-search"></i>
-							</a>
-						</form>
-					</div>
-						<div class="panel-body" id="contentid">
-							<table id="movieTable">
-							</table>
-						</div>
-					</div><!-- /.col -->
-				</div><!-- /.row -->
+<div class="row">
+	<div class="panel-body col-xs-12">
+		<form action="" class="form-horizontal row-border" autocomplete="off">
+			影片名称<input type="text"  id="movieName_id" placeholder="请输入:影片，名称">
+			<a class="btn btn-success-alt btn-sm"
+               style="margin-left:10px;float:left;" onclick="searchData('/movieManage/selectAllMovieByParam.html')" data-type="btn-search">
+                <i class="fa fa-search"></i>
+            </a>
+		</form>
+	</div>
+	<div class="panel-body" id="contentid">
+		<div class="button-group" style="float:right">
+			<button type="button" class="button button-pill button-small button-primary" onclick="addData()">新增</button>
+			<button type="button" class="button button-pill button-small button-primary" onclick="beforeEdit()">编辑</button>
+			<button type="button" class="button button-pill button-small button-primary" onclick="deleteData()">删除</button>
+		</div>
+		<table id="movieTable">
+		</table>
+	</div>
+</div><!-- /.col -->
+</div><!-- /.row -->
+
+<!--
+<!--新增form
+<form id="add_form_id" style="display: none" autocomplete="off">
+	影片名称<input  type="text" name="movieName"/>
+	影片来源<input  type="text" name="source"/>
+	下载链接<input  type="text" name="downLoadHref" width="280px;"/>
+	imgUrl<input  type="text" name="imgUrl" width="280px;"/>
+	imgUrl2<input  type="text" name="imgUrl2" width="280px;"/>
+	产生年代<input  type="text" name="produceYear"/>
+	国家<input  type="text" name="produceCountry"/>
+	描述<textarea name="describes" style="height: 100px;width: 100px;"/>
+</form>
+
+<!--编辑form
+<form id="edit_form_id" style="display: none" autocomplete="off">
+	<input type="hidden" name="movieId" id="movieId_edit">
+	影片名称<input  type="text" name="movieName" id="movieName_edit"/>
+	影片来源<input  type="text" name="source" id="source_edit"/>
+	下载链接<input  type="text" name="downLoadHref" id="downLoadHref_edit" width="280px;"/>
+	imgUrl<input  type="text" name="imgUrl" id="imgUrl_edit" width="280px;"/>
+	imgUrl2<input  type="text" name="imgUrl2" id="imgUrl2_edit" width="280px;"/>
+	产生年代<input  type="text" name="produceYear" id="produceYear_edit"/>
+	国家<input  type="text" name="produceCountry" id="produceCountry_edit"/>
+	描述<textarea name="describes" id="describes_edit" style="height: 100px;width: 100px;"/>
+</form>
+-->
 <#include "../../theBackGround-footer.html"/>
 <script type="text/javascript">
     var url = "/movieManage/selectAllMovieByParam.html";
@@ -23,7 +55,7 @@
         searchData(url);
     });
     //查询数据
-	function searchData(url){
+    function searchData(url){
         $("#movieTable").bootstrapTable('destroy').bootstrapTable({
             url: url,
             pagination: true,
@@ -37,36 +69,42 @@
                     pageNumber: params.offset,
                     sortOrder: params.order,
                     sortName: params.sort
-            }
+                }
             },
             striped:true,
             clickToSelect: true,
             toolbar: "#toolbar",
             locale: "zh-CN",
             columns: [{
-            field: 'Number',
-            title: '序号',
-            align: "center",
-            width:'3%',
-            formatter: function (value, row, index) {
-                return index + 1;
-            }
-        },{
-             field: 'movieName',
-             title: '名称',
-             align: "center",
-			 width:'8%'
-        },{
-            field: 'produceCountry',
-            title: '产地',
-            align: "center",
-            width:'3%'
-        },{
-            field: 'produceYear',
-            title: '年代',
-            align: "center",
-            width:'3%'
-        }, {
+                field: "select",
+                checkbox: true,
+                width:'3%',
+                align: "center",
+                valign: "middle"
+            },{
+                field: 'Number',
+                title: '序号',
+                align: "center",
+                width:'3%',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            },{
+                field: 'movieName',
+                title: '名称',
+                align: "center",
+                width:'8%'
+            },{
+                field: 'produceCountry',
+                title: '产地',
+                align: "center",
+                width:'3%'
+            },{
+                field: 'produceYear',
+                title: '年代',
+                align: "center",
+                width:'3%'
+            }, {
                 field: 'source',
                 title: '来源',
                 align: "center",
@@ -97,45 +135,203 @@
                 align: "center",
                 width:'10%'
             },{
-            field: 'describes',
+                field: 'describes',
                 title: '简介',
                 align: "center",
                 width:'25%'
-        }, {
-            field: 'searchScore',
+            }, {
+                field: 'searchScore',
                 title: '搜索指数',
                 align: "center",
                 width:'3%'
-        },{
-            field: 'seeOrdownLoadScore',
+            },{
+                field: 'seeOrdownLoadScore',
                 title: '下载指数',
                 align: "center",
                 width:'3%'
-        },{
-            field: 'insertDate',
-            title: '接入日期',
-            align: "center",
-            width:'5%',
-            formatter: function (value, row, index) {
-                if(value != null && value != "" && value != undefined && value != "undefined"){
-                    return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
-                }else{
-                    return value;
+            },{
+                field: 'insertDate',
+                title: '接入日期',
+                align: "center",
+                width:'5%',
+                formatter: function (value, row, index) {
+                    if(value != null && value != "" && value != undefined && value != "undefined"){
+                        return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                    }else{
+                        return value;
+                    }
                 }
-            }
-        },{
-            field: 'updateDate',
+            },{
+                field: 'updateDate',
                 title: '更新日期',
                 align: "center",
                 width:'5%',
                 formatter: function (value, row, index) {
-                if(value != null && value != "" && value != undefined && value != "undefined"){
-                    return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
-                }else{
-                    return value;
+                    if(value != null && value != "" && value != undefined && value != "undefined"){
+                        return wDateFormat(new Date(value), "yyyy-MM-dd HH:mm:ss")
+                    }else{
+                        return value;
+                    }
+                }
+            }]
+        });
+    }
+
+    //实际新增数据
+    function addData(){
+        $("#add_form_id").css("display","");
+        bootbox.confirm({
+            title: "新增影片信息",
+            message: $("#add_form_id"),
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                var vo = $('#add_form_id').serializeJSON();
+                if(result == true){
+                    $.ajax({
+                        url:"/movieManage/addOrUpdateMovie.html",
+                        dataType:"json",
+                        method:"post",
+                        data:{vo:vo},
+                        success:function(data){
+                            if(data!= null && data.status == true){
+                                bootbox.alert({
+                                    message: "新增数据成功！",
+                                    size: 'small'
+                                });
+                              searchData("/movieManage/selectAllMovieByParam.html");
+                            }else{
+                                bootbox.alert({
+                                    message: "新增数据失败！",
+                                    size: 'small'
+                                });
+                            }
+                        }
+                    })
                 }
             }
-        }]
         });
-	}
+    }
+    //编辑数据前选中行
+    function beforeEdit(){
+        var selectRow =  $('#movieTable').bootstrapTable('getSelections');
+        if(selectRow == null || selectRow == ''||selectRow.length>1){
+            bootbox.alert({
+                message: "仅能选择一条要编辑的记录！",
+                size: 'small'
+            });
+        }else {
+            $("#movieId_edit").val(selectRow[0].movieId);
+            $("#movieName_edit").val(selectRow[0].movieName);
+            $("#downLoadHref_edit").val(selectRow[0].downLoadHref);
+            $("#imgUrl_edit").val(selectRow[0].imgUrl);
+            $("#imgUrl2_edit").val(selectRow[0].imgUrl2);
+            $("#source").val(selectRow[0].source);
+            $("#produceYear_edit").val(selectRow[0].produceYear);
+            $("#produceCountry_edit").val(selectRow[0].produceCountry);
+            $("#describes_edit").val(selectRow[0].describes);
+            $("#edit_form_id").css("display","");
+            bootbox.confirm({
+                title: "确定修改当前数据?",
+                message: $("#edit_form_id"),
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    var vo = $('#edit_form_id').serializeJSON();
+                    if(result == true){
+                        $.ajax({
+                            url:"/movieManage/addOrUpdateMovie.html",
+                            dataType:"json",
+                            method:"post",
+                            data:{vo:vo},
+                            success:function(data){
+                                if(data!= null && data.status == true){
+                                    bootbox.alert({
+                                        message: "编辑数据成功！",
+                                        size: 'small'
+                                    });
+                                    searchData("/movieManage/selectAllMovieByParam.html");
+                                }else{
+                                    bootbox.alert({
+                                        message: "编辑数据失败！",
+                                        size: 'small'
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        }
+    }
+
+    //删除
+    function deleteData(){
+        var selectRow =  $('#movieTable').bootstrapTable('getSelections');
+        if(selectRow == null || selectRow == ''){
+            bootbox.alert({
+                message: "请先选择要删除的数据！",
+                size: 'small'
+            });
+        }else {
+            var ids = new Array();
+            for(var i = 0;i < selectRow.length; i++) {
+                ids.push(selectRow[i].movieId);
+            }
+            ids = ids.join(",");
+            bootbox.confirm({
+                message: "确定要删除选择的数据吗?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if(result == true){
+                        $.ajax({
+                            type: "POST",
+                            url: "/movieManage/deleteMovie.html",
+                            data: {ids:ids},
+                            dataType: "json",
+                            success:function(data){
+                                if(data.status != null && data.status == true){
+                                    bootbox.alert({
+                                        message: "删除数据成功！",
+                                        size: 'small'
+                                    });
+                                    searchData("/movieManage/selectAllMovieByParam.html");
+                                }else{
+                                    bootbox.alert({
+                                        message: "删除数据失败！",
+                                        size: 'small'
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        }
+    }
 </script>

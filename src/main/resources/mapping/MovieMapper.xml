@@ -224,4 +224,72 @@ ORDER BY countryName
             and movie_name like concat("%",#{movieVo.movieName},"%")
         </if>
     </select>
+    <!--更新影片信息-->
+    <update id="updateMovieVo" parameterType="com.seeMovie.pojo.MovieVo">
+        UPDATE movie
+        <set>
+            <if test="category != null">
+                category = #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="downLoadHref != null">
+                downLoad_href = #{downLoadHref,jdbcType=VARCHAR},
+            </if>
+            <if test="movieName != null">
+                movie_name = #{movieName,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                source = #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl2 != null">
+                img_url2 = #{imgUrl2,jdbcType=VARCHAR},
+            </if>
+            <if test="doubanScore != null">
+                douban_score = #{doubanScore,jdbcType=DECIMAL},
+            </if>
+            <if test="produceYear != null">
+                produce_year = #{produceYear,jdbcType=VARCHAR},
+            </if>
+            <if test="produceCountry != null">
+                produce_country = #{produceCountry,jdbcType=VARCHAR},
+            </if>
+            <if test="describes != null">
+                describes = #{describes,jdbcType=VARCHAR},
+            </if>
+            <if test="synchronousFlag != null">
+                synchronous_flag = #{synchronousFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="synchronousImgUrlFlage != null">
+                synchronous_imgUrl_flage = #{synchronousImgUrlFlage,jdbcType=VARCHAR},
+            </if>
+            <if test="insertDate != null">
+                insert_date = #{insertDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="searchScore != null">
+                search_score = #{searchScore,jdbcType=INTEGER},
+            </if>
+            <if test="seeOrdownLoadScore != null">
+                see_or_downLoad_score = #{seeOrdownLoadScore,jdbcType=INTEGER},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE movie_id = #{movieId,jdbcType=VARCHAR}
+    </update>
+    <!--删除影片信息-->
+    <delete id="deleteMovieVo" parameterType="java.util.List">
+        <if test="ids != null">
+            delete from movie
+            where movie_id in
+            <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
 </mapper>

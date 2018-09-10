@@ -545,4 +545,30 @@ public class MovieServiceImpl implements MovieService{
 		}
 		return returnMap;
 	}
+	//新增影片信息
+	@Override
+	public void insertMovieVo(MovieVo movieVo) {
+		movieVo.setSynchronousFlag("Y");
+		movieVo.setSynchronousImgUrlFlage("N");
+		movieVo.setInsertDate(new Date());
+		movieMapper.insert(movieVo);
+	}
+	//编辑影片信息
+	@Override
+	public void updateMovieVo(MovieVo movieVo) {
+		movieVo.setUpdateDate(new Date());
+		movieMapper.updateMovieVo(movieVo);
+	}
+	//删除影片信息
+	@Override
+	public int deleteMovieVo(String[] ids) {
+		int returnType = 0;
+		try{
+			movieMapper.deleteMovieVo(ids);
+		}catch (Exception e){
+			returnType =1;
+			e.printStackTrace();
+		}
+		return returnType;
+	}
 }

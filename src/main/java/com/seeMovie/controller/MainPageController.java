@@ -111,6 +111,13 @@ public class MainPageController {
 		try {
 			//查找所有电影
 			MovieVo movieVo = movieService.getMovieDetail(movieId);
+			if(movieVo !=null){
+				if(movieVo.getDownLoadHref().contains("<") || movieVo.getDownLoadHref().contains(">")){
+					mv.addObject("type", "noUse");
+				}else{
+					mv.addObject("type", "use");
+				}
+			}
 			mv.addObject("movie", movieVo);
 			mv.setViewName("homePage/movieDetail");
 		} catch (Exception e) {

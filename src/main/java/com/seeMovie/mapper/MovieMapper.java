@@ -38,4 +38,8 @@ public interface MovieMapper {
     int selectCountMovieListByParam(Map<String, Object> returnMap);
 	//查询符合条件的影片信息
 	List<MovieVo> selectMovieListByParam(Map<String, Object> returnMap);
+	//更新影片信息
+	void updateMovieVo(MovieVo movieVo);
+	//删除影片信息
+	void deleteMovieVo(@Param("ids") String[] ids);
 }

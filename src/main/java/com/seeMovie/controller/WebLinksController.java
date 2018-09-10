@@ -107,30 +107,6 @@ public class WebLinksController {
 	}
 	/**
 	 * @author      mym
-	 * @date        2018/9/5 0005 19:40
-	 * @describe    根据主键id编辑待爬取网站信息
-	 * @version     V1.0
-	 * @param       [vo]
-	 * @return      com.seeMovie.common.utils.JsonData
-	*/
-	@RequestMapping("/updateWebLink")
-	@ResponseBody
-	public JsonData updateWebLink(String vo){
-		JsonData jsonData = new JsonData();
-		try {
-			if(!StringUtils.isEmpty(vo)){
-				WebLinksVo webLinksVo = JSON.parseObject(vo,WebLinksVo.class);
-				webLinksVo.setUpdateDate(new Date());
-				webLinksService.updateWebLinkVo(webLinksVo);
-				jsonData.setStatus(true);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return jsonData;
-	}
-	/**
-	 * @author      mym
 	 * @date        2018/9/8 0008 16:43
 	 * @describe    [ids] 根据待爬取网站id删除对应数据
 	 * @version     V1.0

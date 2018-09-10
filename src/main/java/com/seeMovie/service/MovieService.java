@@ -25,4 +25,10 @@ public interface MovieService {
     List<MovieVo> selectAllNoUpdateImgUrlVo();
 	//多条件查询影片信息
     Map<String, Object> selectAllMovieByParam(Map<String, Object> returnMap);
+	//新增影片信息
+	void insertMovieVo(MovieVo movieVo);
+	//编辑影片信息
+	void updateMovieVo(MovieVo movieVo);
+	//删除影片信息
+	int deleteMovieVo(String[] strings);
 }

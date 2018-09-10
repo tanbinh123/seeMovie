@@ -158,7 +158,12 @@
                         size: 'small'
                     });
                     searchData("/webLinks/selectAllWebLinksByParam.html");
-                }
+                }else{
+                    bootbox.alert({
+                        message: "新增待爬取网站失败！",
+                        size: 'small'
+                    });
+				}
             }
         });
     }

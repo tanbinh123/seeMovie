@@ -25,15 +25,21 @@ body{
 			<div style="float:left;width:50%;">
 				<span style="margin-left:28%;background:#A4D3EE;width:60%;text-align:center;"><b>${movie.movieName}</b></span>
 				<img style="height:600px;width:100%;" src="${movie.imgUrl}">
-				<h5>复制下载链接到迅雷下载<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;豆瓣评分：${movie.doubanScore!'暂无'}</span></h5>
-				<a>${movie.downLoadHref}</a>
+				<h5>单击或复制下载链接到迅雷下载<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;豆瓣评分：${movie.doubanScore!'暂无'}</span></h5>
 			</div>
 			<div style="float:left;width:50%;">
 				<div>
 				  <textarea style="margin-top:20px;height:295px;width:100%;resize:none;" disabled="disabled">${movie.describes!'当前影片暂无描述！'}</textarea>
 				</div>
-				<img class="detailImg" style="height:300px; width:100%;" src="${movie.imgUrl2!''}">
+				<img class="detai lImg" style="height:300px; width:100%;" src="${movie.imgUrl2!''}">
 			</div>
+		</div>
+		<div class="row">
+			<#if type?exists && type == "use">
+			<a href="#" thunderHref="ThunderEncode(${movie.downLoadHref})" onClick="return OnDownloadClick_Simple(this,2,4)" oncontextmenu="ThunderNetwork_SetHref(this)">${movie.downLoadHref}</a>
+			<#else>
+			<a href="#">${movie.downLoadHref}</a>
+		    </#if>
 		</div>
 	</div>
 </body>
