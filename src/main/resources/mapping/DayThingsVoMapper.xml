@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seeMovie.mapper.DayThingsVoMapper" >
+  <resultMap id="BaseResultMap" type="com.seeMovie.pojo.DayThingsVo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="day_id" property="dayId" jdbcType="VARCHAR" />
+    <result column="day_things" property="dayThings" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from day_things
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.seeMovie.pojo.DayThingsVo" >
+    insert into day_things (id, day_id, day_things
+      )
+    values (#{id,jdbcType=VARCHAR}, #{dayId,jdbcType=VARCHAR}, #{dayThings,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.seeMovie.pojo.DayThingsVo" >
+    update day_things
+    set day_id = #{dayId,jdbcType=VARCHAR},
+      day_things = #{dayThings,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, day_id, day_things
+    from day_things
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, day_id, day_things
+    from day_things
+  </select>
+  <select id="selectDaysByDayId" resultType="int" parameterType="java.lang.String" >
+    select count(1)
+    from day_things
+    where day_id = #{dayId,jdbcType=VARCHAR}
+  </select>
+</mapper>
